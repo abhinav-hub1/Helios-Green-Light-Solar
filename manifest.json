@@ -1,7 +1,7 @@
 {
   "name": "Solar Installation",
   "short_name": "Solar App",
-  "start_url": "/",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#1e88e5",
