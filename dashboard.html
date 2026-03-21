@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  font-family: Arial;
+  background: #f1f1f1;
+  margin: 0;
+}
+
+.header {
+  background: #1e88e5;
+  height: 55px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  color: white;
+}
+
+.title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: 600;
+}
+
+.back-btn {
+  margin-left: 12px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.container {
+  padding: 10px;
+}
+
+.card {
+  background: white;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+img {
+  width: 100%;
+  margin-top: 8px;
+  border-radius: 6px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <div class="back-btn" onclick="goBack()">←</div>
+  <div class="title">📊 Dashboard</div>
+</div>
+
+<div id="loading" style="text-align:center; padding:20px; color:#1e88e5; font-weight:600;">
+  ⏳ Loading dashboard...
+</div>
+
+<div class="container" id="data"></div>
+
+<script>
+
+async function loadData() {
+
+   const loading = document.getElementById("loading");
+   const container = document.getElementById("data");
+
+  // 🔥 Show loading
+  loading.style.display = "block";
+  container.innerHTML = "";
+
+  const url = "https://script.google.com/macros/s/AKfycbyVt7RojVm-DZFZdmAyvGthhwqUAXlxA7846Hxlq1e9Lw2-erLwItJ30wuZwH6ttCoK/exec?type=all";
+
+  const res = await fetch(url);
+  const data = await res.json();
+
+    // 🔥 Hide loading
+    loading.style.display = "none";
+
+  data.reverse().forEach(item => {
+
+    container.innerHTML += `
+      <div class="card">
+        <b>${item.service}</b><br>
+        ${item.name}<br>
+        📞 ${item.phone}<br>
+        📍 ${item.address}<br>
+
+        ${item.panels ? `<img src="${item.panels}">` : ""}
+      </div>
+    `;
+  });
+}
+
+function goBack() {
+  window.location.href = "index.html";
+}
+
+loadData();
+
+</script>
+
+</body>
+</html>
