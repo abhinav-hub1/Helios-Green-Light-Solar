@@ -149,6 +149,16 @@ input[readonly] {
   transform: scale(0.96);
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
+	.delete-btn {
+  position: absolute;
+  right: 10px;
+  top: 35px;
+  background: white;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  display: none;
+}
 </style>
 </head>
 
@@ -200,9 +210,13 @@ input[readonly] {
 
 <h3>Upload Images</h3>
 
-<div class="file-box">
-<label>Panels Image</label>
-<input type="file" id="panels" accept="image/*,application/pdf">
+<div class="file-box file-wrapper">
+  <label>Panels Image</label>
+  <input type="file" id="panels" onchange="showDelete(this)">
+  
+  <button class="delete-btn" onclick="removeFile('panels')">
+    🗑️
+  </button>
 </div>
 
 <div class="file-box">
