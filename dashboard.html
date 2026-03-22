@@ -5,49 +5,65 @@
 
 <style>
 body {
-  font-family: Arial;
-  background: #f1f1f1;
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
   margin: 0;
 }
 
+/* HEADER */
 .header {
   background: #1e88e5;
   height: 55px;
   display: flex;
   align-items: center;
+  justify-content: center;
   position: relative;
   color: white;
-}
-
-.title {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
   font-weight: 600;
 }
 
 .back-btn {
-  margin-left: 12px;
+  position: absolute;
+  left: 12px;
   font-size: 20px;
   cursor: pointer;
 }
 
+/* CONTAINER */
 .container {
-  padding: 10px;
+  padding: 12px;
 }
 
+/* CARD */
 .card {
   background: white;
-  padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  padding: 14px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.08);
 }
 
-img {
-  width: 100%;
-  margin-top: 8px;
-  border-radius: 6px;
+/* SERVICE NUMBER (highlight) */
+.service {
+  font-size: 16px;
+  font-weight: bold;
+  color: #1e88e5;
+  margin-bottom: 6px;
+}
+
+/* TEXT */
+.text {
+  font-size: 14px;
+  color: #444;
+  margin-top: 4px;
+}
+
+/* LOADING */
+#loading {
+  text-align: center;
+  padding: 20px;
+  color: #1e88e5;
+  font-weight: 600;
 }
 </style>
 </head>
@@ -56,12 +72,10 @@ img {
 
 <div class="header">
   <div class="back-btn" onclick="goBack()">←</div>
-  <div class="title">📊 Dashboard</div>
+  Dashboard
 </div>
 
-<div id="loading" style="text-align:center; padding:20px; color:#1e88e5; font-weight:600;">
-  ⏳ Loading dashboard...
-</div>
+<div id="loading">Loading data...</div>
 
 <div class="container" id="data"></div>
 
@@ -69,31 +83,26 @@ img {
 
 async function loadData() {
 
-   const loading = document.getElementById("loading");
-   const container = document.getElementById("data");
+  const loading = document.getElementById("loading");
+  const container = document.getElementById("data");
 
-  // 🔥 Show loading
   loading.style.display = "block";
   container.innerHTML = "";
 
-  const url = "https://script.google.com/macros/s/AKfycbyVt7RojVm-DZFZdmAyvGthhwqUAXlxA7846Hxlq1e9Lw2-erLwItJ30wuZwH6ttCoK/exec?type=all";
+  const url = "https://script.google.com/macros/s/AKfycbwhlMxTxB4pPXi6ApKLO60yRMF_HKSutI0R98xv-S3fyLxsVCQ0jUosaLaUDBQIa88v/exec?type=all";
 
   const res = await fetch(url);
   const data = await res.json();
 
-    // 🔥 Hide loading
-    loading.style.display = "none";
+  loading.style.display = "none";
 
   data.reverse().forEach(item => {
 
     container.innerHTML += `
       <div class="card">
-        <b>${item.service}</b><br>
-        ${item.name}<br>
-        📞 ${item.phone}<br>
-        📍 ${item.address}<br>
-
-        ${item.panels ? `<img src="${item.panels}">` : ""}
+        <div class="service">${item.service}</div>
+        <div class="text">Phone: ${item.phone}</div>
+        <div class="text">Address: ${item.address}</div>
       </div>
     `;
   });
