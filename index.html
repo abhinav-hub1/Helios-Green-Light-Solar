@@ -409,13 +409,8 @@ const url = "https://script.google.com/macros/s/AKfycbwhlMxTxB4pPXi6ApKLO60yRMF_
 
 async function submitForm() {
 
-  if (!document.getElementById("name").value) {
-    alert("Please fetch data first ❗");
-    return;
-  }
-
-if (!doc2.files.length) {
-  document.getElementById("errorMsg").innerText = "Document Image 2 is required";
+if (!document.getElementById("service").value.trim()) {
+  document.getElementById("errorMsg").innerText = "Service Number is required";
   document.getElementById("errorMsg").style.display = "block";
   return;
 }
