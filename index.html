@@ -100,6 +100,11 @@ input[readonly] {
   border-radius: 6px;
   padding: 10px;
   margin-top: 8px;
+  padding-bottom: 20px;
+	box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+	.file-box input[type="text"] {
+  margin-top: 8px;
 }
 
 /* BUTTON */
@@ -152,12 +157,12 @@ input[readonly] {
 }
 .file-wrapper {
   position: relative;
+  padding-top: 10px; /* 👈 ADD THIS */
 }
-
 .delete-btn {
   position: absolute;
   right: 10px;
-  top: 35px;
+  top: 5px;
   background: white;
   border-radius: 50%;
   padding: 6px;
@@ -166,7 +171,6 @@ input[readonly] {
   display: none;
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
-
 .delete-btn .material-icons {
   font-size: 20px;
   color: #e53935;
@@ -230,6 +234,12 @@ input[readonly] {
 
   <label>Panel No.2</label>
   <input type="text" id="panel2" placeholder="Enter Panel Number 2">
+	
+  <label>Panel No.3</label>
+  <input type="text" id="panel1" placeholder="Enter Panel Number 3">
+
+  <label>Panel No.4</label>
+  <input type="text" id="panel2" placeholder="Enter Panel Number 4">
 
   <button type="button" class="delete-btn" onclick="removeFile('panels')">
     <span class="material-icons">delete</span>
@@ -566,6 +576,10 @@ function openDashboard() {
 function showDelete(input) {
   const btn = input.parentElement.querySelector(".delete-btn");
   btn.style.display = input.files.length ? "block" : "none";
+
+  if (input.files.length) {
+    input.style.background = "#dcedc8"; // light green
+  }
 }
 
 function removeFile(id) {
