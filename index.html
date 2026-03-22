@@ -250,8 +250,8 @@ input[readonly] {
   <label>Inverter Image</label>
   <input type="file" id="inverter" accept="image/*,application/pdf" onchange="showDelete(this)">
 
-  <label>Inverter Service Number</label>
-  <input type="text" id="inverterService" placeholder="Enter Inverter Service Number">
+  <label>Inverter Serial Number</label>
+  <input type="text" id="inverterSerial" placeholder="Enter Inverter Serial Number">
 
   <button type="button" class="delete-btn" onclick="removeFile('inverter')">
     <span class="material-icons">delete</span>
@@ -460,7 +460,7 @@ const data = {
 	panel1: document.getElementById("panel1").value,
 panel2: document.getElementById("panel2").value,
   inverter: inverterData,
-	inverterService: document.getElementById("inverterService").value,
+	inverterSerial: document.getElementById("inverterSerial").value,
   earth: earthData,
   bill: billData,
   aadhar: aadharData,
@@ -538,7 +538,7 @@ function reloadForm(){
 	document.getElementById("panel1").value = "";
 document.getElementById("panel2").value = "";
   document.getElementById("inverter").value = "";
-	document.getElementById("inverterService").value = "";
+	document.getElementById("inverterSerial").value = "";
   document.getElementById("earth").value = "";
   document.getElementById("bill").value = "";
   document.getElementById("aadhar").value = "";
@@ -576,10 +576,6 @@ function openDashboard() {
 function showDelete(input) {
   const btn = input.parentElement.querySelector(".delete-btn");
   btn.style.display = input.files.length ? "block" : "none";
-
-  if (input.files.length) {
-    input.style.background = "#dcedc8"; // light green
-  }
 }
 
 function removeFile(id) {
