@@ -175,15 +175,32 @@ input[readonly] {
   font-size: 20px;
   color: #e53935;
 }
+	.back-btn {
+  position: absolute;
+  left: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.back-btn .material-icons {
+  font-size: 24px;
+  color: white;
+}
 </style>
 </head>
 
 <body>
+	
 <div class="header">
+<div class="back-btn" onclick="goHome()">
+  <span class="material-icons">home</span>
+</div>
   <div class="header-title">Solar Installation</div>
   <div class="profile-circle" onclick="openDashboard()">👤</div>
 </div>
-
+	
 <div class="container" id="formScreen">
   
 <div id="loading">Loading... ⏳</div>
@@ -578,6 +595,9 @@ function resetMessages(){
 
 function openDashboard() {
   window.location.href = "dashboard.html";
+}
+	function goHome() {
+  window.location.href = "index.html";
 }
 function showDelete(input) {
   const btn = input.parentElement.querySelector(".delete-btn");
