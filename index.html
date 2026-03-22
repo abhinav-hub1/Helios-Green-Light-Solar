@@ -224,24 +224,24 @@ input[readonly] {
 <div class="file-box file-wrapper">
   <label>Panels Image</label>
   <input type="file" id="panels" accept="image/*,application/pdf" onchange="showDelete(this)">
-  
+  <input type="text" id="panel1" placeholder="Panel No.1">
+
+<input type="text" id="panel2" placeholder="Panel No.2">
   <button type="button" class="delete-btn" onclick="removeFile('panels')">
     <span class="material-icons">delete</span>
 
-<input type="text" id="panel1" placeholder="Panel No.1">
 
-<input type="text" id="panel2" placeholder="Panel No.2">
   </button>
 </div>
 
 <div class="file-box file-wrapper">
   <label>Inverter Image</label>
   <input type="file" id="inverter" accept="image/*,application/pdf" onchange="showDelete(this)">
-  
+  	  <input type="text" id="inverterService" placeholder="Enter Inverter Service Number">
   <button type="button" class="delete-btn" onclick="removeFile('inverter')">
     <span class="material-icons">delete</span>
 	  
-	  <input type="text" id="inverterService" placeholder="Enter Inverter Service Number">
+
   </button>
 </div>
 
