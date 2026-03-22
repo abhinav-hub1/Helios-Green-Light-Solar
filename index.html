@@ -310,6 +310,12 @@ input[readonly] {
 </div>
 
 <script>
+	let mode = "create";
+
+const params = new URLSearchParams(window.location.search);
+if (params.get("mode")) {
+  mode = params.get("mode");
+}
 function readFile(input) {
   return new Promise((resolve) => {
     const file = input.files[0];
@@ -476,19 +482,17 @@ const result = await res.json();
 loading.style.display = "none";
 
 if (result.status === "ALREADY_SUBMITTED") {
-  loading.style.display = "none";
 
-  document.getElementById("duplicateMsg").style.display = "block";
+  if (mode === "create") {
+    document.getElementById("duplicateMsg").style.display = "block";
 
-  // 🔥 Full Reset
+    submitBtn.innerText = "Submit";
+    submitBtn.disabled = false;
+    loading.style.display = "none";
+    return;
+  }
 
- reloadForm();
-document.getElementById("duplicateMsg").style.display = "block";
-
-  submitBtn.innerText = "Submit";
-  submitBtn.disabled = false;
-
-  return;
+  // EDIT MODE → allow
 }
 
     loading.style.display = "none";
