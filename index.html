@@ -377,7 +377,7 @@ async function fetchData() {
 loading.innerHTML = "Loading... ⏳";
   loading.style.display = "block";
 
-const url = "https://script.google.com/macros/s/AKfycbyVt7RojVm-DZFZdmAyvGthhwqUAXlxA7846Hxlq1e9Lw2-erLwItJ30wuZwH6ttCoK/exec?service=" + service;
+const url = "https://script.google.com/macros/s/AKfycbwhlMxTxB4pPXi6ApKLO60yRMF_HKSutI0R98xv-S3fyLxsVCQ0jUosaLaUDBQIa88v/exec?service=" + service;
   try {
     const res = await fetch(url);
     const data = await res.json();
@@ -471,7 +471,7 @@ panel4: document.getElementById("panel4").value,
 };
 
   try {
-const res = await fetch("https://script.google.com/macros/s/AKfycbyVt7RojVm-DZFZdmAyvGthhwqUAXlxA7846Hxlq1e9Lw2-erLwItJ30wuZwH6ttCoK/exec", {
+const res = await fetch("https://script.google.com/macros/s/AKfycbwhlMxTxB4pPXi6ApKLO60yRMF_HKSutI0R98xv-S3fyLxsVCQ0jUosaLaUDBQIa88v/exec", {
   method: "POST",
   body: JSON.stringify(data)
 });
