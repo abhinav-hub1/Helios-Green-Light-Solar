@@ -197,7 +197,7 @@ input[readonly] {
   ⚠️ This service number already submitted
 </div>
 
-<div id="errorMsg" class="error">Service Number not found ❌</div>
+<div id="errorMsg" class="error">Service Number not found </div>
 
 <label>Customer Name</label>
 <input id="name">
@@ -231,34 +231,54 @@ input[readonly] {
   </button>
 </div>
 
-<div class="file-box">
-<label>Inverter Image</label>
-<input type="file" id="inverter" accept="image/*,application/pdf">
+<div class="file-box file-wrapper">
+  <label>Inverter Image</label>
+  <input type="file" id="inverter" accept="image/*,application/pdf" onchange="showDelete(this)">
+  
+  <button type="button" class="delete-btn" onclick="removeFile('inverter')">
+    <span class="material-icons">delete</span>
+  </button>
 </div>
 
-<div class="file-box">
+
+<div class="file-box file-wrapper">
 <label>Earth Image</label>
-<input type="file" id="earth" accept="image/*,application/pdf">
+<input type="file" id="earth" accept="image/*,application/pdf" onchange="showDelete(this)">
+<button type="button" class="delete-btn" onclick="removeFile('earth')">
+    <span class="material-icons">delete</span>
+  </button>
 </div>
 
-<div class="file-box">
-<label>Current Bill</label>
-<input type="file" id="bill" accept="image/*,application/pdf">
+<div class="file-box file-wrapper">
+  <label>Current Bill</label>
+<input type="file" id="bill" accept="image/*,application/pdf" onchange="showDelete(this)">
+<button type="button" class="delete-btn" onclick="removeFile('bill')">
+    <span class="material-icons">delete</span>
+  </button>
 </div>
 
-<div class="file-box">
+<div class="file-box file-wrapper">
 <label>Aadhar Card</label>
-<input type="file" id="aadhar" accept="image/*,application/pdf">
+<input type="file" id="aadhar" accept="image/*,application/pdf" onchange="showDelete(this)">
+<button type="button" class="delete-btn" onclick="removeFile('aadhar')">
+    <span class="material-icons">delete</span>
+  </button>
 </div>
-
-<div class="file-box">
+	
+<div class="file-box file-wrapper">
 <label>Document Image 1</label>
-<input type="file" id="doc1" accept="image/*,application/pdf">
+<input type="file" id="doc1" accept="image/*,application/pdf" onchange="showDelete(this)">
+<button type="button" class="delete-btn" onclick="removeFile('doc1')">
+    <span class="material-icons">delete</span>
+  </button>
 </div>
-
-<div class="file-box">
+	
+<div class="file-box file-wrapper">
 <label>Document Image 2 (Optional)</label>
-<input type="file" id="doc2" accept="image/*,application/pdf">
+<input type="file" id="doc2" accept="image/*,application/pdf" onchange="showDelete(this)">
+<button type="button" class="delete-btn" onclick="removeFile('doc2')">
+    <span class="material-icons">delete</span>
+  </button>
 </div>
 
 <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit</button>
@@ -474,7 +494,7 @@ submitBtn.disabled = false;
     loading.style.display = "none";
     submitBtn.innerText = "Submit";
 submitBtn.disabled = false;
-    alert("Submission failed ❌");
+    alert("Submission failed");
     console.log(err);
   }
 
@@ -513,6 +533,9 @@ function reloadForm(){
 
   // Focus back to first field
   document.getElementById("service").focus();
+	document.querySelectorAll(".delete-btn").forEach(btn => {
+  btn.style.display = "none";
+});
 }
 
 function clearFields(){
