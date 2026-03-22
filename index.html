@@ -227,6 +227,10 @@ input[readonly] {
   
   <button type="button" class="delete-btn" onclick="removeFile('panels')">
     <span class="material-icons">delete</span>
+
+<input type="text" id="panel1" placeholder="Panel No.1">
+
+<input type="text" id="panel2" placeholder="Panel No.2">
   </button>
 </div>
 
@@ -236,6 +240,8 @@ input[readonly] {
   
   <button type="button" class="delete-btn" onclick="removeFile('inverter')">
     <span class="material-icons">delete</span>
+	  
+	  <input type="text" id="inverterService" placeholder="Enter Inverter Service Number">
   </button>
 </div>
 
@@ -273,7 +279,7 @@ input[readonly] {
 </div>
 	
 <div class="file-box file-wrapper">
-<label>Document Image 2 (Optional)</label>
+<label>Document Image 2 (Required)</label>
 <input type="file" id="doc2" accept="image/*,application/pdf" onchange="showDelete(this)">
 <button type="button" class="delete-btn" onclick="removeFile('doc2')">
     <span class="material-icons">delete</span>
@@ -396,17 +402,11 @@ async function submitForm() {
     return;
   }
 
-  if (
-    !panels.files.length ||
-    !inverter.files.length ||
-    !earth.files.length ||
-    !bill.files.length ||
-    !aadhar.files.length ||
-    !doc1.files.length
-  ) {
-    alert("Please fill the required fields");
-    return;
-  }
+if (!doc2.files.length) {
+  document.getElementById("errorMsg").innerText = "Document Image 2 is required";
+  document.getElementById("errorMsg").style.display = "block";
+  return;
+}
 
   document.getElementById("submitBtn").disabled = true;
 
@@ -445,7 +445,10 @@ const data = {
   distribution: document.getElementById("distribution").value,
 
   panels: panelsData,
+	panel1: document.getElementById("panel1").value,
+panel2: document.getElementById("panel2").value,
   inverter: inverterData,
+	inverterService: document.getElementById("inverterService").value,
   earth: earthData,
   bill: billData,
   aadhar: aadharData,
@@ -520,7 +523,10 @@ function reloadForm(){
 
   // Clear file inputs
   document.getElementById("panels").value = "";
+	document.getElementById("panel1").value = "";
+document.getElementById("panel2").value = "";
   document.getElementById("inverter").value = "";
+	document.getElementById("inverterService").value = "";
   document.getElementById("earth").value = "";
   document.getElementById("bill").value = "";
   document.getElementById("aadhar").value = "";
