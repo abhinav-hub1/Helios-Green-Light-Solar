@@ -236,10 +236,10 @@ input[readonly] {
   <input type="text" id="panel2" placeholder="Enter Panel Number 2">
 	
   <label>Panel No.3</label>
-  <input type="text" id="panel1" placeholder="Enter Panel Number 3">
+  <input type="text" id="panel3" placeholder="Enter Panel Number 3">
 
   <label>Panel No.4</label>
-  <input type="text" id="panel2" placeholder="Enter Panel Number 4">
+  <input type="text" id="panel4" placeholder="Enter Panel Number 4">
 
   <button type="button" class="delete-btn" onclick="removeFile('panels')">
     <span class="material-icons">delete</span>
@@ -459,6 +459,8 @@ const data = {
   panels: panelsData,
 	panel1: document.getElementById("panel1").value,
 panel2: document.getElementById("panel2").value,
+	panel3: document.getElementById("panel3").value,
+panel4: document.getElementById("panel4").value,
   inverter: inverterData,
 	inverterSerial: document.getElementById("inverterSerial").value,
   earth: earthData,
@@ -537,6 +539,8 @@ function reloadForm(){
   document.getElementById("panels").value = "";
 	document.getElementById("panel1").value = "";
 document.getElementById("panel2").value = "";
+	document.getElementById("panel3").value = "";
+document.getElementById("panel4").value = "";
   document.getElementById("inverter").value = "";
 	document.getElementById("inverterSerial").value = "";
   document.getElementById("earth").value = "";
@@ -576,11 +580,15 @@ function openDashboard() {
 function showDelete(input) {
   const btn = input.parentElement.querySelector(".delete-btn");
   btn.style.display = input.files.length ? "block" : "none";
+
+  // 🔥 Force remove any green color
+  input.style.background = "#eee";
 }
 
 function removeFile(id) {
   const input = document.getElementById(id);
   input.value = "";
+  input.style.background = "#eee"; // 🔥 reset color
   input.parentElement.querySelector(".delete-btn").style.display = "none";
 }
 </script>
