@@ -198,13 +198,19 @@ input[readonly] {
   box-shadow: 2px 0 10px rgba(0,0,0,0.2);
   transition: 0.3s;
   z-index: 1000;
-  padding-top: 60px;
 }
 
 .side-menu.open {
   left: 0;
 }
-
+.menu-header {
+  padding: 18px;
+  font-size: 18px;
+  font-weight: bold;
+  background: #1e88e5;
+  color: white;
+  text-align: center;
+}
 .menu-item {
   padding: 15px;
   border-bottom: 1px solid #eee;
@@ -232,17 +238,21 @@ input[readonly] {
 
 <body>
 <div id="sideMenu" class="side-menu">
-	  <div style="padding: 16px;
-		  font-size: 18px;
-		  font-weight: bold;
-		  color: #1e88e5;
-		  border-bottom: 1px solid #eee;">Solar Installation</div>
-	<div class="menu-item" onclick="setMode('create')">
-	     Create New
-</div>
-	<div class="menu-item" onclick="setMode('edit')">
-	     Edit Existing
- 	 </div>
+
+  <!-- 🔵 HEADER -->
+  <div class="menu-header">
+    Solar Installation
+  </div>
+
+  <!-- MENU ITEMS -->
+  <div class="menu-item" onclick="setMode('create')">
+    Create New
+  </div>
+
+  <div class="menu-item" onclick="setMode('edit')">
+    Edit Existing
+  </div>
+
 </div>
 <div id="overlay" onclick="toggleMenu()"></div>
 	
