@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1e88e5">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	
+<style>
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f1f1f1;
+  margin: 0;
+}
+
+.header {
+  background: #1e88e5;
+  height: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* center title */
+  position: relative;
+  color: white;
+}
+
+.header-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* keep profile on right */
+.profile-circle {
+  position: absolute;
+  right: 12px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: white;
+  color: #1e88e5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+}
+/* CONTAINER */
+.container {
+  padding: 12px;
+}
+
+/* LABEL */
+label {
+  font-size: 14px;
+  font-weight: 600;
+  display: block;
+  margin-top: 12px;
+}
+
+/* INPUT */
+input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 5px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #eee;
+  font-size: 15px;
+}
+
+/* READONLY STYLE */
+input[readonly] {
+  background: #e0e0e0;
+}
+
+/* ROW FOR SEARCH */
+.row {
+  display: flex;
+  gap: 6px;
+}
+
+.row input {
+  flex: 1;
+}
+
+/* ICON BUTTON */
+.icon-btn {
+  width: 45px;
+  border: none;
+  border-radius: 6px;
+  background: #1e88e5;
+  color: white;
+  font-size: 18px;
+}
+
+/* FILE BOX */
+.file-box {
+  background: #eee;
+  border-radius: 6px;
+  padding: 10px;
+  margin-top: 8px;
+  padding-bottom: 20px;
+	box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+	.file-box input[type="text"] {
+  margin-top: 8px;
+}
+
+/* BUTTON */
+.submit-btn {
+  width: 100%;
+  margin-top: 20px;
+  padding: 14px;
+  background: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+/* ERROR */
+.error {
+  color: red;
+  text-align: center;
+  display: none;
+}
+
+/* LOADING */
+#loading {
+  text-align: center;
+  display: none;
+  color: blue;
+}
+
+#successScreen {
+  display: none;
+  text-align: center;
+  padding: 30px;
+}
+.new-entry-btn {
+  margin-top: 20px;
+  padding: 14px 20px;
+  background: linear-gradient(45deg, #2196F3, #21CBF3);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: all 0.2s ease;
+}
+
+.new-entry-btn:active {
+  transform: scale(0.96);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.file-wrapper {
+  position: relative;
+  padding-top: 10px; /* 👈 ADD THIS */
+}
+.delete-btn {
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  background: white;
+  border-radius: 50%;
+  padding: 6px;
+  border: none;
+  cursor: pointer;
+  display: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+.delete-btn .material-icons {
+  font-size: 20px;
+  color: #e53935;
+}
+	.menu-btn {
+  position: absolute;
+  left: 12px;
+  cursor: pointer;
+}
+
+.menu-btn .material-icons {
+  font-size: 26px;
+  color: white;
+}
+
+/* SIDE MENU */
+.side-menu {
+  position: fixed;
+  top: 0;
+  left: -250px;
+  width: 250px;
+  height: 100%;
+  background: white;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+  transition: 0.3s;
+  z-index: 1000;
+  padding-top: 60px;
+}
+
+.side-menu.open {
+  left: 0;
+}
+
+.menu-item {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.menu-item:hover {
+  background: #f5f5f5;
+}
+
+/* OVERLAY */
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.3);
+  display: none;
+  z-index: 999;
+}
+</style>
+</head>
+
+<body>
+<div id="sideMenu" class="side-menu">
+	<div class="menu-item" onclick="setMode('create')">
+	     Create New
+</div>
+	<div class="menu-item" onclick="setMode('edit')">
+	     Edit Existing
+ 	 </div>
+</div>
+<div id="overlay" onclick="toggleMenu()"></div>
+	
+<div class="header">
+<div class="menu-btn" onclick="toggleMenu()">
+  <span class="material-icons">menu</span>
+</div>
+  <div class="header-title">Solar Installation</div>
+  <div class="profile-circle" onclick="openDashboard()">👤</div>
+</div>
+	
+<div class="container" id="formScreen">
+  
+<div id="loading">Loading... ⏳</div>
+
+<label>Service Number</label>
+<div class="row">
+<input id="service" placeholder="Enter Service Number"
+       oninput="resetMessages()" onkeypress="handleKey(event)">
+  <button class="icon-btn" onclick="fetchData()">🔍</button>
+  <button class="icon-btn" onclick="reloadForm()">⟳</button>
+</div>
+
+<div id="duplicateMsg" style="color:red; display:none; margin-top:5px;">
+  ⚠️ This service number already submitted
+</div>
+
+<div id="errorMsg" class="error">Service Number not found </div>
+
+<label>Customer Name</label>
+<input id="name">
+
+<label>Phone</label>
+<input id="phone">
+
+<label>Address</label>
+<input id="address">
+
+<label>Division</label>
+<input id="division">
+
+<label>Sub Division</label>
+<input id="subdivision">
+
+<label>Section</label>
+<input id="section">
+
+<label>Distribution</label>
+<input id="distribution">
+
+<h3>Upload Images</h3>
+
+<div class="file-box file-wrapper">
+  <label>Panels Image</label>
+  <input type="file" id="panels" accept="image/*,application/pdf" onchange="showDelete(this)">
+
+  <label>Panel No.1</label>
+  <input type="text" id="panel1" placeholder="Enter Panel Number 1">
+
+  <label>Panel No.2</label>
+  <input type="text" id="panel2" placeholder="Enter Panel Number 2">
+	
+  <label>Panel No.3</label>
+  <input type="text" id="panel3" placeholder="Enter Panel Number 3">
+
+  <label>Panel No.4</label>
+  <input type="text" id="panel4" placeholder="Enter Panel Number 4">
+
+  <button type="button" class="delete-btn" onclick="removeFile('panels')">
+    <span class="material-icons">delete</span>
+  </button>
+</div>
+
+<div class="file-box file-wrapper">
+  <label>Inverter Image</label>
+  <input type="file" id="inverter" accept="image/*,application/pdf" onchange="showDelete(this)">
+
+  <label>Inverter Serial Number</label>
+  <input type="text" id="inverterSerial" placeholder="Enter Inverter Serial Number">
+
+  <button type="button" class="delete-btn" onclick="removeFile('inverter')">
+    <span class="material-icons">delete</span>
+  </button>
+</div>
+
+<div class="file-box file-wrapper">
+<label>Earth Image</label>
+<input type="file" id="earth" accept="image/*,application/pdf" onchange="showDelete(this)">
+<button type="button" class="delete-btn" onclick="removeFile('earth')">
+    <span class="material-icons">delete</span>
+  </button>
+</div>
+
+<div class="file-box file-wrapper">
+  <label>Current Bill</label>
+<input type="file" id="bill" accept="image/*,application/pdf" onchange="showDelete(this)">
+<button type="button" class="delete-btn" onclick="removeFile('bill')">
+    <span class="material-icons">delete</span>
+  </button>
+</div>
+
+<div class="file-box file-wrapper">
+<label>Aadhar Card</label>
+<input type="file" id="aadhar" accept="image/*,application/pdf" onchange="showDelete(this)">
+<button type="button" class="delete-btn" onclick="removeFile('aadhar')">
+    <span class="material-icons">delete</span>
+  </button>
+</div>
+	
+<div class="file-box file-wrapper">
+<label>Document Image 1</label>
+<input type="file" id="doc1" accept="image/*,application/pdf" onchange="showDelete(this)">
+<button type="button" class="delete-btn" onclick="removeFile('doc1')">
+    <span class="material-icons">delete</span>
+  </button>
+</div>
+	
+<div class="file-box file-wrapper">
+<label>Document Image 2</label>
+<input type="file" id="doc2" accept="image/*,application/pdf" onchange="showDelete(this)">
+<button type="button" class="delete-btn" onclick="removeFile('doc2')">
+    <span class="material-icons">delete</span>
+  </button>
+</div>
+
+<button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit</button>
+
+</div>
+
+<!-- SUCCESS SCREEN -->
+<div id="successScreen">
+  <h2 style="color:green;">✅ Submitted Successfully</h2>
+  <p>Your data has been saved.</p>
+  <button class="new-entry-btn" onclick="reloadForm()">New Entry</button>
+</div>
+
+<script>
+	let mode = "create";
+
+const params = new URLSearchParams(window.location.search);
+if (params.get("mode")) {
+  mode = params.get("mode");
+}
+function readFile(input) {
+  return new Promise((resolve) => {
+    const file = input.files[0];
+    if (!file) return resolve("");
+    const reader = new FileReader();
+    reader.onload = e => resolve(e.target.result);
+    reader.readAsDataURL(file);
+  });
+}
+async function compressImage(input) {
+  return new Promise(resolve => {
+    const file = input.files[0];
+    if (!file) return resolve("");
+
+    // If PDF → don't compress
+    if (file.type === "application/pdf") {
+      const reader = new FileReader();
+      reader.onload = e => resolve(e.target.result);
+      reader.readAsDataURL(file);
+      return;
+    }
+
+    const img = new Image();
+    const reader = new FileReader();
+
+    reader.onload = e => {
+      img.src = e.target.result;
+    };
+
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      const MAX_WIDTH = 800;
+      const scale = MAX_WIDTH / img.width;
+
+      canvas.width = MAX_WIDTH;
+      canvas.height = img.height * scale;
+
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      resolve(canvas.toDataURL("image/jpeg", 0.7));
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
+
+function handleKey(e){
+
+  // 🔥 Hide old messages
+  document.getElementById("duplicateMsg").style.display = "none";
+  document.getElementById("errorMsg").style.display = "none";
+
+  // 🔥 Reset loading text
+  loading.innerHTML = "Loading... ⏳";
+
+  if(e.key==="Enter") fetchData();
+}
+
+async function fetchData() {
+  const service = document.getElementById("service").value;
+  if (!service) return;
+
+loading.innerHTML = "Loading... ⏳";
+  loading.style.display = "block";
+
+const url = "https://script.google.com/macros/s/AKfycbwhlMxTxB4pPXi6ApKLO60yRMF_HKSutI0R98xv-S3fyLxsVCQ0jUosaLaUDBQIa88v/exec?service=" + service;
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+
+    loading.style.display = "none";
+
+    if (!data || data.name === "NOT FOUND") {
+      errorMsg.style.display = "block";
+      clearFields();
+      return;
+    }
+
+    errorMsg.style.display = "none";
+
+    document.getElementById("name").value = data.name;
+    document.getElementById("phone").value = data.phone;
+    document.getElementById("address").value = data.address;
+    document.getElementById("division").value = data.division;
+    document.getElementById("subdivision").value = data.subdivision;
+    document.getElementById("section").value = data.section;
+    document.getElementById("distribution").value = data.distribution;
+
+  } catch (err) {
+    loading.style.display = "none";
+    alert("Error fetching data ❌");
+    console.log(err);
+  }
+}
+
+async function submitForm() {
+
+if (!document.getElementById("service").value.trim()) {
+  document.getElementById("errorMsg").innerText = "Service Number is required";
+  document.getElementById("errorMsg").style.display = "block";
+  return;
+}
+
+  document.getElementById("submitBtn").disabled = true;
+
+loading.innerHTML = "Uploading images... Please wait ⏳";
+loading.style.display = "block";
+
+submitBtn.innerText = "Uploading...";
+submitBtn.disabled = true;
+
+const [
+  panelsData,
+  inverterData,
+  earthData,
+  billData,
+  aadharData,
+  doc1Data,
+  doc2Data
+] = await Promise.all([
+  compressImage(panels),
+  compressImage(inverter),
+  compressImage(earth),
+  compressImage(bill),
+  compressImage(aadhar),
+  compressImage(doc1),
+  compressImage(doc2)
+]);
+
+const data = {
+	mode: mode,
+  serviceNumber: document.getElementById("service").value,
+  name: document.getElementById("name").value,
+  phone: document.getElementById("phone").value,
+  address: document.getElementById("address").value,
+  division: document.getElementById("division").value,
+  subdivision: document.getElementById("subdivision").value,
+  section: document.getElementById("section").value,
+  distribution: document.getElementById("distribution").value,
+
+  panels: panelsData,
+	panel1: document.getElementById("panel1").value,
+panel2: document.getElementById("panel2").value,
+	panel3: document.getElementById("panel3").value,
+panel4: document.getElementById("panel4").value,
+	
+  inverter: inverterData,
+	inverterSerial: document.getElementById("inverterSerial").value,
+	
+  earth: earthData,
+  bill: billData,
+  aadhar: aadharData,
+  doc1: doc1Data,
+  doc2: doc2Data
+};
+
+  try {
+const res = await fetch("https://script.google.com/macros/s/AKfycbwhlMxTxB4pPXi6ApKLO60yRMF_HKSutI0R98xv-S3fyLxsVCQ0jUosaLaUDBQIa88v/exec", {
+  method: "POST",
+  body: JSON.stringify(data)
+});
+
+const result = await res.json();
+
+loading.style.display = "none";
+
+if (result.status === "ALREADY_SUBMITTED") {
+
+  if (mode === "create") {
+    document.getElementById("duplicateMsg").style.display = "block";
+
+    submitBtn.innerText = "Submit";
+    submitBtn.disabled = false;
+    loading.style.display = "none";
+    return;
+  }
+
+  // EDIT MODE → allow
+}
+
+    loading.style.display = "none";
+    submitBtn.innerText = "Submit";
+submitBtn.disabled = false;
+
+
+    formScreen.style.display = "none";
+    loading.innerHTML = "Loading... ⏳";
+    successScreen.style.display = "block";
+
+  } catch (err) {
+  loading.innerHTML = "Loading... ⏳";
+    loading.style.display = "none";
+    submitBtn.innerText = "Submit";
+submitBtn.disabled = false;
+    alert("Submission failed");
+    console.log(err);
+  }
+
+  document.getElementById("submitBtn").disabled = false;
+}
+
+function reloadForm(){
+
+  // Show form again
+  document.getElementById("formScreen").style.display = "block";
+
+  // Hide success screen
+  document.getElementById("successScreen").style.display = "none";
+
+  // Clear text fields
+  document.getElementById("service").value = "";
+  document.getElementById("name").value = "";
+  document.getElementById("phone").value = "";
+  document.getElementById("address").value = "";
+  document.getElementById("division").value = "";
+  document.getElementById("subdivision").value = "";
+  document.getElementById("section").value = "";
+  document.getElementById("distribution").value = "";
+
+  // Clear file inputs
+  document.getElementById("panels").value = "";
+	document.getElementById("panel1").value = "";
+document.getElementById("panel2").value = "";
+	document.getElementById("panel3").value = "";
+document.getElementById("panel4").value = "";
+  document.getElementById("inverter").value = "";
+	document.getElementById("inverterSerial").value = "";
+  document.getElementById("earth").value = "";
+  document.getElementById("bill").value = "";
+  document.getElementById("aadhar").value = "";
+  document.getElementById("doc1").value = "";
+  document.getElementById("doc2").value = "";
+
+  // Hide error message
+  document.getElementById("errorMsg").style.display = "none";
+
+  // Focus back to first field
+  document.getElementById("service").focus();
+	document.querySelectorAll(".delete-btn").forEach(btn => {
+  btn.style.display = "none";
+});
+}
+
+function clearFields(){
+  document.getElementById("name").value="";
+  document.getElementById("phone").value="";
+  document.getElementById("address").value="";
+  document.getElementById("division").value="";
+  document.getElementById("subdivision").value="";
+  document.getElementById("section").value="";
+  document.getElementById("distribution").value="";
+}
+
+function resetMessages(){
+  document.getElementById("duplicateMsg").style.display = "none";
+  document.getElementById("errorMsg").style.display = "none";
+}
+
+function openDashboard() {
+  window.location.href = "dashboard.html";
+}
+function showDelete(input) {
+  const btn = input.parentElement.querySelector(".delete-btn");
+  btn.style.display = input.files.length ? "block" : "none";
+
+  // 🔥 Force remove any green color
+  input.style.background = "#eee";
+}
+
+function removeFile(id) {
+  const input = document.getElementById(id);
+  input.value = "";
+  input.style.background = "#eee"; // 🔥 reset color
+  input.parentElement.querySelector(".delete-btn").style.display = "none";
+}
+	function toggleMenu() {
+  const menu = document.getElementById("sideMenu");
+  const overlay = document.getElementById("overlay");
+
+  menu.classList.toggle("open");
+
+  if (menu.classList.contains("open")) {
+    overlay.style.display = "block";
+  } else {
+    overlay.style.display = "none";
+  }
+}
+
+function setMode(selectedMode) {
+  mode = selectedMode;
+
+  document.querySelector(".header-title").innerText =
+    mode === "edit" ? "Edit Entry" : "New Entry";
+
+  toggleMenu();
+}
+</script>
+	<!-- <script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js')
+    .then(() => console.log("Service Worker Registered"))
+    .catch(err => console.log("SW error:", err));
+}
+</script> -->
+</body>
+</html>
