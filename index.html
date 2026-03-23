@@ -685,14 +685,10 @@ function removeFile(id) {
     overlay.style.display = "none";
   }
 }
-
 function setMode(selectedMode) {
-  mode = selectedMode;
-
-  document.querySelector(".header-title").innerText =
-    mode === "edit" ? "Edit Entry" : "New Entry";
-
-  toggleMenu();
+  if (mode !== selectedMode) {
+    window.location.href = `index.html?mode=${selectedMode}`;
+  }
 }
 </script>
 	<!-- <script>
