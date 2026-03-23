@@ -561,8 +561,8 @@ loading.style.display = "none";
 if (result.status === "ALREADY_SUBMITTED") {
 
   if (mode === "create") {
-  duplicateMsg.innerText = "⚠️ This service number already exists";
-  duplicateMsg.style.display = "block";
+    duplicateMsg.innerText = "This service number already exists";
+    duplicateMsg.style.display = "block";
 
     submitBtn.innerText = "Submit";
     submitBtn.disabled = false;
@@ -570,7 +570,14 @@ if (result.status === "ALREADY_SUBMITTED") {
     return;
   }
 
-  // EDIT MODE → allow
+  // ✅ EDIT MODE → treat as SUCCESS
+  formScreen.style.display = "none";
+  successScreen.style.display = "block";
+
+  submitBtn.innerText = "Submit";
+  submitBtn.disabled = false;
+  loading.style.display = "none";
+  return;
 }
 
     loading.style.display = "none";
