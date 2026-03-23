@@ -400,15 +400,24 @@ input[readonly] {
   const submitBtn = document.getElementById("submitBtn");
   const formScreen = document.getElementById("formScreen");
   const successScreen = document.getElementById("successScreen");
-	let mode = "create";
-  
+
+let mode = "create";
+
 const params = new URLSearchParams(window.location.search);
-if (params.get("mode")) {
-  mode = params.get("mode");
+const urlMode = params.get("mode");
+
+if (urlMode === "edit") {
+  mode = "edit";
+} else {
+  mode = "create";
 }
-  document.querySelector(".header-title").innerText =
-  mode === "edit" ? "Edit Entry" : "New Entry";
-  
+
+// 🔥 SET HEADER TEXT
+const titleEl = document.querySelector(".header-title");
+if (titleEl) {
+  titleEl.innerText = mode === "edit" ? "Edit Entry" : "Create New";
+}
+	
 function readFile(input) {
   return new Promise((resolve) => {
     const file = input.files[0];
@@ -704,11 +713,11 @@ function removeFile(id) {
     overlay.style.display = "none";
   }
 }
+
 function setMode(selectedMode) {
-  if (mode !== selectedMode) {
-    window.location.href = `index.html?mode=${selectedMode}`;
-  }
+  window.location.href = `index.html?mode=${selectedMode}`;
 }
+	
 </script>
 	<!-- <script>
 if ('serviceWorker' in navigator) {
