@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -518,14 +517,14 @@ const url = "https://script.google.com/macros/s/AKfycbwhlMxTxB4pPXi6ApKLO60yRMF_
 async function submitForm() {
   errorMsg.style.display = "none";
 duplicateMsg.style.display = "none";
-
+	
 if (!document.getElementById("service").value.trim()) {
   document.getElementById("errorMsg").innerText = "Service Number is required";
   document.getElementById("errorMsg").style.display = "block";
   return;
 }
 
-loading.innerHTML = "Uploading images... Please wait ⏳";
+loading.innerHTML = "Uploading... Please wait ⏳";
 loading.style.display = "block";
 
 submitBtn.innerText = "Uploading...";
@@ -550,7 +549,7 @@ compressImage(document.getElementById("doc2"))
 ]);
 
 const data = {
-	mode: mode,
+  mode: mode,
   serviceNumber: document.getElementById("service").value,
   name: document.getElementById("name").value,
   phone: document.getElementById("phone").value,
@@ -560,13 +559,13 @@ const data = {
   section: document.getElementById("section").value,
   distribution: document.getElementById("distribution").value,
 
-  panels: panelsData,
+    panels: panelsData,
 	panel1: document.getElementById("panel1").value,
-panel2: document.getElementById("panel2").value,
+	panel2: document.getElementById("panel2").value,
 	panel3: document.getElementById("panel3").value,
-panel4: document.getElementById("panel4").value,
+	panel4: document.getElementById("panel4").value,
 	
-  inverter: inverterData,
+  	inverter: inverterData,
 	inverterSerial: document.getElementById("inverterSerial").value,
 	
   earth: earthData,
@@ -585,6 +584,16 @@ const res = await fetch("https://script.google.com/macros/s/AKfycbwhlMxTxB4pPXi6
 const result = await res.json();
 
 loading.style.display = "none";
+
+if (result.status === "NOT_FOUND") {
+  errorMsg.innerText = "❌ Service number not found for editing";
+  errorMsg.style.display = "block";
+
+  submitBtn.innerText = "Submit";
+  submitBtn.disabled = false;
+  loading.style.display = "none";
+  return;
+}
 
 if (result.status === "ALREADY_SUBMITTED") {
 
