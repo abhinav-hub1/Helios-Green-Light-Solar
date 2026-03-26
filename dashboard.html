@@ -29,6 +29,15 @@ body {
   cursor: pointer;
 }
 
+/* COUNT BOX */
+.count-box {
+  text-align: center;
+  padding: 10px;
+  font-weight: bold;
+  color: #1e88e5;
+  background: #e3f2fd;
+}
+
 /* CONTAINER */
 .container {
   padding: 12px;
@@ -50,29 +59,24 @@ body {
   box-shadow: 0 3px 8px rgba(0,0,0,0.08);
 }
 
-/* SERVICE */
 .service {
   font-size: 16px;
   font-weight: bold;
   color: #1e88e5;
-  margin-bottom: 6px;
 }
 
-/* TEXT */
 .text {
   font-size: 14px;
   color: #444;
   margin-top: 4px;
 }
 
-/* TIME */
 .time {
   font-size: 12px;
   color: #888;
   margin-top: 6px;
 }
 
-/* LOADING */
 #loading {
   text-align: center;
   padding: 20px;
@@ -88,6 +92,8 @@ body {
   <div class="back-btn" onclick="goBack()">←</div>
   Dashboard
 </div>
+
+<div class="count-box" id="totalCount">Total: 0</div>
 
 <div id="loading">Loading data...</div>
 
@@ -110,6 +116,10 @@ async function loadData() {
 
   loading.style.display = "none";
 
+  // ✅ TOTAL COUNT
+  document.getElementById("totalCount").innerText =
+    "Total Submissions: " + data.length;
+
   // 🔥 DATE LOGIC
   const today = new Date();
   const yesterday = new Date();
@@ -129,25 +139,32 @@ async function loadData() {
     return d.toLocaleDateString("en-GB");
   }
 
+  // 🔥 COUNT PER DAY
+  const counts = {};
+  data.forEach(item => {
+    const group = formatDate(item.timestamp);
+    counts[group] = (counts[group] || 0) + 1;
+  });
+
   let currentGroup = "";
 
-  // 🔥 MAIN LOOP
+  // 🔥 DISPLAY DATA
   data.reverse().forEach(item => {
 
     const group = formatDate(item.timestamp);
 
-    // Add date heading
     if (group !== currentGroup) {
       currentGroup = group;
 
       container.innerHTML += `
-        <div class="date-header">${group}</div>
+        <div class="date-header">
+          ${group} (${counts[group]})
+        </div>
       `;
     }
 
     const time = new Date(item.timestamp).toLocaleTimeString();
 
-    // Add card
     container.innerHTML += `
       <div class="card">
         <div class="service">${item.service}</div>
@@ -160,12 +177,12 @@ async function loadData() {
   });
 }
 
-// 🔙 BACK BUTTON
+// BACK
 function goBack() {
   window.location.href = "index.html";
 }
 
-// 🚀 LOAD DATA
+// LOAD
 loadData();
 
 </script>
