@@ -24,19 +24,17 @@ body {
 .back-btn {
   position: absolute;
   left: 12px;
-  font-size: 20px;
   cursor: pointer;
 }
 
-/* calendar button */
 .filter-btn {
   position: absolute;
   right: 12px;
-  font-size: 18px;
   cursor: pointer;
+  font-size: 18px;
 }
 
-/* popup filter */
+/* popup */
 #filterPanel {
   display: none;
   position: absolute;
@@ -47,12 +45,12 @@ body {
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   z-index: 1000;
-  width: 200px;
+  width: 220px;
 }
 
 #filterPanel input {
   width: 100%;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   padding: 6px;
 }
 
@@ -92,28 +90,25 @@ body {
 }
 
 .service {
-  font-size: 16px;
   font-weight: bold;
   color: #1e88e5;
 }
 
 .text {
   font-size: 14px;
-  color: #444;
   margin-top: 4px;
 }
 
 .time {
   font-size: 12px;
   color: #888;
-  margin-top: 6px;
 }
 
 #loading {
   text-align: center;
-  padding: 20px;
+  padding: 15px;
+  display: none;
   color: #1e88e5;
-  font-weight: 600;
 }
 </style>
 </head>
@@ -123,21 +118,18 @@ body {
 <div class="header">
   <div class="back-btn" onclick="goBack()">←</div>
   Dashboard
-
-  <!-- 📅 small filter button -->
   <div class="filter-btn" onclick="toggleFilter()">📅</div>
 </div>
 
-<!-- FILTER PANEL -->
 <div id="filterPanel">
   <input type="date" id="fromDate">
   <input type="date" id="toDate">
-  <button onclick="applyFilter()">Apply</button>
+  <button onclick="applyFilter()">Apply Filter</button>
 </div>
 
 <div class="count-box" id="totalCount">Total: 0</div>
 
-<div id="loading">Loading data...</div>
+<div id="loading">Loading...</div>
 
 <div class="container" id="data"></div>
 
@@ -146,19 +138,12 @@ body {
 let fullData = [];
 
 async function loadData() {
+  document.getElementById("loading").style.display = "block";
 
-  const loading = document.getElementById("loading");
-  const container = document.getElementById("data");
-
-  loading.style.display = "block";
-  container.innerHTML = "";
-
-  const url = "https://script.google.com/macros/s/AKfycbwhlMxTxB4pPXi6ApKLO60yRMF_HKSutI0R98xv-S3fyLxsVCQ0jUosaLaUDBQIa88v/exec?type=all";
-
-  const res = await fetch(url);
+  const res = await fetch("https://script.google.com/macros/s/AKfycbwhlMxTxB4pPXi6ApKLO60yRMF_HKSutI0R98xv-S3fyLxsVCQ0jUosaLaUDBQIa88v/exec?type=all");
   fullData = await res.json();
 
-  loading.style.display = "none";
+  document.getElementById("loading").style.display = "none";
 
   renderData(fullData);
 }
@@ -172,23 +157,11 @@ function renderData(data) {
     "Total Submissions: " + data.length;
 
   const today = new Date();
-  const yesterday = new Date();
-  yesterday.setDate(today.getDate() - 1);
 
   function formatDate(dateStr) {
     const d = new Date(dateStr.replace(" ", "T"));
-
-    if (d.toDateString() === today.toDateString()) return "Today";
-    if (d.toDateString() === yesterday.toDateString()) return "Yesterday";
-
     return d.toLocaleDateString("en-GB");
   }
-
-  const counts = {};
-  data.forEach(item => {
-    const group = formatDate(item.timestamp);
-    counts[group] = (counts[group] || 0) + 1;
-  });
 
   let currentGroup = "";
 
@@ -201,9 +174,7 @@ function renderData(data) {
       currentGroup = group;
 
       container.innerHTML += `
-        <div class="date-header">
-          ${group} (${counts[group]})
-        </div>
+        <div class="date-header">${group}</div>
       `;
     }
 
@@ -214,32 +185,23 @@ function renderData(data) {
         <div class="service">${item.service}</div>
         <div class="text">Name: ${item.name}</div>
         <div class="text">Phone: ${item.phone}</div>
-        <div class="text">Address: ${item.address}</div>
-        <div class="time">Time: ${time}</div>
+        <div class="time">${time}</div>
       </div>
     `;
   });
 }
 
-// ✅ toggle panel
 function toggleFilter() {
   const panel = document.getElementById("filterPanel");
   panel.style.display = panel.style.display === "none" ? "block" : "none";
 }
 
-// ✅ filter logic
 function applyFilter() {
+
+  document.getElementById("loading").style.display = "block";
 
   const from = document.getElementById("fromDate").value;
   const to = document.getElementById("toDate").value;
-
-  if (!from && !to) {
-    renderData(fullData);
-    return;
-  }
-
-  const fromDate = from ? new Date(from + "T00:00:00") : null;
-  const toDate = to ? new Date(to + "T23:59:59") : null;
 
   const filtered = fullData.filter(item => {
 
@@ -247,25 +209,26 @@ function applyFilter() {
 
     const d = new Date(item.timestamp.replace(" ", "T"));
 
-    if (isNaN(d)) return false;
+    // 🔥 convert to YYYY-MM-DD
+    const itemDate = d.toISOString().split("T")[0];
 
-    if (fromDate && d < fromDate) return false;
-    if (toDate && d > toDate) return false;
+    if (from && itemDate < from) return false;
+    if (to && itemDate > to) return false;
 
     return true;
   });
 
-  renderData(filtered);
-
-  document.getElementById("filterPanel").style.display = "none";
+  setTimeout(() => {
+    document.getElementById("loading").style.display = "none";
+    renderData(filtered);
+    document.getElementById("filterPanel").style.display = "none";
+  }, 500);
 }
 
-// BACK
 function goBack() {
   window.location.href = "index.html";
 }
 
-// LOAD
 loadData();
 
 </script>
