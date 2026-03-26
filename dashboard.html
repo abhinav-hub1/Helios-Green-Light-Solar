@@ -57,18 +57,37 @@ body {
 #filterPanel button {
   width: 100%;
   padding: 6px;
-  background: #1e88e5;
-  color: white;
   border: none;
   cursor: pointer;
 }
 
+.apply-btn {
+  background: #1e88e5;
+  color: white;
+}
+
+.clear-btn {
+  margin-top: 6px;
+  background: #f44336;
+  color: white;
+  border-radius: 6px;
+}
+
+/* count */
 .count-box {
   text-align: center;
   padding: 10px;
   font-weight: bold;
   color: #1e88e5;
   background: #e3f2fd;
+}
+
+/* selected range */
+#selectedRange {
+  text-align:center;
+  font-size:13px;
+  color:#555;
+  margin-top:5px;
 }
 
 .container {
@@ -124,32 +143,19 @@ body {
 <div id="filterPanel">
   <input type="date" id="fromDate">
   <input type="date" id="toDate">
-  <button onclick="applyFilter()">Apply Filter</button>
-<button onclick="clearFilter()" style="margin-top:6px; background:#ccc; color:#000;">
-  Clear
-</button>
+  <button class="apply-btn" onclick="applyFilter()">Apply Filter</button>
+  <button class="clear-btn" onclick="clearFilter()">Clear Filter</button>
 </div>
 
 <div class="count-box" id="totalCount">Total: 0</div>
+
+<div id="selectedRange"></div>
 
 <div id="loading">Loading...</div>
 
 <div class="container" id="data"></div>
 
 <script>
-
-  function clearFilter() {
-
-  // clear inputs
-  document.getElementById("fromDate").value = "";
-  document.getElementById("toDate").value = "";
-
-  // show full data again
-  renderData(fullData);
-
-  // close popup
-  document.getElementById("filterPanel").style.display = "none";
-}
 
 let fullData = [];
 
@@ -174,17 +180,14 @@ function renderData(data) {
 
   const today = new Date();
 
-function formatDate(dateStr) {
-  const d = new Date(dateStr.replace(" ", "T"));
+  function formatDate(dateStr) {
+    const d = new Date(dateStr.replace(" ", "T"));
 
-  const today = new Date();
+    if (d.toDateString() === today.toDateString()) return "Today";
 
-  if (d.toDateString() === today.toDateString()) {
-    return "Today";
+    return d.toLocaleDateString("en-GB");
   }
 
-  return d.toLocaleDateString("en-GB");
-}
   let currentGroup = "";
 
   data.slice().reverse().forEach(item => {
@@ -192,28 +195,23 @@ function formatDate(dateStr) {
     const d = new Date(item.timestamp.replace(" ", "T"));
     const group = formatDate(item.timestamp);
 
-  if (group !== currentGroup) {
-  currentGroup = group;
+    if (group !== currentGroup) {
+      currentGroup = group;
 
-  let displayText = group;
+      let displayText = group;
 
-  // ✅ FIXED CONDITION
-  if (group === "Today") {
+      if (group === "Today") {
+        const todayCount = data.filter(item => {
+          const d = new Date(item.timestamp.replace(" ", "T"));
+          return d.toDateString() === today.toDateString();
+        }).length;
 
-    const todayCount = data.filter(item => {
-      if (!item.timestamp) return false;
+        displayText = `Today (${todayCount})`;
+      }
 
-      const d = new Date(item.timestamp.replace(" ", "T"));
-      return d.toDateString() === new Date().toDateString();
-    }).length;
+      container.innerHTML += `<div class="date-header">${displayText}</div>`;
+    }
 
-    displayText = `Today (${todayCount})`;
-  }
-
-  container.innerHTML += `
-    <div class="date-header">${displayText}</div>
-  `;
-}
     const time = d.toLocaleTimeString();
 
     container.innerHTML += `
@@ -227,11 +225,23 @@ function formatDate(dateStr) {
   });
 }
 
+// toggle filter
 function toggleFilter() {
   const panel = document.getElementById("filterPanel");
+
   panel.style.display = panel.style.display === "none" ? "block" : "none";
+
+  const today = new Date().toISOString().split("T")[0];
+
+  if (!document.getElementById("fromDate").value) {
+    document.getElementById("fromDate").value = today;
+  }
+  if (!document.getElementById("toDate").value) {
+    document.getElementById("toDate").value = today;
+  }
 }
 
+// apply filter
 function applyFilter() {
 
   document.getElementById("loading").style.display = "block";
@@ -241,11 +251,7 @@ function applyFilter() {
 
   const filtered = fullData.filter(item => {
 
-    if (!item.timestamp) return false;
-
     const d = new Date(item.timestamp.replace(" ", "T"));
-
-    // 🔥 convert to YYYY-MM-DD
     const itemDate = d.toISOString().split("T")[0];
 
     if (from && itemDate < from) return false;
@@ -254,11 +260,31 @@ function applyFilter() {
     return true;
   });
 
+  // show selected range
+  let text = "";
+  if (from && to) text = `📅 ${from.split("-").reverse().join("/")} → ${to.split("-").reverse().join("/")}`;
+  else if (from) text = `📅 From ${from.split("-").reverse().join("/")}`;
+  else if (to) text = `📅 Till ${to.split("-").reverse().join("/")}`;
+
+  document.getElementById("selectedRange").innerText = text;
+
   setTimeout(() => {
     document.getElementById("loading").style.display = "none";
     renderData(filtered);
     document.getElementById("filterPanel").style.display = "none";
-  }, 500);
+  }, 400);
+}
+
+// clear filter
+function clearFilter() {
+
+  document.getElementById("fromDate").value = "";
+  document.getElementById("toDate").value = "";
+  document.getElementById("selectedRange").innerText = "";
+
+  renderData(fullData);
+
+  document.getElementById("filterPanel").style.display = "none";
 }
 
 function goBack() {
