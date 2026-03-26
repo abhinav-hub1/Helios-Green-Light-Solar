@@ -158,11 +158,17 @@ function renderData(data) {
 
   const today = new Date();
 
-  function formatDate(dateStr) {
-    const d = new Date(dateStr.replace(" ", "T"));
-    return d.toLocaleDateString("en-GB");
+function formatDate(dateStr) {
+  const d = new Date(dateStr.replace(" ", "T"));
+
+  const today = new Date();
+
+  if (d.toDateString() === today.toDateString()) {
+    return "Today";
   }
 
+  return d.toLocaleDateString("en-GB");
+}
   let currentGroup = "";
 
   data.slice().reverse().forEach(item => {
@@ -170,14 +176,28 @@ function renderData(data) {
     const d = new Date(item.timestamp.replace(" ", "T"));
     const group = formatDate(item.timestamp);
 
-    if (group !== currentGroup) {
-      currentGroup = group;
+  if (group !== currentGroup) {
+  currentGroup = group;
 
-      container.innerHTML += `
-        <div class="date-header">${group}</div>
-      `;
-    }
+  let displayText = group;
 
+  // ✅ FIXED CONDITION
+  if (group === "Today") {
+
+    const todayCount = data.filter(item => {
+      if (!item.timestamp) return false;
+
+      const d = new Date(item.timestamp.replace(" ", "T"));
+      return d.toDateString() === new Date().toDateString();
+    }).length;
+
+    displayText = `Today (${todayCount})`;
+  }
+
+  container.innerHTML += `
+    <div class="date-header">${displayText}</div>
+  `;
+}
     const time = d.toLocaleTimeString();
 
     container.innerHTML += `
