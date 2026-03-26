@@ -273,12 +273,16 @@ function toggleFilter() {
 // apply filter
 function applyFilter() {
 
-  document.getElementById("loading").style.display = "block";
+  const loading = document.getElementById("loading");
+  loading.style.display = "block";
 
   const from = document.getElementById("fromDate").value;
   const to = document.getElementById("toDate").value;
 
   const filtered = fullData.filter(item => {
+
+    if (!item.timestamp) return false;
+
     const d = new Date(item.timestamp.replace(" ", "T"));
     const itemDate = d.toISOString().split("T")[0];
 
@@ -288,6 +292,13 @@ function applyFilter() {
     return true;
   });
 
+  // ✅ update UI immediately
+  renderData(filtered);
+
+  // ✅ hide loading immediately
+  loading.style.display = "none";
+
+  // ✅ show selected range
   let text = "";
   if (from && to) text = `📅 ${from.split("-").reverse().join("/")} → ${to.split("-").reverse().join("/")}`;
   else if (from) text = `📅 From ${from.split("-").reverse().join("/")}`;
@@ -295,11 +306,8 @@ function applyFilter() {
 
   document.getElementById("selectedRange").innerText = text;
 
-  setTimeout(() => {
-    document.getElementById("loading").style.display = "none";
-    renderData(filtered);
-    document.getElementById("filterPanel").style.display = "none";
-  }, 300);
+  // close popup
+  document.getElementById("filterPanel").style.display = "none";
 }
 
 // clear filter
@@ -309,11 +317,12 @@ function clearFilter() {
   document.getElementById("toDate").value = "";
   document.getElementById("selectedRange").innerText = "";
 
+  document.getElementById("loading").style.display = "none";
+
   renderData(fullData);
 
   document.getElementById("filterPanel").style.display = "none";
 }
-
 // close on outside click
 document.addEventListener("click", function(e) {
   const panel = document.getElementById("filterPanel");
