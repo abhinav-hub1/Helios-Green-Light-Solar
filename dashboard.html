@@ -34,6 +34,13 @@ body {
   padding: 12px;
 }
 
+/* DATE HEADER */
+.date-header {
+  margin: 10px 5px;
+  font-weight: bold;
+  color: #1e88e5;
+}
+
 /* CARD */
 .card {
   background: white;
@@ -43,7 +50,7 @@ body {
   box-shadow: 0 3px 8px rgba(0,0,0,0.08);
 }
 
-/* SERVICE NUMBER (highlight) */
+/* SERVICE */
 .service {
   font-size: 16px;
   font-weight: bold;
@@ -56,6 +63,13 @@ body {
   font-size: 14px;
   color: #444;
   margin-top: 4px;
+}
+
+/* TIME */
+.time {
+  font-size: 12px;
+  color: #888;
+  margin-top: 6px;
 }
 
 /* LOADING */
@@ -96,23 +110,62 @@ async function loadData() {
 
   loading.style.display = "none";
 
+  // 🔥 DATE LOGIC
+  const today = new Date();
+  const yesterday = new Date();
+  yesterday.setDate(today.getDate() - 1);
+
+  function formatDate(dateStr) {
+    const d = new Date(dateStr);
+
+    if (d.toDateString() === today.toDateString()) {
+      return "Today";
+    }
+
+    if (d.toDateString() === yesterday.toDateString()) {
+      return "Yesterday";
+    }
+
+    return d.toLocaleDateString("en-GB");
+  }
+
+  let currentGroup = "";
+
+  // 🔥 MAIN LOOP
   data.reverse().forEach(item => {
 
+    const group = formatDate(item.timestamp);
+
+    // Add date heading
+    if (group !== currentGroup) {
+      currentGroup = group;
+
+      container.innerHTML += `
+        <div class="date-header">${group}</div>
+      `;
+    }
+
+    const time = new Date(item.timestamp).toLocaleTimeString();
+
+    // Add card
     container.innerHTML += `
       <div class="card">
         <div class="service">${item.service}</div>
         <div class="text">Name: ${item.name}</div>
         <div class="text">Phone: ${item.phone}</div>
         <div class="text">Address: ${item.address}</div>
+        <div class="time">Time: ${time}</div>
       </div>
     `;
   });
 }
 
+// 🔙 BACK BUTTON
 function goBack() {
   window.location.href = "index.html";
 }
 
+// 🚀 LOAD DATA
 loadData();
 
 </script>
