@@ -514,9 +514,57 @@ const url = "https://script.google.com/macros/s/AKfycbwhlMxTxB4pPXi6ApKLO60yRMF_
   }
 }
 
+function isValidID(value) {
+  return /^[A-Z0-9]+$/.test(value);
+}
 async function submitForm() {
   errorMsg.style.display = "none";
 duplicateMsg.style.display = "none";
+
+	const panelIds = [
+  document.getElementById("panel1").value.trim(),
+  document.getElementById("panel2").value.trim(),
+  document.getElementById("panel3").value.trim(),
+  document.getElementById("panel4").value.trim()
+];
+
+const inverterId = document.getElementById("inverterSerial").value.trim();
+
+// 🔴 Validate Panel IDs
+const panelInputs = ["panel1","panel2","panel3","panel4"];
+
+// 🔴 Validate Panel IDs + Highlight
+for (let i = 0; i < panelIds.length; i++) {
+
+  const inputField = document.getElementById(panelInputs[i]);
+
+  if (panelIds[i] && !isValidID(panelIds[i])) {
+
+    // ❌ Highlight wrong field
+    inputField.style.border = "2px solid red";
+
+    errorMsg.innerText = `Panel ${i+1}: Only A-Z and 0-9 allowed`;
+    errorMsg.style.display = "block";
+    return;
+
+  } else {
+    // ✅ Reset border if correct
+    inputField.style.border = "1px solid #ccc";
+  }
+}
+
+// 🔴 Validate Inverter ID
+const inverterInput = document.getElementById("inverterSerial");
+
+if (inverterId && !isValidID(inverterId)) {
+  inverterInput.style.border = "2px solid red";
+
+  errorMsg.innerText = "Inverter: Only A-Z and 0-9 allowed";
+  errorMsg.style.display = "block";
+  return;
+} else {
+  inverterInput.style.border = "1px solid #ccc";
+}
 	
 if (!document.getElementById("service").value.trim()) {
   document.getElementById("errorMsg").innerText = "Service Number is required";
@@ -727,6 +775,17 @@ function setMode(selectedMode) {
   window.location.href = `index.html?mode=${selectedMode}`;
 }
 	
+["panel1","panel2","panel3","panel4","inverterSerial"].forEach(id => {
+  const input = document.getElementById(id);
+
+  input.addEventListener("input", () => {
+    input.value = input.value.toUpperCase();
+    input.value = input.value.replace(/[^A-Z0-9]/g, "");
+
+    // ✅ ADD THIS LINE (border reset)
+    input.style.border = "1px solid #ccc";
+  });
+});
 </script>
 	<!-- <script>
 if ('serviceWorker' in navigator) {
