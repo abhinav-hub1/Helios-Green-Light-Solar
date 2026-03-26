@@ -10,7 +10,6 @@ body {
   margin: 0;
 }
 
-/* HEADER */
 .header {
   background: #1e88e5;
   height: 55px;
@@ -29,7 +28,43 @@ body {
   cursor: pointer;
 }
 
-/* COUNT BOX */
+/* calendar button */
+.filter-btn {
+  position: absolute;
+  right: 12px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* popup filter */
+#filterPanel {
+  display: none;
+  position: absolute;
+  top: 60px;
+  right: 10px;
+  background: white;
+  padding: 12px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 1000;
+  width: 200px;
+}
+
+#filterPanel input {
+  width: 100%;
+  margin-bottom: 6px;
+  padding: 6px;
+}
+
+#filterPanel button {
+  width: 100%;
+  padding: 6px;
+  background: #1e88e5;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
 .count-box {
   text-align: center;
   padding: 10px;
@@ -38,39 +73,16 @@ body {
   background: #e3f2fd;
 }
 
-/* FILTER */
-.filter-box {
-  padding: 10px;
-  display: flex;
-  gap: 8px;
-}
-
-.filter-box input {
-  flex: 1;
-  padding: 6px;
-}
-
-.filter-box button {
-  padding: 6px 10px;
-  background: #1e88e5;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-/* CONTAINER */
 .container {
   padding: 12px;
 }
 
-/* DATE HEADER */
 .date-header {
   margin: 10px 5px;
   font-weight: bold;
   color: #1e88e5;
 }
 
-/* CARD */
 .card {
   background: white;
   padding: 14px;
@@ -111,16 +123,19 @@ body {
 <div class="header">
   <div class="back-btn" onclick="goBack()">←</div>
   Dashboard
+
+  <!-- 📅 small filter button -->
+  <div class="filter-btn" onclick="toggleFilter()">📅</div>
+</div>
+
+<!-- FILTER PANEL -->
+<div id="filterPanel">
+  <input type="date" id="fromDate">
+  <input type="date" id="toDate">
+  <button onclick="applyFilter()">Apply</button>
 </div>
 
 <div class="count-box" id="totalCount">Total: 0</div>
-
-<!-- ✅ FILTER UI -->
-<div class="filter-box">
-  <input type="date" id="fromDate">
-  <input type="date" id="toDate">
-  <button onclick="applyFilter()">Filter</button>
-</div>
 
 <div id="loading">Loading data...</div>
 
@@ -148,7 +163,6 @@ async function loadData() {
   renderData(fullData);
 }
 
-// ✅ RENDER FUNCTION (your logic moved here)
 function renderData(data) {
 
   const container = document.getElementById("data");
@@ -162,7 +176,7 @@ function renderData(data) {
   yesterday.setDate(today.getDate() - 1);
 
   function formatDate(dateStr) {
-    const d = new Date(dateStr);
+    const d = new Date(dateStr.replace(" ", "T"));
 
     if (d.toDateString() === today.toDateString()) return "Today";
     if (d.toDateString() === yesterday.toDateString()) return "Yesterday";
@@ -180,6 +194,7 @@ function renderData(data) {
 
   data.slice().reverse().forEach(item => {
 
+    const d = new Date(item.timestamp.replace(" ", "T"));
     const group = formatDate(item.timestamp);
 
     if (group !== currentGroup) {
@@ -192,7 +207,7 @@ function renderData(data) {
       `;
     }
 
-    const time = new Date(item.timestamp).toLocaleTimeString();
+    const time = d.toLocaleTimeString();
 
     container.innerHTML += `
       <div class="card">
@@ -206,7 +221,13 @@ function renderData(data) {
   });
 }
 
-// ✅ FILTER FUNCTION
+// ✅ toggle panel
+function toggleFilter() {
+  const panel = document.getElementById("filterPanel");
+  panel.style.display = panel.style.display === "none" ? "block" : "none";
+}
+
+// ✅ filter logic
 function applyFilter() {
 
   const from = document.getElementById("fromDate").value;
@@ -217,24 +238,26 @@ function applyFilter() {
     return;
   }
 
+  const fromDate = from ? new Date(from + "T00:00:00") : null;
+  const toDate = to ? new Date(to + "T23:59:59") : null;
+
   const filtered = fullData.filter(item => {
 
-    const d = new Date(item.timestamp);
+    if (!item.timestamp) return false;
 
-    const fromDate = from ? new Date(from) : null;
-    const toDate = to ? new Date(to) : null;
+    const d = new Date(item.timestamp.replace(" ", "T"));
+
+    if (isNaN(d)) return false;
 
     if (fromDate && d < fromDate) return false;
-
-    if (toDate) {
-      toDate.setHours(23,59,59);
-      if (d > toDate) return false;
-    }
+    if (toDate && d > toDate) return false;
 
     return true;
   });
 
   renderData(filtered);
+
+  document.getElementById("filterPanel").style.display = "none";
 }
 
 // BACK
