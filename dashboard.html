@@ -6,82 +6,94 @@
 <style>
 body {
   font-family: Arial, sans-serif;
-  background: #f4f6f8;
   margin: 0;
+  background: #f4f6f8;
 }
 
 /* HEADER */
 .header {
   background: #1e88e5;
-  height: 55px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
   color: white;
-  font-weight: 600;
+  padding: 15px;
+  text-align: center;
+  font-weight: bold;
+  position: relative;
 }
 
 .back-btn {
   position: absolute;
   left: 12px;
-  font-size: 20px;
+  top: 15px;
   cursor: pointer;
 }
 
-/* COUNT BOX */
-.count-box {
-  text-align: center;
+/* SUMMARY */
+.summary {
+  display: flex;
+  gap: 10px;
   padding: 10px;
-  font-weight: bold;
-  color: #1e88e5;
-  background: #e3f2fd;
 }
 
-/* CONTAINER */
-.container {
+.box {
+  flex: 1;
+  background: white;
   padding: 12px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-/* DATE HEADER */
-.date-header {
-  margin: 10px 5px;
-  font-weight: bold;
+.box h3 {
+  margin: 5px 0;
   color: #1e88e5;
+}
+
+/* SEARCH */
+.search {
+  padding: 10px;
+}
+
+.search input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+/* DATE GROUP */
+.group {
+  margin: 10px;
+}
+
+.group-header {
+  background: #e3f2fd;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 /* CARD */
 .card {
   background: white;
-  padding: 14px;
-  margin-bottom: 12px;
+  margin-top: 8px;
+  padding: 12px;
   border-radius: 10px;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 .service {
-  font-size: 16px;
   font-weight: bold;
   color: #1e88e5;
 }
 
 .text {
   font-size: 14px;
-  color: #444;
   margin-top: 4px;
 }
 
-.time {
-  font-size: 12px;
-  color: #888;
-  margin-top: 6px;
-}
-
-#loading {
-  text-align: center;
-  padding: 20px;
-  color: #1e88e5;
-  font-weight: 600;
+.hidden {
+  display: none;
 }
 </style>
 </head>
@@ -93,96 +105,112 @@ body {
   Dashboard
 </div>
 
-<div class="count-box" id="totalCount">Total: 0</div>
+<div class="summary">
+  <div class="box">
+    <div>Total</div>
+    <h3 id="total">0</h3>
+  </div>
+  <div class="box">
+    <div>Today</div>
+    <h3 id="today">0</h3>
+  </div>
+</div>
 
-<div id="loading">Loading data...</div>
+<div class="search">
+  <input type="text" id="search" placeholder="Search Service Number..." oninput="filterData()">
+</div>
 
-<div class="container" id="data"></div>
+<div id="data"></div>
 
 <script>
 
+let fullData = [];
+
 async function loadData() {
 
-  const loading = document.getElementById("loading");
-  const container = document.getElementById("data");
+  const res = await fetch("https://script.google.com/macros/s/AKfycbwhlMxTxB4pPXi6ApKLO60yRMF_HKSutI0R98xv-S3fyLxsVCQ0jUosaLaUDBQIa88v/exec?type=all");
+  fullData = await res.json();
 
-  loading.style.display = "block";
+  renderData(fullData);
+}
+
+function renderData(data) {
+
+  const container = document.getElementById("data");
   container.innerHTML = "";
 
-  const url = "https://script.google.com/macros/s/AKfycbwhlMxTxB4pPXi6ApKLO60yRMF_HKSutI0R98xv-S3fyLxsVCQ0jUosaLaUDBQIa88v/exec?type=all";
-
-  const res = await fetch(url);
-  const data = await res.json();
-
-  loading.style.display = "none";
-
-  // ✅ TOTAL COUNT
-  document.getElementById("totalCount").innerText =
-    "Total Submissions: " + data.length;
-
-  // 🔥 DATE LOGIC
   const today = new Date();
-  const yesterday = new Date();
-  yesterday.setDate(today.getDate() - 1);
 
-  function formatDate(dateStr) {
-    const d = new Date(dateStr);
+  // COUNTS
+  let todayCount = 0;
 
-    if (d.toDateString() === today.toDateString()) {
-      return "Today";
-    }
-
-    if (d.toDateString() === yesterday.toDateString()) {
-      return "Yesterday";
-    }
-
-    return d.toLocaleDateString("en-GB");
-  }
-
-  // 🔥 COUNT PER DAY
-  const counts = {};
   data.forEach(item => {
-    const group = formatDate(item.timestamp);
-    counts[group] = (counts[group] || 0) + 1;
+    const d = new Date(item.timestamp);
+    if (d.toDateString() === today.toDateString()) {
+      todayCount++;
+    }
   });
 
-  let currentGroup = "";
+  document.getElementById("total").innerText = data.length;
+  document.getElementById("today").innerText = todayCount;
 
-  // 🔥 DISPLAY DATA
-  data.reverse().forEach(item => {
+  // GROUPING
+  const groups = {};
 
-    const group = formatDate(item.timestamp);
+  data.forEach(item => {
+    const d = new Date(item.timestamp);
+    const key = d.toDateString();
 
-    if (group !== currentGroup) {
-      currentGroup = group;
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(item);
+  });
 
-      container.innerHTML += `
-        <div class="date-header">
-          ${group} (${counts[group]})
+  Object.keys(groups).reverse().forEach(date => {
+
+    const groupDiv = document.createElement("div");
+    groupDiv.className = "group";
+
+    const header = document.createElement("div");
+    header.className = "group-header";
+    header.innerText = `${date} (${groups[date].length})`;
+
+    const content = document.createElement("div");
+
+    header.onclick = () => {
+      content.classList.toggle("hidden");
+    };
+
+    groups[date].forEach(item => {
+      content.innerHTML += `
+        <div class="card">
+          <div class="service">${item.service}</div>
+          <div class="text">Name: ${item.name}</div>
+          <div class="text">Phone: ${item.phone}</div>
         </div>
       `;
-    }
+    });
 
-    const time = new Date(item.timestamp).toLocaleTimeString();
-
-    container.innerHTML += `
-      <div class="card">
-        <div class="service">${item.service}</div>
-        <div class="text">Name: ${item.name}</div>
-        <div class="text">Phone: ${item.phone}</div>
-        <div class="text">Address: ${item.address}</div>
-        <div class="time">Time: ${time}</div>
-      </div>
-    `;
+    groupDiv.appendChild(header);
+    groupDiv.appendChild(content);
+    container.appendChild(groupDiv);
   });
 }
 
-// BACK
+// SEARCH
+function filterData() {
+  const value = document.getElementById("search").value.toLowerCase();
+
+  const filtered = fullData.filter(item =>
+    item.service.toString().includes(value)
+  );
+
+  renderData(filtered);
+}
+
 function goBack() {
   window.location.href = "index.html";
 }
 
-// LOAD
 loadData();
 
 </script>
