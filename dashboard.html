@@ -10,6 +10,7 @@ body {
   margin: 0;
 }
 
+/* HEADER */
 .header {
   background: #1e88e5;
   height: 55px;
@@ -27,7 +28,7 @@ body {
   cursor: pointer;
 }
 
-/* ✅ FILTER TEXT BUTTON */
+/* FILTER BUTTON */
 .filter-btn {
   position: absolute;
   right: 12px;
@@ -35,52 +36,75 @@ body {
   font-size: 14px;
   background: white;
   color: #1e88e5;
-  padding: 4px 10px;
-  border-radius: 6px;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-weight: 500;
 }
 
-/* popup */
+/* PROFESSIONAL FILTER PANEL */
 #filterPanel {
   display: none;
   position: absolute;
-  top: 60px;
+  top: 65px;
   right: 10px;
-  background: white;
-  padding: 12px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  width: 240px;
+  background: #fff;
+  padding: 16px;
+  border-radius: 14px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
   z-index: 1000;
-  width: 220px;
+  animation: fadeIn 0.2s ease;
+}
+
+.filter-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #1e88e5;
+}
+
+#filterPanel label {
+  font-size: 13px;
+  color: #555;
+  display: block;
+  margin-bottom: 4px;
 }
 
 #filterPanel input {
   width: 100%;
-  margin-bottom: 8px;
   padding: 8px;
-  border-radius: 6px;
+  border-radius: 8px;
   border: 1px solid #ccc;
-}
-
-#filterPanel button {
-  width: 100%;
-  padding: 8px;
-  border: none;
-  cursor: pointer;
-  border-radius: 6px;
+  margin-bottom: 10px;
+  font-size: 14px;
 }
 
 .apply-btn {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
   background: #1e88e5;
   color: white;
+  font-weight: 500;
 }
 
 .clear-btn {
-  margin-top: 6px;
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
   background: #f44336;
   color: white;
+  margin-top: 6px;
+  font-weight: 500;
 }
 
-/* count */
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(-10px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+/* COUNT */
 .count-box {
   text-align: center;
   padding: 10px;
@@ -89,6 +113,7 @@ body {
   background: #e3f2fd;
 }
 
+/* SELECTED RANGE */
 #selectedRange {
   text-align:center;
   font-size:13px;
@@ -96,6 +121,7 @@ body {
   margin-top:5px;
 }
 
+/* DATA */
 .container {
   padding: 12px;
 }
@@ -110,8 +136,8 @@ body {
   background: white;
   padding: 14px;
   margin-bottom: 12px;
-  border-radius: 10px;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
 }
 
 .service {
@@ -146,9 +172,16 @@ body {
   <div class="filter-btn" onclick="toggleFilter()">Filter</div>
 </div>
 
+<!-- FILTER PANEL -->
 <div id="filterPanel">
-  <input type="date" id="fromDate" placeholder="From Date">
-  <input type="date" id="toDate" placeholder="To Date">
+  <div class="filter-title">Filter by Date</div>
+
+  <label>From</label>
+  <input type="date" id="fromDate">
+
+  <label>To</label>
+  <input type="date" id="toDate">
+
   <button class="apply-btn" onclick="applyFilter()">Apply</button>
   <button class="clear-btn" onclick="clearFilter()">Clear</button>
 </div>
@@ -231,11 +264,13 @@ function renderData(data) {
   });
 }
 
+// toggle filter
 function toggleFilter() {
   const panel = document.getElementById("filterPanel");
   panel.style.display = panel.style.display === "none" ? "block" : "none";
 }
 
+// apply filter
 function applyFilter() {
 
   document.getElementById("loading").style.display = "block";
@@ -244,7 +279,6 @@ function applyFilter() {
   const to = document.getElementById("toDate").value;
 
   const filtered = fullData.filter(item => {
-
     const d = new Date(item.timestamp.replace(" ", "T"));
     const itemDate = d.toISOString().split("T")[0];
 
@@ -265,9 +299,10 @@ function applyFilter() {
     document.getElementById("loading").style.display = "none";
     renderData(filtered);
     document.getElementById("filterPanel").style.display = "none";
-  }, 400);
+  }, 300);
 }
 
+// clear filter
 function clearFilter() {
 
   document.getElementById("fromDate").value = "";
@@ -278,6 +313,16 @@ function clearFilter() {
 
   document.getElementById("filterPanel").style.display = "none";
 }
+
+// close on outside click
+document.addEventListener("click", function(e) {
+  const panel = document.getElementById("filterPanel");
+  const btn = document.querySelector(".filter-btn");
+
+  if (!panel.contains(e.target) && !btn.contains(e.target)) {
+    panel.style.display = "none";
+  }
+});
 
 function goBack() {
   window.location.href = "index.html";
