@@ -10,6 +10,7 @@ body {
   margin: 0;
 }
 
+/* HEADER */
 .header {
   background: #1e88e5;
   height: 55px;
@@ -28,6 +29,7 @@ body {
   cursor: pointer;
 }
 
+/* COUNT BOX */
 .count-box {
   text-align: center;
   padding: 10px;
@@ -36,37 +38,39 @@ body {
   background: #e3f2fd;
 }
 
-/* 🔥 FILTER BOX */
+/* FILTER */
 .filter-box {
+  padding: 10px;
   display: flex;
   gap: 8px;
-  padding: 10px;
-  background: #fff;
 }
 
-.filter-box input, .filter-box button {
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+.filter-box input {
+  flex: 1;
+  padding: 6px;
 }
 
 .filter-box button {
+  padding: 6px 10px;
   background: #1e88e5;
   color: white;
   border: none;
   cursor: pointer;
 }
 
+/* CONTAINER */
 .container {
   padding: 12px;
 }
 
+/* DATE HEADER */
 .date-header {
   margin: 10px 5px;
   font-weight: bold;
   color: #1e88e5;
 }
 
+/* CARD */
 .card {
   background: white;
   padding: 14px;
@@ -111,7 +115,7 @@ body {
 
 <div class="count-box" id="totalCount">Total: 0</div>
 
-<!-- 🔥 FILTER -->
+<!-- ✅ FILTER UI -->
 <div class="filter-box">
   <input type="date" id="fromDate">
   <input type="date" id="toDate">
@@ -134,7 +138,9 @@ async function loadData() {
   loading.style.display = "block";
   container.innerHTML = "";
 
-  const res = await fetch("https://script.google.com/macros/s/AKfycbwhlMxTxB4pPXi6ApKLO60yRMF_HKSutI0R98xv-S3fyLxsVCQ0jUosaLaUDBQIa88v/exec?type=all");
+  const url = "https://script.google.com/macros/s/AKfycbwhlMxTxB4pPXi6ApKLO60yRMF_HKSutI0R98xv-S3fyLxsVCQ0jUosaLaUDBQIa88v/exec?type=all";
+
+  const res = await fetch(url);
   fullData = await res.json();
 
   loading.style.display = "none";
@@ -142,7 +148,7 @@ async function loadData() {
   renderData(fullData);
 }
 
-// 🔥 MAIN RENDER FUNCTION
+// ✅ RENDER FUNCTION (your logic moved here)
 function renderData(data) {
 
   const container = document.getElementById("data");
@@ -200,7 +206,7 @@ function renderData(data) {
   });
 }
 
-// 🔥 APPLY FILTER
+// ✅ FILTER FUNCTION
 function applyFilter() {
 
   const from = document.getElementById("fromDate").value;
@@ -212,13 +218,18 @@ function applyFilter() {
   }
 
   const filtered = fullData.filter(item => {
+
     const d = new Date(item.timestamp);
 
     const fromDate = from ? new Date(from) : null;
     const toDate = to ? new Date(to) : null;
 
     if (fromDate && d < fromDate) return false;
-    if (toDate && d > new Date(toDate.setHours(23,59,59))) return false;
+
+    if (toDate) {
+      toDate.setHours(23,59,59);
+      if (d > toDate) return false;
+    }
 
     return true;
   });
