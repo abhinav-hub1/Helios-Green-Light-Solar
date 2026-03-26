@@ -27,11 +27,16 @@ body {
   cursor: pointer;
 }
 
+/* ✅ FILTER TEXT BUTTON */
 .filter-btn {
   position: absolute;
   right: 12px;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 14px;
+  background: white;
+  color: #1e88e5;
+  padding: 4px 10px;
+  border-radius: 6px;
 }
 
 /* popup */
@@ -42,7 +47,7 @@ body {
   right: 10px;
   background: white;
   padding: 12px;
-  border-radius: 10px;
+  border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   z-index: 1000;
   width: 220px;
@@ -51,14 +56,17 @@ body {
 #filterPanel input {
   width: 100%;
   margin-bottom: 8px;
-  padding: 6px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
 
 #filterPanel button {
   width: 100%;
-  padding: 6px;
+  padding: 8px;
   border: none;
   cursor: pointer;
+  border-radius: 6px;
 }
 
 .apply-btn {
@@ -70,7 +78,6 @@ body {
   margin-top: 6px;
   background: #f44336;
   color: white;
-  border-radius: 6px;
 }
 
 /* count */
@@ -82,7 +89,6 @@ body {
   background: #e3f2fd;
 }
 
-/* selected range */
 #selectedRange {
   text-align:center;
   font-size:13px;
@@ -137,14 +143,14 @@ body {
 <div class="header">
   <div class="back-btn" onclick="goBack()">←</div>
   Dashboard
-  <div class="filter-btn" onclick="toggleFilter()">📅</div>
+  <div class="filter-btn" onclick="toggleFilter()">Filter</div>
 </div>
 
 <div id="filterPanel">
-  <input type="date" id="fromDate">
-  <input type="date" id="toDate">
-  <button class="apply-btn" onclick="applyFilter()">Apply Filter</button>
-  <button class="clear-btn" onclick="clearFilter()">Clear Filter</button>
+  <input type="date" id="fromDate" placeholder="From Date">
+  <input type="date" id="toDate" placeholder="To Date">
+  <button class="apply-btn" onclick="applyFilter()">Apply</button>
+  <button class="clear-btn" onclick="clearFilter()">Clear</button>
 </div>
 
 <div class="count-box" id="totalCount">Total: 0</div>
@@ -225,23 +231,11 @@ function renderData(data) {
   });
 }
 
-// toggle filter
 function toggleFilter() {
   const panel = document.getElementById("filterPanel");
-
   panel.style.display = panel.style.display === "none" ? "block" : "none";
-
-  const today = new Date().toISOString().split("T")[0];
-
-  if (!document.getElementById("fromDate").value) {
-    document.getElementById("fromDate").value = today;
-  }
-  if (!document.getElementById("toDate").value) {
-    document.getElementById("toDate").value = today;
-  }
 }
 
-// apply filter
 function applyFilter() {
 
   document.getElementById("loading").style.display = "block";
@@ -260,7 +254,6 @@ function applyFilter() {
     return true;
   });
 
-  // show selected range
   let text = "";
   if (from && to) text = `📅 ${from.split("-").reverse().join("/")} → ${to.split("-").reverse().join("/")}`;
   else if (from) text = `📅 From ${from.split("-").reverse().join("/")}`;
@@ -275,7 +268,6 @@ function applyFilter() {
   }, 400);
 }
 
-// clear filter
 function clearFilter() {
 
   document.getElementById("fromDate").value = "";
