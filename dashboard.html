@@ -6,94 +6,98 @@
 <style>
 body {
   font-family: Arial, sans-serif;
-  margin: 0;
   background: #f4f6f8;
+  margin: 0;
 }
 
-/* HEADER */
 .header {
   background: #1e88e5;
-  color: white;
-  padding: 15px;
-  text-align: center;
-  font-weight: bold;
+  height: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
+  color: white;
+  font-weight: 600;
 }
 
 .back-btn {
   position: absolute;
   left: 12px;
-  top: 15px;
+  font-size: 20px;
   cursor: pointer;
 }
 
-/* SUMMARY */
-.summary {
-  display: flex;
-  gap: 10px;
-  padding: 10px;
-}
-
-.box {
-  flex: 1;
-  background: white;
-  padding: 12px;
-  border-radius: 10px;
+.count-box {
   text-align: center;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-
-.box h3 {
-  margin: 5px 0;
+  padding: 10px;
+  font-weight: bold;
   color: #1e88e5;
+  background: #e3f2fd;
 }
 
-/* SEARCH */
-.search {
+/* 🔥 FILTER BOX */
+.filter-box {
+  display: flex;
+  gap: 8px;
   padding: 10px;
+  background: #fff;
 }
 
-.search input {
-  width: 100%;
-  padding: 10px;
-  border-radius: 8px;
+.filter-box input, .filter-box button {
+  padding: 8px;
+  border-radius: 6px;
   border: 1px solid #ccc;
 }
 
-/* DATE GROUP */
-.group {
-  margin: 10px;
-}
-
-.group-header {
-  background: #e3f2fd;
-  padding: 10px;
-  border-radius: 8px;
-  font-weight: bold;
+.filter-box button {
+  background: #1e88e5;
+  color: white;
+  border: none;
   cursor: pointer;
 }
 
-/* CARD */
+.container {
+  padding: 12px;
+}
+
+.date-header {
+  margin: 10px 5px;
+  font-weight: bold;
+  color: #1e88e5;
+}
+
 .card {
   background: white;
-  margin-top: 8px;
-  padding: 12px;
+  padding: 14px;
+  margin-bottom: 12px;
   border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.08);
 }
 
 .service {
+  font-size: 16px;
   font-weight: bold;
   color: #1e88e5;
 }
 
 .text {
   font-size: 14px;
+  color: #444;
   margin-top: 4px;
 }
 
-.hidden {
-  display: none;
+.time {
+  font-size: 12px;
+  color: #888;
+  margin-top: 6px;
+}
+
+#loading {
+  text-align: center;
+  padding: 20px;
+  color: #1e88e5;
+  font-weight: 600;
 }
 </style>
 </head>
@@ -105,22 +109,18 @@ body {
   Dashboard
 </div>
 
-<div class="summary">
-  <div class="box">
-    <div>Total</div>
-    <h3 id="total">0</h3>
-  </div>
-  <div class="box">
-    <div>Today</div>
-    <h3 id="today">0</h3>
-  </div>
+<div class="count-box" id="totalCount">Total: 0</div>
+
+<!-- 🔥 FILTER -->
+<div class="filter-box">
+  <input type="date" id="fromDate">
+  <input type="date" id="toDate">
+  <button onclick="applyFilter()">Filter</button>
 </div>
 
-<div class="search">
-  <input type="text" id="search" placeholder="Search Service Number..." oninput="filterData()">
-</div>
+<div id="loading">Loading data...</div>
 
-<div id="data"></div>
+<div class="container" id="data"></div>
 
 <script>
 
@@ -128,89 +128,110 @@ let fullData = [];
 
 async function loadData() {
 
+  const loading = document.getElementById("loading");
+  const container = document.getElementById("data");
+
+  loading.style.display = "block";
+  container.innerHTML = "";
+
   const res = await fetch("https://script.google.com/macros/s/AKfycbwhlMxTxB4pPXi6ApKLO60yRMF_HKSutI0R98xv-S3fyLxsVCQ0jUosaLaUDBQIa88v/exec?type=all");
   fullData = await res.json();
+
+  loading.style.display = "none";
 
   renderData(fullData);
 }
 
+// 🔥 MAIN RENDER FUNCTION
 function renderData(data) {
 
   const container = document.getElementById("data");
   container.innerHTML = "";
 
+  document.getElementById("totalCount").innerText =
+    "Total Submissions: " + data.length;
+
   const today = new Date();
+  const yesterday = new Date();
+  yesterday.setDate(today.getDate() - 1);
 
-  // COUNTS
-  let todayCount = 0;
+  function formatDate(dateStr) {
+    const d = new Date(dateStr);
 
+    if (d.toDateString() === today.toDateString()) return "Today";
+    if (d.toDateString() === yesterday.toDateString()) return "Yesterday";
+
+    return d.toLocaleDateString("en-GB");
+  }
+
+  const counts = {};
   data.forEach(item => {
-    const d = new Date(item.timestamp);
-    if (d.toDateString() === today.toDateString()) {
-      todayCount++;
-    }
+    const group = formatDate(item.timestamp);
+    counts[group] = (counts[group] || 0) + 1;
   });
 
-  document.getElementById("total").innerText = data.length;
-  document.getElementById("today").innerText = todayCount;
+  let currentGroup = "";
 
-  // GROUPING
-  const groups = {};
+  data.slice().reverse().forEach(item => {
 
-  data.forEach(item => {
-    const d = new Date(item.timestamp);
-    const key = d.toDateString();
+    const group = formatDate(item.timestamp);
 
-    if (!groups[key]) groups[key] = [];
-    groups[key].push(item);
-  });
+    if (group !== currentGroup) {
+      currentGroup = group;
 
-  Object.keys(groups).reverse().forEach(date => {
-
-    const groupDiv = document.createElement("div");
-    groupDiv.className = "group";
-
-    const header = document.createElement("div");
-    header.className = "group-header";
-    header.innerText = `${date} (${groups[date].length})`;
-
-    const content = document.createElement("div");
-
-    header.onclick = () => {
-      content.classList.toggle("hidden");
-    };
-
-    groups[date].forEach(item => {
-      content.innerHTML += `
-        <div class="card">
-          <div class="service">${item.service}</div>
-          <div class="text">Name: ${item.name}</div>
-          <div class="text">Phone: ${item.phone}</div>
+      container.innerHTML += `
+        <div class="date-header">
+          ${group} (${counts[group]})
         </div>
       `;
-    });
+    }
 
-    groupDiv.appendChild(header);
-    groupDiv.appendChild(content);
-    container.appendChild(groupDiv);
+    const time = new Date(item.timestamp).toLocaleTimeString();
+
+    container.innerHTML += `
+      <div class="card">
+        <div class="service">${item.service}</div>
+        <div class="text">Name: ${item.name}</div>
+        <div class="text">Phone: ${item.phone}</div>
+        <div class="text">Address: ${item.address}</div>
+        <div class="time">Time: ${time}</div>
+      </div>
+    `;
   });
 }
 
-// SEARCH
-function filterData() {
-  const value = document.getElementById("search").value.toLowerCase();
+// 🔥 APPLY FILTER
+function applyFilter() {
 
-  const filtered = fullData.filter(item =>
-    item.service.toString().includes(value)
-  );
+  const from = document.getElementById("fromDate").value;
+  const to = document.getElementById("toDate").value;
+
+  if (!from && !to) {
+    renderData(fullData);
+    return;
+  }
+
+  const filtered = fullData.filter(item => {
+    const d = new Date(item.timestamp);
+
+    const fromDate = from ? new Date(from) : null;
+    const toDate = to ? new Date(to) : null;
+
+    if (fromDate && d < fromDate) return false;
+    if (toDate && d > new Date(toDate.setHours(23,59,59))) return false;
+
+    return true;
+  });
 
   renderData(filtered);
 }
 
+// BACK
 function goBack() {
   window.location.href = "index.html";
 }
 
+// LOAD
 loadData();
 
 </script>
