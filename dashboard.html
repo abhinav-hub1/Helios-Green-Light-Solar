@@ -125,6 +125,9 @@ body {
   <input type="date" id="fromDate">
   <input type="date" id="toDate">
   <button onclick="applyFilter()">Apply Filter</button>
+<button onclick="clearFilter()" style="margin-top:6px; background:#ccc; color:#000;">
+  Clear
+</button>
 </div>
 
 <div class="count-box" id="totalCount">Total: 0</div>
@@ -134,6 +137,19 @@ body {
 <div class="container" id="data"></div>
 
 <script>
+
+  function clearFilter() {
+
+  // clear inputs
+  document.getElementById("fromDate").value = "";
+  document.getElementById("toDate").value = "";
+
+  // show full data again
+  renderData(fullData);
+
+  // close popup
+  document.getElementById("filterPanel").style.display = "none";
+}
 
 let fullData = [];
 
