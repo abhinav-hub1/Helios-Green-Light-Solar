@@ -220,7 +220,7 @@ function renderData(data) {
   const today = new Date();
 
   function formatDate(dateStr) {
-    const d = new Date(dateStr.replace(" ", "T"));
+   const d = new Date(dateStr);
 
     if (d.toDateString() === today.toDateString()) return "Today";
 
@@ -258,6 +258,7 @@ function renderData(data) {
         <div class="service">${item.service}</div>
         <div class="text">Name: ${item.name}</div>
         <div class="text">Phone: ${item.phone}</div>
+        <div class="text">Surveyor: ${item.surveyor || "-"}</div>
         <div class="time">${time}</div>
       </div>
     `;
@@ -283,7 +284,7 @@ function applyFilter() {
 
     if (!item.timestamp) return false;
 
-    const d = new Date(item.timestamp.replace(" ", "T"));
+    const d = new Date(item.timestamp);
     const itemDate = d.toISOString().split("T")[0];
 
     if (from && itemDate < from) return false;
