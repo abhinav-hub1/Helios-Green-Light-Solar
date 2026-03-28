@@ -489,7 +489,7 @@ async function fetchData() {
 loading.innerHTML = "Loading... ⏳";
   loading.style.display = "block";
 
-const url = "https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?service=" + service;" + service;
+const url = "https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?service=" + service;
   try {
     const res = await fetch(url);
     const data = await res.json();
@@ -789,12 +789,11 @@ function setMode(selectedMode) {
 	
 ["panel1","panel2","panel3","panel4","inverterSerial"].forEach(id => {
   const input = document.getElementById(id);
+  if (!input) return;   // ✅ prevent crash
 
   input.addEventListener("input", () => {
     input.value = input.value.toUpperCase();
     input.value = input.value.replace(/[^A-Z0-9]/g, "");
-
-    // ✅ ADD THIS LINE (border reset)
     input.style.border = "1px solid #ccc";
   });
 });
