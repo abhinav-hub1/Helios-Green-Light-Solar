@@ -201,7 +201,7 @@ let fullData = [];
 async function loadData() {
   document.getElementById("loading").style.display = "block";
 
-  const res = await fetch("https://script.google.com/macros/s/AKfycbwhlMxTxB4pPXi6ApKLO60yRMF_HKSutI0R98xv-S3fyLxsVCQ0jUosaLaUDBQIa88v/exec?type=all");
+  const res = await fetch("https://script.google.com/macros/s/AKfycbyBkfUBXbt6BWGoLSv46MZ1prEUTQiKGpIjw2UWvz4njoE9KpEy67llEL09bh55zZKU/exec?type=all");
   fullData = await res.json();
 
   document.getElementById("loading").style.display = "none";
