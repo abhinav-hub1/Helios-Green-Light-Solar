@@ -489,7 +489,7 @@ async function fetchData() {
 loading.innerHTML = "Loading... ⏳";
   loading.style.display = "block";
 
-const url = "https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec" + service;
+const url = "https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?service=" + service;" + service;
   try {
     const res = await fetch(url);
     const data = await res.json();
