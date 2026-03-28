@@ -381,7 +381,7 @@ input[readonly] {
   </button>
 </div>
 	
-<div class="form-group">
+<div class="form-group" id="surveyorGroup">
   <label>Surveyor Name</label>
   <input type="text" id="surveyor" placeholder="Enter Surveyor Name" required>
 </div>
@@ -420,6 +420,12 @@ if (urlMode === "edit") {
 const titleEl = document.querySelector(".header-title");
 if (titleEl) {
   titleEl.innerText = mode === "edit" ? "Edit Entry" : "Create New";
+}
+	if (mode === "edit") {
+  const surveyorField = document.getElementById("surveyorGroup");
+  if (surveyorField) {
+    surveyorField.style.display = "none";  // ✅ hide
+  }
 }
 	
 function readFile(input) {
@@ -523,11 +529,15 @@ function isValidID(value) {
   return /^[A-Z0-9]+$/.test(value);
 }
 async function submitForm() {
-const surveyor = document.getElementById("surveyor").value.trim();
+let surveyor = null;
 
-if (!surveyor) {
-  alert("Please enter Surveyor Name");
-  return;
+if (mode === "create") {
+  surveyor = document.getElementById("surveyor").value.trim();
+
+  if (!surveyor) {
+    alert("Please enter Surveyor Name");
+    return;
+  }
 }
   errorMsg.style.display = "none";
 duplicateMsg.style.display = "none";
