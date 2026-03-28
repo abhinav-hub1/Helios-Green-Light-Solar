@@ -489,7 +489,7 @@ async function fetchData() {
 loading.innerHTML = "Loading... ⏳";
   loading.style.display = "block";
 
-const url = "https://script.google.com/macros/s/AKfycbwhlMxTxB4pPXi6ApKLO60yRMF_HKSutI0R98xv-S3fyLxsVCQ0jUosaLaUDBQIa88v/exec?service=" + service;
+const url = "https://script.google.com/macros/s/AKfycbyBkfUBXbt6BWGoLSv46MZ1prEUTQiKGpIjw2UWvz4njoE9KpEy67llEL09bh55zZKU/exec" + service;
   try {
     const res = await fetch(url);
     const data = await res.json();
@@ -636,7 +636,7 @@ const data = {
 };
 
   try {
-const res = await fetch("https://script.google.com/macros/s/AKfycbwhlMxTxB4pPXi6ApKLO60yRMF_HKSutI0R98xv-S3fyLxsVCQ0jUosaLaUDBQIa88v/exec", {
+const res = await fetch("https://script.google.com/macros/s/AKfycbyBkfUBXbt6BWGoLSv46MZ1prEUTQiKGpIjw2UWvz4njoE9KpEy67llEL09bh55zZKU/exec", {
   method: "POST",
   body: JSON.stringify(data)
 });
