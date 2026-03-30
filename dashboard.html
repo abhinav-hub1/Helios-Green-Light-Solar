@@ -206,7 +206,14 @@ async function loadData() {
 
   document.getElementById("loading").style.display = "none";
 
-  renderData(fullData);
+  const today = new Date();
+
+const todayData = fullData.filter(item => {
+  const d = new Date(item.timestamp.replace(" ", "T"));
+  return d.toDateString() === today.toDateString();
+});
+
+renderData(todayData);
 }
 
 function renderData(data) {
@@ -214,8 +221,10 @@ function renderData(data) {
   const container = document.getElementById("data");
   container.innerHTML = "";
 
-  document.getElementById("totalCount").innerText =
-    "Total Submissions: " + data.length;
+    document.getElementById("totalCount").innerText =
+  data.length === fullData.length
+    ? "Total Submissions: " + data.length
+    : "Filtered Submissions: " + data.length;
 
   const today = new Date();
 
@@ -240,7 +249,7 @@ function renderData(data) {
       let displayText = group;
 
       if (group === "Today") {
-        const todayCount = data.filter(item => {
+        const todayCount = fullData.filter(item => {
           const d = new Date(item.timestamp.replace(" ", "T"));
           return d.toDateString() === today.toDateString();
         }).length;
@@ -320,7 +329,14 @@ function clearFilter() {
 
   document.getElementById("loading").style.display = "none";
 
-  renderData(fullData);
+ const today = new Date();
+
+const todayData = fullData.filter(item => {
+  const d = new Date(item.timestamp.replace(" ", "T"));
+  return d.toDateString() === today.toDateString();
+});
+
+renderData(todayData);
 
   document.getElementById("filterPanel").style.display = "none";
 }
