@@ -203,11 +203,17 @@ function toIST(dateInput) {
   if (!dateInput) return null;
 
   if (typeof dateInput === "string") {
-    // Convert to ISO + force IST timezone
     dateInput = dateInput.replace(" ", "T") + "+05:30";
   }
 
-  return new Date(dateInput);
+  const d = new Date(dateInput);
+
+  // 🔥 Business rule: shift early hours to previous day
+  if (d.getHours() < 3) {
+    d.setDate(d.getDate() - 1);
+  }
+
+  return d;
 }
   function getTodayIST() {
   return new Date();
