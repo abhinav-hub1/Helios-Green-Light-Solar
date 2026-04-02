@@ -209,7 +209,7 @@ async function loadData() {
   const today = new Date();
 
 const todayData = fullData.filter(item => {
-  const d = new Date(item.timestamp);
+ const d = new Date(item.timestamp + " GMT+0530");
   return d.toDateString() === today.toDateString();
 });
 
@@ -227,7 +227,7 @@ const totalCount = fullData.length;
 const today = new Date();
 
 const isTodayView = data.every(item => {
-  const d = new Date(item.timestamp);
+  const d = new Date(item.timestamp + " GMT+0530");
   return d.toDateString() === today.toDateString();
 });
 
@@ -237,7 +237,7 @@ document.getElementById("totalCount").innerText =
     : `Filtered: ${filteredCount} | Total: ${totalCount}`;
 
  function formatDate(dateStr) {
-  const d = new Date(dateStr);
+  const d = new Date(dateStr + " GMT+0530");
 
   if (d.toDateString() === today.toDateString()) return "Today";
 
@@ -248,7 +248,7 @@ document.getElementById("totalCount").innerText =
 
   data.slice().reverse().forEach(item => {
 
-    const d = new Date(item.timestamp);
+   const d = new Date(item.timestamp + " GMT+0530");
     const group = formatDate(item.timestamp);
 
     if (group !== currentGroup) {
@@ -258,7 +258,7 @@ document.getElementById("totalCount").innerText =
 
       if (group === "Today") {
         const todayCount = fullData.filter(item => {
-          const d = new Date(item.timestamp);
+          const d = new Date(item.timestamp + " GMT+0530");
           return d.toDateString() === today.toDateString();
         }).length;
 
@@ -304,7 +304,7 @@ function applyFilter() {
 
     if (!item.timestamp) return false;
 
-const d = new Date(item.timestamp);
+const d = new Date(item.timestamp + " GMT+0530");
 
 const itemDate =
   d.getFullYear() + "-" +
@@ -347,7 +347,7 @@ function clearFilter() {
  const today = new Date();
 
 const todayData = fullData.filter(item => {
-  const d = new Date(item.timestamp);
+const d = new Date(item.timestamp + " GMT+0530");
   return d.toDateString() === today.toDateString();
 });
 
