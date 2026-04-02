@@ -351,7 +351,7 @@ input[readonly] {
 
 <div class="file-box file-wrapper">
   <label>Current Bill</label>
-<input type="file" id="bill" accept="image/*,application/pdf"  onchange="showDelete(this)">
+<input type="file" id="bill" accept="image/*,application/pdf" onchange="showDelete(this)">
 <button type="button" class="delete-btn" onclick="removeFile('bill')">
     <span class="material-icons">delete</span>
   </button>
@@ -404,26 +404,6 @@ input[readonly] {
   const submitBtn = document.getElementById("submitBtn");
   const formScreen = document.getElementById("formScreen");
   const successScreen = document.getElementById("successScreen");
-
-let latitude = "";
-let longitude = "";
-	
-	function getLocation() {
-  if (!navigator.geolocation) {
-    alert("GPS not supported");
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(
-    position => {
-      latitude = position.coords.latitude;
-      longitude = position.coords.longitude;
-    },
-    error => {
-      alert("Please allow location access");
-    }
-  );
-}
 
 let mode = "create";
 
@@ -481,29 +461,15 @@ async function compressImage(input) {
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
 
-      const MAX_WIDTH = 400;
+      const MAX_WIDTH = 800;
       const scale = MAX_WIDTH / img.width;
 
       canvas.width = MAX_WIDTH;
       canvas.height = img.height * scale;
 
-ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-// 🔥 ADD GPS TEXT ON IMAGE
-ctx.fillStyle = "black";
-ctx.fillRect(5, canvas.height - 60, 320, 55); // background box
-
-ctx.fillStyle = "white";
-ctx.font = "14px Arial";
-const now = new Date().toLocaleString();
-
-const latText = latitude ? latitude : "Fetching...";
-const lngText = longitude ? longitude : "";
-
-ctx.fillText(`📍 ${latText}, ${lngText}`, 10, canvas.height - 40);
-ctx.fillText(`🕒 ${now}`, 10, canvas.height - 20);
-
-resolve(canvas.toDataURL("image/jpeg", 0.5));
+      resolve(canvas.toDataURL("image/jpeg", 0.7));
     };
 
     reader.readAsDataURL(file);
@@ -570,9 +536,6 @@ if (mode === "create") {
 
   if (!surveyor) {
     alert("Please enter Surveyor Name");
-	  
-	  submitBtn.disabled = false;
-	  submitBtn.innerText = "Submit";
     return;
   }
 }
@@ -603,10 +566,6 @@ for (let i = 0; i < panelIds.length; i++) {
 
     errorMsg.innerText = `Panel ${i+1}: Only A-Z and 0-9 allowed`;
     errorMsg.style.display = "block";
-
-	  submitBtn.disabled = false;
-submitBtn.innerText = "Submit";
-	  
     return;
 
   } else {
@@ -623,9 +582,6 @@ if (inverterId && !isValidID(inverterId)) {
 
   errorMsg.innerText = "Inverter: Only A-Z and 0-9 allowed";
   errorMsg.style.display = "block";
-
-	submitBtn.disabled = false;
-submitBtn.innerText = "Submit";
   return;
 } else {
   inverterInput.style.border = "1px solid #ccc";
@@ -634,9 +590,6 @@ submitBtn.innerText = "Submit";
 if (!document.getElementById("service").value.trim()) {
   document.getElementById("errorMsg").innerText = "Service Number is required";
   document.getElementById("errorMsg").style.display = "block";
-
-	  submitBtn.disabled = false;   
-  submitBtn.innerText = "Submit";
   return;
 }
 
@@ -645,23 +598,25 @@ loading.style.display = "block";
 
 submitBtn.innerText = "Uploading...";
 submitBtn.disabled = true;
-	
-const panelsInput = document.getElementById("panels");
-const inverterInput = document.getElementById("inverter");
-const earthInput = document.getElementById("earth");
-const billInput = document.getElementById("bill");
-const aadharInput = document.getElementById("aadhar");
-const doc1Input = document.getElementById("doc1");
-const doc2Input = document.getElementById("doc2");
 
-const panelsData = panelsInput.files.length ? await compressImage(panelsInput) : "";
-const inverterData = inverterInput.files.length ? await compressImage(inverterInput) : "";
-const earthData = earthInput.files.length ? await compressImage(earthInput) : "";
-const billData = billInput.files.length ? await compressImage(billInput) : "";
-const aadharData = aadharInput.files.length ? await compressImage(aadharInput) : "";
-const doc1Data = doc1Input.files.length ? await compressImage(doc1Input) : "";
-const doc2Data = doc2Input.files.length ? await compressImage(doc2Input) : "";
-	
+const [
+  panelsData,
+  inverterData,
+  earthData,
+  billData,
+  aadharData,
+  doc1Data,
+  doc2Data
+] = await Promise.all([
+compressImage(document.getElementById("panels")),
+compressImage(document.getElementById("inverter")),
+compressImage(document.getElementById("earth")),
+compressImage(document.getElementById("bill")),
+compressImage(document.getElementById("aadhar")),
+compressImage(document.getElementById("doc1")),
+compressImage(document.getElementById("doc2"))
+]);
+
 const data = {
   mode: mode,
   serviceNumber: document.getElementById("service").value,
@@ -741,14 +696,16 @@ if (result.status === "ALREADY_SUBMITTED") {
     successScreen.style.display = "block";
 
   } catch (err) {
-  loading.style.display = "none";
-  submitBtn.innerText = "Submit";
-  alert("Submission failed");
-  console.log(err);
-} finally {
-  submitBtn.disabled = false;
+  loading.innerHTML = "Loading... ⏳";
+    loading.style.display = "none";
+    submitBtn.innerText = "Submit";
+    alert("Submission failed");
+    console.log(err);
+  }
+
+submitBtn.disabled = false;
 }
-}
+
 function reloadForm(){
 
   // Show form again
@@ -811,12 +768,11 @@ function openDashboard() {
   window.location.href = "dashboard.html";
 }
 function showDelete(input) {
-  const wrapper = input.closest(".file-wrapper");
-  const btn = wrapper.querySelector(".delete-btn");
+  const btn = input.parentElement.querySelector(".delete-btn");
+  btn.style.display = input.files.length ? "block" : "none";
 
-  if (btn) {
-    btn.style.display = input.files.length ? "block" : "none";
-  }
+  // 🔥 Force remove any green color
+  input.style.background = "#eee";
 }
 
 function removeFile(id) {
@@ -852,7 +808,13 @@ function setMode(selectedMode) {
     input.style.border = "1px solid #ccc";
   });
 });
-	getLocation();
 </script>
+	<!-- <script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js')
+    .then(() => console.log("Service Worker Registered"))
+    .catch(err => console.log("SW error:", err));
+}
+</script> -->
 </body>
 </html>
