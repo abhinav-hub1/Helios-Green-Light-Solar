@@ -405,6 +405,26 @@ input[readonly] {
   const formScreen = document.getElementById("formScreen");
   const successScreen = document.getElementById("successScreen");
 
+let latitude = "";
+let longitude = "";
+	
+	function getLocation() {
+  if (!navigator.geolocation) {
+    alert("GPS not supported");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    position => {
+      latitude = position.coords.latitude;
+      longitude = position.coords.longitude;
+    },
+    error => {
+      alert("Please allow location access");
+    }
+  );
+}
+
 let mode = "create";
 
 const params = new URLSearchParams(window.location.search);
@@ -467,9 +487,23 @@ async function compressImage(input) {
       canvas.width = MAX_WIDTH;
       canvas.height = img.height * scale;
 
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-      resolve(canvas.toDataURL("image/jpeg", 0.7));
+// 🔥 ADD GPS TEXT ON IMAGE
+ctx.fillStyle = "black";
+ctx.fillRect(5, canvas.height - 60, 320, 55); // background box
+
+ctx.fillStyle = "white";
+ctx.font = "14px Arial";
+const now = new Date().toLocaleString();
+
+const latText = latitude ? latitude : "Fetching...";
+const lngText = longitude ? longitude : "";
+
+ctx.fillText(`📍 ${latText}, ${lngText}`, 10, canvas.height - 40);
+ctx.fillText(`🕒 ${now}`, 10, canvas.height - 20);
+
+resolve(canvas.toDataURL("image/jpeg", 0.8));
     };
 
     reader.readAsDataURL(file);
@@ -599,6 +633,14 @@ loading.style.display = "block";
 submitBtn.innerText = "Uploading...";
 submitBtn.disabled = true;
 
+	await new Promise(resolve => {
+  navigator.geolocation.getCurrentPosition(pos => {
+    latitude = pos.coords.latitude;
+    longitude = pos.coords.longitude;
+    resolve();
+  });
+});
+	
 const [
   panelsData,
   inverterData,
@@ -808,6 +850,7 @@ function setMode(selectedMode) {
     input.style.border = "1px solid #ccc";
   });
 });
+	getLocation();
 </script>
 	<!-- <script>
 if ('serviceWorker' in navigator) {
