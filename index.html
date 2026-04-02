@@ -481,7 +481,7 @@ async function compressImage(input) {
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
 
-      const MAX_WIDTH = 800;
+      const MAX_WIDTH = 400;
       const scale = MAX_WIDTH / img.width;
 
       canvas.width = MAX_WIDTH;
@@ -503,7 +503,7 @@ const lngText = longitude ? longitude : "";
 ctx.fillText(`📍 ${latText}, ${lngText}`, 10, canvas.height - 40);
 ctx.fillText(`🕒 ${now}`, 10, canvas.height - 20);
 
-resolve(canvas.toDataURL("image/jpeg", 0.8));
+resolve(canvas.toDataURL("image/jpeg", 0.5));
     };
 
     reader.readAsDataURL(file);
@@ -632,33 +632,23 @@ loading.style.display = "block";
 
 submitBtn.innerText = "Uploading...";
 submitBtn.disabled = true;
-
-	await new Promise(resolve => {
-  navigator.geolocation.getCurrentPosition(pos => {
-    latitude = pos.coords.latitude;
-    longitude = pos.coords.longitude;
-    resolve();
-  });
-});
 	
-const [
-  panelsData,
-  inverterData,
-  earthData,
-  billData,
-  aadharData,
-  doc1Data,
-  doc2Data
-] = await Promise.all([
-compressImage(document.getElementById("panels")),
-compressImage(document.getElementById("inverter")),
-compressImage(document.getElementById("earth")),
-compressImage(document.getElementById("bill")),
-compressImage(document.getElementById("aadhar")),
-compressImage(document.getElementById("doc1")),
-compressImage(document.getElementById("doc2"))
-]);
+const panelsInput = document.getElementById("panels");
+const inverterInput = document.getElementById("inverter");
+const earthInput = document.getElementById("earth");
+const billInput = document.getElementById("bill");
+const aadharInput = document.getElementById("aadhar");
+const doc1Input = document.getElementById("doc1");
+const doc2Input = document.getElementById("doc2");
 
+const panelsData = panelsInput.files.length ? await compressImage(panelsInput) : "";
+const inverterData = inverterInput.files.length ? await compressImage(inverterInput) : "";
+const earthData = earthInput.files.length ? await compressImage(earthInput) : "";
+const billData = billInput.files.length ? await compressImage(billInput) : "";
+const aadharData = aadharInput.files.length ? await compressImage(aadharInput) : "";
+const doc1Data = doc1Input.files.length ? await compressImage(doc1Input) : "";
+const doc2Data = doc2Input.files.length ? await compressImage(doc2Input) : "";
+	
 const data = {
   mode: mode,
   serviceNumber: document.getElementById("service").value,
