@@ -203,8 +203,8 @@ function toIST(dateInput) {
   if (!dateInput) return null;
 
   if (typeof dateInput === "string") {
-    // Convert "yyyy-MM-dd HH:mm:ss" → ISO format
-    dateInput = dateInput.replace(" ", "T");
+    // Convert to ISO + force IST timezone
+    dateInput = dateInput.replace(" ", "T") + "+05:30";
   }
 
   return new Date(dateInput);
