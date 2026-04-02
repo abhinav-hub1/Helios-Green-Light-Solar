@@ -28,7 +28,6 @@ body {
   cursor: pointer;
 }
 
-/* FILTER BUTTON */
 .filter-btn {
   position: absolute;
   right: 12px;
@@ -38,10 +37,8 @@ body {
   color: #1e88e5;
   padding: 5px 12px;
   border-radius: 8px;
-  font-weight: 500;
 }
 
-/* PROFESSIONAL FILTER PANEL */
 #filterPanel {
   display: none;
   position: absolute;
@@ -52,59 +49,24 @@ body {
   padding: 16px;
   border-radius: 14px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-  z-index: 1000;
-  animation: fadeIn 0.2s ease;
-}
-
-.filter-title {
-  font-weight: bold;
-  margin-bottom: 10px;
-  color: #1e88e5;
-}
-
-#filterPanel label {
-  font-size: 13px;
-  color: #555;
-  display: block;
-  margin-bottom: 4px;
 }
 
 #filterPanel input {
   width: 100%;
   padding: 8px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
   margin-bottom: 10px;
-  font-size: 14px;
 }
 
-.apply-btn {
+.apply-btn, .clear-btn {
   width: 100%;
   padding: 10px;
-  border-radius: 8px;
   border: none;
-  background: #1e88e5;
-  color: white;
-  font-weight: 500;
+  margin-top: 5px;
 }
 
-.clear-btn {
-  width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
-  background: #f44336;
-  color: white;
-  margin-top: 6px;
-  font-weight: 500;
-}
+.apply-btn { background: #1e88e5; color: white; }
+.clear-btn { background: #f44336; color: white; }
 
-@keyframes fadeIn {
-  from {opacity: 0; transform: translateY(-10px);}
-  to {opacity: 1; transform: translateY(0);}
-}
-
-/* COUNT */
 .count-box {
   text-align: center;
   padding: 10px;
@@ -113,53 +75,21 @@ body {
   background: #e3f2fd;
 }
 
-/* SELECTED RANGE */
-#selectedRange {
-  text-align:center;
-  font-size:13px;
-  color:#555;
-  margin-top:5px;
-}
-
-/* DATA */
 .container {
   padding: 12px;
 }
 
-.date-header {
-  margin: 10px 5px;
-  font-weight: bold;
-  color: #1e88e5;
-}
-
 .card {
   background: white;
-  padding: 14px;
-  margin-bottom: 12px;
-  border-radius: 12px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 10px;
 }
 
-.service {
+.date-header {
   font-weight: bold;
   color: #1e88e5;
-}
-
-.text {
-  font-size: 14px;
-  margin-top: 4px;
-}
-
-.time {
-  font-size: 12px;
-  color: #888;
-}
-
-#loading {
-  text-align: center;
-  padding: 15px;
-  display: none;
-  color: #1e88e5;
+  margin: 10px 0;
 }
 </style>
 </head>
@@ -172,25 +102,14 @@ body {
   <div class="filter-btn" onclick="toggleFilter()">Filter</div>
 </div>
 
-<!-- FILTER PANEL -->
 <div id="filterPanel">
-  <div class="filter-title">Filter by Date</div>
-
-  <label>From</label>
   <input type="date" id="fromDate">
-
-  <label>To</label>
   <input type="date" id="toDate">
-
   <button class="apply-btn" onclick="applyFilter()">Apply</button>
   <button class="clear-btn" onclick="clearFilter()">Clear</button>
 </div>
 
-<div class="count-box" id="totalCount">Total: 0</div>
-
-<div id="selectedRange"></div>
-
-<div id="loading">Loading...</div>
+<div class="count-box" id="totalCount">Loading...</div>
 
 <div class="container" id="data"></div>
 
@@ -198,22 +117,31 @@ body {
 
 let fullData = [];
 
-async function loadData() {
-  document.getElementById("loading").style.display = "block";
+// ✅ SAFE DATE PARSER (FIXED)
+function parseDate(timestamp) {
+  const parts = timestamp.split(/[- :]/);
+  return new Date(
+    parts[0],
+    parts[1] - 1,
+    parts[2],
+    parts[3],
+    parts[4],
+    parts[5]
+  );
+}
 
+async function loadData() {
   const res = await fetch("https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?type=all");
   fullData = await res.json();
 
-  document.getElementById("loading").style.display = "none";
-
   const today = new Date();
 
-const todayData = fullData.filter(item => {
-  const d = new Date(item.timestamp.replace(" ", "T"));
-  return d.toDateString() === today.toDateString();
-});
+  const todayData = fullData.filter(item => {
+    const d = parseDate(item.timestamp);
+    return d.toDateString() === today.toDateString();
+  });
 
-renderData(todayData);
+  renderData(todayData);
 }
 
 function renderData(data) {
@@ -221,149 +149,94 @@ function renderData(data) {
   const container = document.getElementById("data");
   container.innerHTML = "";
 
- const filteredCount = data.length;
-const totalCount = fullData.length;
+  const totalCount = fullData.length;
+  const filteredCount = data.length;
 
-const today = new Date();
+  const today = new Date();
 
-const isTodayView = data.every(item => {
-  const d = new Date(item.timestamp.replace(" ", "T"));
-  return d.toDateString() === today.toDateString();
-});
+  const isTodayView = data.every(item => {
+    const d = parseDate(item.timestamp);
+    return d.toDateString() === today.toDateString();
+  });
 
-document.getElementById("totalCount").innerText =
-  isTodayView
-    ? `Today: ${filteredCount} | Total: ${totalCount}`
-    : `Filtered: ${filteredCount} | Total: ${totalCount}`;
-
-  function formatDate(dateStr) {
-  const d = new Date(dateStr.replace(" ", "T"));
-
-    if (d.toDateString() === today.toDateString()) return "Today";
-
-    return d.toLocaleDateString("en-GB");
-  }
+  document.getElementById("totalCount").innerText =
+    isTodayView
+      ? `Today: ${filteredCount} | Total: ${totalCount}`
+      : `Filtered: ${filteredCount} | Total: ${totalCount}`;
 
   let currentGroup = "";
 
   data.slice().reverse().forEach(item => {
 
-    const d = new Date(item.timestamp.replace(" ", "T"));
-    const group = formatDate(item.timestamp);
+    const d = parseDate(item.timestamp);
+    const group = d.toDateString() === today.toDateString()
+      ? "Today"
+      : d.toLocaleDateString("en-GB");
 
     if (group !== currentGroup) {
       currentGroup = group;
-
-      let displayText = group;
-
-      if (group === "Today") {
-        const todayCount = fullData.filter(item => {
-          const d = new Date(item.timestamp.replace(" ", "T"));
-          return d.toDateString() === today.toDateString();
-        }).length;
-
-        displayText = `Today (${todayCount})`;
-      }
-
-      container.innerHTML += `<div class="date-header">${displayText}</div>`;
+      container.innerHTML += `<div class="date-header">${group}</div>`;
     }
 
     const time = d.toLocaleTimeString("en-IN", {
-  hour: "2-digit",
-  minute: "2-digit"
-});
+      hour: "2-digit",
+      minute: "2-digit"
+    });
 
     container.innerHTML += `
       <div class="card">
-        <div class="service">${item.service}</div>
-        <div class="text">Name: ${item.name}</div>
-        <div class="text">Phone: ${item.phone}</div>
-        <div class="text">Surveyor: ${item.surveyor || "-"}</div>
-        <div class="time">${time}</div>
+        <div><b>${item.service}</b></div>
+        <div>${item.name}</div>
+        <div>${item.phone}</div>
+        <div>${item.surveyor || "-"}</div>
+        <div style="font-size:12px;color:#888;">${time}</div>
       </div>
     `;
   });
 }
 
-// toggle filter
-function toggleFilter() {
-  const panel = document.getElementById("filterPanel");
-  panel.style.display = panel.style.display === "none" ? "block" : "none";
-}
-
-// apply filter
+// FILTER
 function applyFilter() {
-
-  const loading = document.getElementById("loading");
-  loading.style.display = "block";
-
   const from = document.getElementById("fromDate").value;
   const to = document.getElementById("toDate").value;
 
   const filtered = fullData.filter(item => {
+    const d = parseDate(item.timestamp);
 
-    if (!item.timestamp) return false;
+    const dateStr =
+      d.getFullYear() + "-" +
+      String(d.getMonth()+1).padStart(2,"0") + "-" +
+      String(d.getDate()).padStart(2,"0");
 
-const d = new Date(item.timestamp.replace(" ", "T"));
-
-const itemDate =
-  d.getFullYear() + "-" +
-  String(d.getMonth() + 1).padStart(2, "0") + "-" +
-  String(d.getDate()).padStart(2, "0");
-
-    if (from && itemDate < from) return false;
-    if (to && itemDate > to) return false;
+    if (from && dateStr < from) return false;
+    if (to && dateStr > to) return false;
 
     return true;
   });
 
-  // ✅ update UI immediately
   renderData(filtered);
-
-  // ✅ hide loading immediately
-  loading.style.display = "none";
-
-  // ✅ show selected range
-  let text = "";
-  if (from && to) text = `📅 ${from.split("-").reverse().join("/")} → ${to.split("-").reverse().join("/")}`;
-  else if (from) text = `📅 From ${from.split("-").reverse().join("/")}`;
-  else if (to) text = `📅 Till ${to.split("-").reverse().join("/")}`;
-
-  document.getElementById("selectedRange").innerText = text;
-
-  // close popup
-  document.getElementById("filterPanel").style.display = "none";
+  toggleFilter();
 }
 
-// clear filter
 function clearFilter() {
-
   document.getElementById("fromDate").value = "";
   document.getElementById("toDate").value = "";
-  document.getElementById("selectedRange").innerText = "";
 
-  document.getElementById("loading").style.display = "none";
+  const today = new Date();
 
- const today = new Date();
+  const todayData = fullData.filter(item => {
+    const d = parseDate(item.timestamp);
+    return d.toDateString() === today.toDateString();
+  });
 
-const todayData = fullData.filter(item => {
-  const d = new Date(item.timestamp.replace(" ", "T"));
-  return d.toDateString() === today.toDateString();
-});
-
-renderData(todayData);
-
-  document.getElementById("filterPanel").style.display = "none";
+  renderData(todayData);
+  toggleFilter();
 }
-// close on outside click
-document.addEventListener("click", function(e) {
-  const panel = document.getElementById("filterPanel");
-  const btn = document.querySelector(".filter-btn");
 
-  if (!panel.contains(e.target) && !btn.contains(e.target)) {
-    panel.style.display = "none";
-  }
-});
+function toggleFilter() {
+  const panel = document.getElementById("filterPanel");
+  panel.style.display = panel.style.display === "block" ? "none" : "block";
+}
 
 function goBack() {
   window.location.href = "index.html";
