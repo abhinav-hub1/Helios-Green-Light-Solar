@@ -206,14 +206,7 @@ function toIST(dateInput) {
     dateInput = dateInput.replace(" ", "T") + "+05:30";
   }
 
-  const d = new Date(dateInput);
-
-  // 🔥 Business rule: shift early hours to previous day
-  if (d.getHours() < 3) {
-    d.setDate(d.getDate() - 1);
-  }
-
-  return d;
+  return new Date(dateInput);
 }
   function getTodayIST() {
   return new Date();
