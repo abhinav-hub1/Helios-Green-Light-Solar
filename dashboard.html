@@ -198,6 +198,17 @@ body {
 
 let fullData = [];
 
+// ✅ Convert to IST safely
+function toIST(dateInput) {
+  const d = new Date(dateInput);
+  return new Date(d.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
+}
+
+// ✅ Get IST "today"
+function getTodayIST() {
+  return toIST(new Date());
+}
+
 async function loadData() {
   document.getElementById("loading").style.display = "block";
 
@@ -206,14 +217,14 @@ async function loadData() {
 
   document.getElementById("loading").style.display = "none";
 
-  const today = new Date();
+  const today = getTodayIST();
 
-const todayData = fullData.filter(item => {
- const d = new Date(item.timestamp + " GMT+0530");
-  return d.toDateString() === today.toDateString();
-});
+  const todayData = fullData.filter(item => {
+    const d = toIST(item.timestamp);
+    return d.toDateString() === today.toDateString();
+  });
 
-renderData(todayData);
+  renderData(todayData);
 }
 
 function renderData(data) {
@@ -221,34 +232,34 @@ function renderData(data) {
   const container = document.getElementById("data");
   container.innerHTML = "";
 
- const filteredCount = data.length;
-const totalCount = fullData.length;
+  const filteredCount = data.length;
+  const totalCount = fullData.length;
 
-const today = new Date();
+  const today = getTodayIST();
 
-const isTodayView = data.every(item => {
-  const d = new Date(item.timestamp + " GMT+0530");
-  return d.toDateString() === today.toDateString();
-});
+  const isTodayView = data.every(item => {
+    const d = toIST(item.timestamp);
+    return d.toDateString() === today.toDateString();
+  });
 
-document.getElementById("totalCount").innerText =
-  isTodayView
-    ? `Today: ${filteredCount} | Total: ${totalCount}`
-    : `Filtered: ${filteredCount} | Total: ${totalCount}`;
+  document.getElementById("totalCount").innerText =
+    isTodayView
+      ? `Today: ${filteredCount} | Total: ${totalCount}`
+      : `Filtered: ${filteredCount} | Total: ${totalCount}`;
 
- function formatDate(dateStr) {
-  const d = new Date(dateStr + " GMT+0530");
+  function formatDate(dateStr) {
+    const d = toIST(dateStr);
 
-  if (d.toDateString() === today.toDateString()) return "Today";
+    if (d.toDateString() === today.toDateString()) return "Today";
 
-  return d.toLocaleDateString("en-GB");
-}
+    return d.toLocaleDateString("en-GB");
+  }
 
   let currentGroup = "";
 
   data.slice().reverse().forEach(item => {
 
-   const d = new Date(item.timestamp + " GMT+0530");
+    const d = toIST(item.timestamp);
     const group = formatDate(item.timestamp);
 
     if (group !== currentGroup) {
@@ -257,9 +268,9 @@ document.getElementById("totalCount").innerText =
       let displayText = group;
 
       if (group === "Today") {
-        const todayCount = fullData.filter(item => {
-          const d = new Date(item.timestamp + " GMT+0530");
-          return d.toDateString() === today.toDateString();
+        const todayCount = fullData.filter(i => {
+          const dt = toIST(i.timestamp);
+          return dt.toDateString() === today.toDateString();
         }).length;
 
         displayText = `Today (${todayCount})`;
@@ -269,9 +280,9 @@ document.getElementById("totalCount").innerText =
     }
 
     const time = d.toLocaleTimeString("en-IN", {
-  hour: "2-digit",
-  minute: "2-digit"
-});
+      hour: "2-digit",
+      minute: "2-digit"
+    });
 
     container.innerHTML += `
       <div class="card">
@@ -285,13 +296,7 @@ document.getElementById("totalCount").innerText =
   });
 }
 
-// toggle filter
-function toggleFilter() {
-  const panel = document.getElementById("filterPanel");
-  panel.style.display = panel.style.display === "none" ? "block" : "none";
-}
-
-// apply filter
+// FILTER
 function applyFilter() {
 
   const loading = document.getElementById("loading");
@@ -304,12 +309,12 @@ function applyFilter() {
 
     if (!item.timestamp) return false;
 
-const d = new Date(item.timestamp + " GMT+0530");
+    const d = toIST(item.timestamp);
 
-const itemDate =
-  d.getFullYear() + "-" +
-  String(d.getMonth() + 1).padStart(2, "0") + "-" +
-  String(d.getDate()).padStart(2, "0");
+    const itemDate =
+      d.getFullYear() + "-" +
+      String(d.getMonth() + 1).padStart(2, "0") + "-" +
+      String(d.getDate()).padStart(2, "0");
 
     if (from && itemDate < from) return false;
     if (to && itemDate > to) return false;
@@ -317,45 +322,41 @@ const itemDate =
     return true;
   });
 
-  // ✅ update UI immediately
   renderData(filtered);
-
-  // ✅ hide loading immediately
   loading.style.display = "none";
 
-  // ✅ show selected range
   let text = "";
   if (from && to) text = `📅 ${from.split("-").reverse().join("/")} → ${to.split("-").reverse().join("/")}`;
   else if (from) text = `📅 From ${from.split("-").reverse().join("/")}`;
   else if (to) text = `📅 Till ${to.split("-").reverse().join("/")}`;
 
   document.getElementById("selectedRange").innerText = text;
-
-  // close popup
   document.getElementById("filterPanel").style.display = "none";
 }
 
-// clear filter
+// CLEAR FILTER
 function clearFilter() {
 
   document.getElementById("fromDate").value = "";
   document.getElementById("toDate").value = "";
   document.getElementById("selectedRange").innerText = "";
 
-  document.getElementById("loading").style.display = "none";
+  const today = getTodayIST();
 
- const today = new Date();
+  const todayData = fullData.filter(item => {
+    const d = toIST(item.timestamp);
+    return d.toDateString() === today.toDateString();
+  });
 
-const todayData = fullData.filter(item => {
-const d = new Date(item.timestamp + " GMT+0530");
-  return d.toDateString() === today.toDateString();
-});
-
-renderData(todayData);
-
-  document.getElementById("filterPanel").style.display = "none";
+  renderData(todayData);
 }
-// close on outside click
+
+// UI
+function toggleFilter() {
+  const panel = document.getElementById("filterPanel");
+  panel.style.display = panel.style.display === "none" ? "block" : "none";
+}
+
 document.addEventListener("click", function(e) {
   const panel = document.getElementById("filterPanel");
   const btn = document.querySelector(".filter-btn");
@@ -369,7 +370,10 @@ function goBack() {
   window.location.href = "index.html";
 }
 
+// INIT
 loadData();
+setInterval(loadData, 5000);
+
 </script>
 
 </body>
