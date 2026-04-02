@@ -208,8 +208,15 @@ function toIST(dateInput) {
 
   return new Date(dateInput);
 }
-  function getTodayIST() {
-  return new Date();
+
+function getTodayIST() {
+  const now = new Date();
+
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const date = now.getDate();
+
+  return new Date(year, month, date); // pure date (no time issue)
 }
   
 async function loadData() {
