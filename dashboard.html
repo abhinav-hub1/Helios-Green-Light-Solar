@@ -224,13 +224,20 @@ function renderData(data) {
  const filteredCount = data.length;
 const totalCount = fullData.length;
 
-document.getElementById("totalCount").innerText =
-  `Filtered: ${filteredCount} | Total: ${totalCount}`;
+const today = new Date();
 
-  const today = new Date();
+const isTodayView = data.every(item => {
+  const d = new Date(item.timestamp.replace(" ", "T"));
+  return d.toDateString() === today.toDateString();
+});
+
+document.getElementById("totalCount").innerText =
+  isTodayView
+    ? `Today: ${filteredCount} | Total: ${totalCount}`
+    : `Filtered: ${filteredCount} | Total: ${totalCount}`;
 
   function formatDate(dateStr) {
-   const d = new Date(dateStr);
+  const d = new Date(dateStr.replace(" ", "T"));
 
     if (d.toDateString() === today.toDateString()) return "Today";
 
@@ -261,7 +268,10 @@ document.getElementById("totalCount").innerText =
       container.innerHTML += `<div class="date-header">${displayText}</div>`;
     }
 
-    const time = d.toLocaleTimeString();
+    const time = d.toLocaleTimeString("en-IN", {
+  hour: "2-digit",
+  minute: "2-digit"
+});
 
     container.innerHTML += `
       <div class="card">
@@ -294,8 +304,12 @@ function applyFilter() {
 
     if (!item.timestamp) return false;
 
-    const d = new Date(item.timestamp.replace(" ", "T"));
-    const itemDate = d.toISOString().split("T")[0];
+const d = new Date(item.timestamp.replace(" ", "T"));
+
+const itemDate =
+  d.getFullYear() + "-" +
+  String(d.getMonth() + 1).padStart(2, "0") + "-" +
+  String(d.getDate()).padStart(2, "0");
 
     if (from && itemDate < from) return false;
     if (to && itemDate > to) return false;
