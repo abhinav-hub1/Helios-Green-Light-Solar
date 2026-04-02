@@ -293,7 +293,7 @@ function applyFilter() {
 
     if (!item.timestamp) return false;
 
-    const d = new Date(item.timestamp);
+    const d = new Date(item.timestamp.replace(" ", "T"));
     const itemDate = d.toISOString().split("T")[0];
 
     if (from && itemDate < from) return false;
