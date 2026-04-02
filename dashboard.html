@@ -221,10 +221,11 @@ function renderData(data) {
   const container = document.getElementById("data");
   container.innerHTML = "";
 
-    document.getElementById("totalCount").innerText =
-  data.length === fullData.length
-    ? "Total Submissions: " + data.length
-    : "Filtered Submissions: " + data.length;
+ const filteredCount = data.length;
+const totalCount = fullData.length;
+
+document.getElementById("totalCount").innerText =
+  `Filtered: ${filteredCount} | Total: ${totalCount}`;
 
   const today = new Date();
 
