@@ -570,6 +570,9 @@ if (mode === "create") {
 
   if (!surveyor) {
     alert("Please enter Surveyor Name");
+	  
+	  submitBtn.disabled = false;
+	  submitBtn.innerText = "Submit";
     return;
   }
 }
@@ -600,6 +603,10 @@ for (let i = 0; i < panelIds.length; i++) {
 
     errorMsg.innerText = `Panel ${i+1}: Only A-Z and 0-9 allowed`;
     errorMsg.style.display = "block";
+
+	  submitBtn.disabled = false;
+submitBtn.innerText = "Submit";
+	  
     return;
 
   } else {
@@ -616,6 +623,9 @@ if (inverterId && !isValidID(inverterId)) {
 
   errorMsg.innerText = "Inverter: Only A-Z and 0-9 allowed";
   errorMsg.style.display = "block";
+
+	submitBtn.disabled = false;
+submitBtn.innerText = "Submit";
   return;
 } else {
   inverterInput.style.border = "1px solid #ccc";
@@ -624,6 +634,9 @@ if (inverterId && !isValidID(inverterId)) {
 if (!document.getElementById("service").value.trim()) {
   document.getElementById("errorMsg").innerText = "Service Number is required";
   document.getElementById("errorMsg").style.display = "block";
+
+	  submitBtn.disabled = false;   
+  submitBtn.innerText = "Submit";
   return;
 }
 
@@ -728,16 +741,14 @@ if (result.status === "ALREADY_SUBMITTED") {
     successScreen.style.display = "block";
 
   } catch (err) {
-  loading.innerHTML = "Loading... ⏳";
-    loading.style.display = "none";
-    submitBtn.innerText = "Submit";
-    alert("Submission failed");
-    console.log(err);
-  }
-
-submitBtn.disabled = false;
+  loading.style.display = "none";
+  submitBtn.innerText = "Submit";
+  alert("Submission failed");
+  console.log(err);
+} finally {
+  submitBtn.disabled = false;
 }
-
+}
 function reloadForm(){
 
   // Show form again
@@ -800,11 +811,12 @@ function openDashboard() {
   window.location.href = "dashboard.html";
 }
 function showDelete(input) {
-  const btn = input.parentElement.querySelector(".delete-btn");
-  btn.style.display = input.files.length ? "block" : "none";
+  const wrapper = input.closest(".file-wrapper");
+  const btn = wrapper.querySelector(".delete-btn");
 
-  // 🔥 Force remove any green color
-  input.style.background = "#eee";
+  if (btn) {
+    btn.style.display = input.files.length ? "block" : "none";
+  }
 }
 
 function removeFile(id) {
@@ -842,12 +854,5 @@ function setMode(selectedMode) {
 });
 	getLocation();
 </script>
-	<!-- <script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js')
-    .then(() => console.log("Service Worker Registered"))
-    .catch(err => console.log("SW error:", err));
-}
-</script> -->
 </body>
 </html>
