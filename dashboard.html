@@ -115,15 +115,26 @@ let fullData = [];
 function toIST(dateInput) {
   if (!dateInput) return null;
 
-  if (typeof dateInput === "string") {
-    dateInput = dateInput.replace(" ", "T"); // ✅ ONLY THIS
+  try {
+    if (typeof dateInput === "string") {
+      // 🔥 MANUAL PARSE (NO JS AUTO CONVERSION)
+      const parts = dateInput.split(/[- :]/);
+
+      return new Date(
+        parts[0],        // year
+        parts[1] - 1,    // month (0-based)
+        parts[2],        // day
+        parts[3] || 0,   // hour
+        parts[4] || 0,   // minute
+        parts[5] || 0    // second
+      );
+    }
+
+    return new Date(dateInput);
+
+  } catch {
+    return null;
   }
-
-  const d = new Date(dateInput);
-
-  if (isNaN(d.getTime())) return null;
-
-  return d;
 }
 
 // ✅ TODAY (IST)
