@@ -115,18 +115,15 @@ let fullData = [];
 function toIST(dateInput) {
   if (!dateInput) return null;
 
-  try {
-    if (typeof dateInput === "string") {
-      dateInput = dateInput.replace(" ", "T") + "+05:30";
-    }
-
-    const d = new Date(dateInput);
-    if (isNaN(d.getTime())) return null;
-
-    return d;
-  } catch {
-    return null;
+  if (typeof dateInput === "string") {
+    dateInput = dateInput.replace(" ", "T"); // ✅ ONLY THIS
   }
+
+  const d = new Date(dateInput);
+
+  if (isNaN(d.getTime())) return null;
+
+  return d;
 }
 
 // ✅ TODAY (IST)
