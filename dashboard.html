@@ -121,13 +121,13 @@ function toIST(dateInput) {
       const parts = dateInput.split(/[- :]/);
 
       return new Date(
-        parts[0],        // year
-        parts[1] - 1,    // month (0-based)
-        parts[2],        // day
-        parts[3] || 0,   // hour
-        parts[4] || 0,   // minute
-        parts[5] || 0    // second
-      );
+  Number(parts[0]),
+  Number(parts[1]) - 1,
+  Number(parts[2]),
+  Number(parts[3] || 0),
+  Number(parts[4] || 0),
+  Number(parts[5] || 0)
+);
     }
 
     return new Date(dateInput);
@@ -168,7 +168,9 @@ function showToday() {
     const d = toIST(item.timestamp);
     if (!d) return false;
 
-    return d.toDateString() === today.toDateString();
+    return d.getFullYear() === today.getFullYear() &&
+d.getMonth() === today.getMonth() &&
+d.getDate() === today.getDate()
   });
 
   renderData(todayData, true);
@@ -192,18 +194,20 @@ function renderData(data, isToday = false) {
     const d = toIST(item.timestamp);
     if (!d) return;
 
-    const dateStr = d.toLocaleDateString("en-GB");
+    const dateStr =
+  String(d.getDate()).padStart(2, "0") + "/" +
+  String(d.getMonth() + 1).padStart(2, "0") + "/" +
+  d.getFullYear();
 
     if (dateStr !== currentDate) {
       currentDate = dateStr;
       container.innerHTML += `<div class="date-header">${dateStr}</div>`;
     }
 
-    const time = d.toLocaleTimeString("en-IN", {
-      hour: "2-digit",
-      minute: "2-digit"
-    });
-
+   const time =
+  String(d.getHours()).padStart(2, "0") + ":" +
+  String(d.getMinutes()).padStart(2, "0");
+    
     container.innerHTML += `
       <div class="card">
         <b>${item.service}</b><br>
