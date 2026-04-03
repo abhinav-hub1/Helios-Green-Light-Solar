@@ -5,12 +5,11 @@
 
 <style>
 body {
-  font-family: Arial, sans-serif;
+  font-family: Arial;
   background: #f4f6f8;
   margin: 0;
 }
 
-/* HEADER */
 .header {
   background: #1e88e5;
   height: 55px;
@@ -19,29 +18,21 @@ body {
   justify-content: center;
   position: relative;
   color: white;
-  font-weight: 600;
+  font-weight: bold;
 }
 
-.back-btn {
-  position: absolute;
-  left: 12px;
-  cursor: pointer;
-}
+.back-btn { position: absolute; left: 12px; cursor: pointer; }
 
-/* FILTER BUTTON */
 .filter-btn {
   position: absolute;
   right: 12px;
-  cursor: pointer;
-  font-size: 14px;
   background: white;
   color: #1e88e5;
-  padding: 5px 12px;
+  padding: 5px 10px;
   border-radius: 8px;
-  font-weight: 500;
+  cursor: pointer;
 }
 
-/* PROFESSIONAL FILTER PANEL */
 #filterPanel {
   display: none;
   position: absolute;
@@ -49,118 +40,47 @@ body {
   right: 10px;
   width: 240px;
   background: #fff;
-  padding: 16px;
-  border-radius: 14px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-  z-index: 1000;
-  animation: fadeIn 0.2s ease;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
 }
 
-.filter-title {
-  font-weight: bold;
-  margin-bottom: 10px;
-  color: #1e88e5;
-}
+input { width: 100%; padding: 8px; margin-bottom: 10px; }
 
-#filterPanel label {
-  font-size: 13px;
-  color: #555;
-  display: block;
-  margin-bottom: 4px;
-}
-
-#filterPanel input {
-  width: 100%;
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  margin-bottom: 10px;
-  font-size: 14px;
-}
-
-.apply-btn {
+button {
   width: 100%;
   padding: 10px;
-  border-radius: 8px;
   border: none;
-  background: #1e88e5;
-  color: white;
-  font-weight: 500;
-}
-
-.clear-btn {
-  width: 100%;
-  padding: 10px;
   border-radius: 8px;
-  border: none;
-  background: #f44336;
-  color: white;
-  margin-top: 6px;
-  font-weight: 500;
+  margin-top: 5px;
 }
 
-@keyframes fadeIn {
-  from {opacity: 0; transform: translateY(-10px);}
-  to {opacity: 1; transform: translateY(0);}
-}
+.apply-btn { background: #1e88e5; color: white; }
+.clear-btn { background: red; color: white; }
 
-/* COUNT */
 .count-box {
   text-align: center;
   padding: 10px;
-  font-weight: bold;
-  color: #1e88e5;
   background: #e3f2fd;
-}
-
-/* SELECTED RANGE */
-#selectedRange {
-  text-align:center;
-  font-size:13px;
-  color:#555;
-  margin-top:5px;
-}
-
-/* DATA */
-.container {
-  padding: 12px;
-}
-
-.date-header {
-  margin: 10px 5px;
   font-weight: bold;
-  color: #1e88e5;
 }
+
+.container { padding: 10px; }
 
 .card {
   background: white;
-  padding: 14px;
-  margin-bottom: 12px;
-  border-radius: 12px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 10px;
 }
 
-.service {
+.date-header {
   font-weight: bold;
+  margin: 10px 5px;
   color: #1e88e5;
 }
 
-.text {
-  font-size: 14px;
-  margin-top: 4px;
-}
-
-.time {
-  font-size: 12px;
-  color: #888;
-}
-
-#loading {
-  text-align: center;
-  padding: 15px;
-  display: none;
-  color: #1e88e5;
-}
+.time { font-size: 12px; color: gray; }
 </style>
 </head>
 
@@ -172,10 +92,7 @@ body {
   <div class="filter-btn" onclick="toggleFilter()">Filter</div>
 </div>
 
-<!-- FILTER PANEL -->
 <div id="filterPanel">
-  <div class="filter-title">Filter by Date</div>
-
   <label>From</label>
   <input type="date" id="fromDate">
 
@@ -186,11 +103,7 @@ body {
   <button class="clear-btn" onclick="clearFilter()">Clear</button>
 </div>
 
-<div class="count-box" id="totalCount">Total: 0</div>
-
-<div id="selectedRange"></div>
-
-<div id="loading">Loading...</div>
+<div class="count-box" id="totalCount">Loading...</div>
 
 <div class="container" id="data"></div>
 
@@ -198,95 +111,74 @@ body {
 
 let fullData = [];
 
-// ✅ Convert to IST safely
+// ✅ Convert backend timestamp → IST
 function toIST(dateInput) {
   if (!dateInput) return null;
-  return new Date(dateInput); // already IST from backend
+
+  if (typeof dateInput === "string") {
+    dateInput = dateInput.replace(" ", "T") + "+05:30";
+  }
+
+  return new Date(dateInput);
 }
 
+// ✅ Get today's IST date
 function getTodayIST() {
   const now = new Date();
 
+  const ist = new Date(
+    now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
+  );
+
   return new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate()
+    ist.getFullYear(),
+    ist.getMonth(),
+    ist.getDate()
   );
 }
-  
+
+// 🚀 Load Data
 async function loadData() {
-  const loading = document.getElementById("loading");
-  loading.style.display = "block";
+  const res = await fetch("https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?type=all&t=" + Date.now());
+  fullData = await res.json();
 
-  try {
-    const res = await fetch(`https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?type=all&t=${Date.now()}`);
-    fullData = await res.json();
-    console.log(fullData[0].timestamp);
-    const today = getTodayIST();
-
-    const todayData = fullData.filter(item => {
-      const d = toIST(item.timestamp);
-      return d && d.toDateString() === today.toDateString();
-    });
-
-    renderData(todayData);
-    loading.style.display = "none";
-
-  } catch (err) {
-    console.error(err);
-  }
+  showToday();
 }
-  
-function renderData(data) {
+
+// ✅ Show today's data
+function showToday() {
+  const today = getTodayIST();
+
+  const todayData = fullData.filter(item => {
+    const d = toIST(item.timestamp);
+    return d && d.toDateString() === today.toDateString();
+  });
+
+  renderData(todayData, true);
+}
+
+// 🎯 Render Data
+function renderData(data, isToday = false) {
 
   const container = document.getElementById("data");
   container.innerHTML = "";
 
-  const filteredCount = data.length;
-  const totalCount = fullData.length;
-
-  const today = getTodayIST();
-
-  const isTodayView = data.every(item => {
-    const d = toIST(item.timestamp);
-    return d.toDateString() === today.toDateString();
-  });
-
   document.getElementById("totalCount").innerText =
-    isTodayView
-      ? `Today: ${filteredCount} | Total: ${totalCount}`
-      : `Filtered: ${filteredCount} | Total: ${totalCount}`;
+    isToday
+      ? `Today: ${data.length} | Total: ${fullData.length}`
+      : `Filtered: ${data.length} | Total: ${fullData.length}`;
 
-  function formatDate(dateStr) {
-    const d = toIST(dateStr);
-
-    if (d.toDateString() === today.toDateString()) return "Today";
-
-    return d.toLocaleDateString("en-GB");
-  }
-
-  let currentGroup = "";
+  let currentDate = "";
 
   data.slice().reverse().forEach(item => {
 
     const d = toIST(item.timestamp);
-    const group = formatDate(item.timestamp);
 
-    if (group !== currentGroup) {
-      currentGroup = group;
+    const dateStr = d.toLocaleDateString("en-GB");
 
-      let displayText = group;
-
-      if (group === "Today") {
-        const todayCount = fullData.filter(i => {
-          const dt = toIST(i.timestamp);
-          return dt.toDateString() === today.toDateString();
-        }).length;
-
-        displayText = `Today (${todayCount})`;
-      }
-
-      container.innerHTML += `<div class="date-header">${displayText}</div>`;
+    if (dateStr !== currentDate) {
+      currentDate = dateStr;
+      container.innerHTML += `<div class="date-header">${dateStr}</div>`;
     }
 
     const time = d.toLocaleTimeString("en-IN", {
@@ -296,85 +188,52 @@ function renderData(data) {
 
     container.innerHTML += `
       <div class="card">
-        <div class="service">${item.service}</div>
-        <div class="text">Name: ${item.name}</div>
-        <div class="text">Phone: ${item.phone}</div>
-        <div class="text">Surveyor: ${item.surveyor || "-"}</div>
+        <b>${item.service}</b><br>
+        ${item.name}<br>
+        ${item.phone}<br>
+        ${item.surveyor || "-"}<br>
         <div class="time">${time}</div>
       </div>
     `;
   });
 }
 
-// FILTER
+// 🔍 Filter
 function applyFilter() {
-
-  const loading = document.getElementById("loading");
-  loading.style.display = "block";
 
   const from = document.getElementById("fromDate").value;
   const to = document.getElementById("toDate").value;
 
   const filtered = fullData.filter(item => {
 
-    if (!item.timestamp) return false;
-
     const d = toIST(item.timestamp);
 
-    const itemDate =
+    const date =
       d.getFullYear() + "-" +
-      String(d.getMonth() + 1).padStart(2, "0") + "-" +
-      String(d.getDate()).padStart(2, "0");
+      String(d.getMonth()+1).padStart(2,"0") + "-" +
+      String(d.getDate()).padStart(2,"0");
 
-    if (from && itemDate < from) return false;
-    if (to && itemDate > to) return false;
+    if (from && date < from) return false;
+    if (to && date > to) return false;
 
     return true;
   });
 
-  renderData(filtered);
-  loading.style.display = "none";
-
-  let text = "";
-  if (from && to) text = `📅 ${from.split("-").reverse().join("/")} → ${to.split("-").reverse().join("/")}`;
-  else if (from) text = `📅 From ${from.split("-").reverse().join("/")}`;
-  else if (to) text = `📅 Till ${to.split("-").reverse().join("/")}`;
-
-  document.getElementById("selectedRange").innerText = text;
-  document.getElementById("filterPanel").style.display = "none";
+  renderData(filtered, false);
 }
 
-// CLEAR FILTER
+// ❌ Clear filter
 function clearFilter() {
-
   document.getElementById("fromDate").value = "";
   document.getElementById("toDate").value = "";
-  document.getElementById("selectedRange").innerText = "";
-
-  const today = getTodayIST();
-
-  const todayData = fullData.filter(item => {
-    const d = toIST(item.timestamp);
-    return d.toDateString() === today.toDateString();
-  });
-
-  renderData(todayData);
+  showToday();
 }
 
 // UI
 function toggleFilter() {
-  const panel = document.getElementById("filterPanel");
-  panel.style.display = panel.style.display === "none" ? "block" : "none";
+  const p = document.getElementById("filterPanel");
+  p.style.display = p.style.display === "block" ? "none" : "block";
 }
-
-document.addEventListener("click", function(e) {
-  const panel = document.getElementById("filterPanel");
-  const btn = document.querySelector(".filter-btn");
-
-  if (!panel.contains(e.target) && !btn.contains(e.target)) {
-    panel.style.display = "none";
-  }
-});
 
 function goBack() {
   window.location.href = "index.html";
