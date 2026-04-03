@@ -115,11 +115,22 @@ let fullData = [];
 function toIST(dateInput) {
   if (!dateInput) return null;
 
-  if (typeof dateInput === "string") {
-    dateInput = dateInput.replace(" ", "T") + "+05:30";
-  }
+  try {
+    if (typeof dateInput === "string") {
+      // ✅ Convert to ISO + IST
+      dateInput = dateInput.replace(" ", "T") + "+05:30";
+    }
 
-  return new Date(dateInput);
+    const d = new Date(dateInput);
+
+    // ✅ Check if valid
+    if (isNaN(d.getTime())) return null;
+
+    return d;
+
+  } catch (e) {
+    return null;
+  }
 }
 
 // ✅ Get today's IST date
@@ -151,6 +162,8 @@ function showToday() {
 
   const todayData = fullData.filter(item => {
     const d = toIST(item.timestamp);
+
+if (!d) return; // skip invalid rows
     return d && d.toDateString() === today.toDateString();
   });
 
