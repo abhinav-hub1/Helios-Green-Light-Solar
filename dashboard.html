@@ -201,33 +201,27 @@ let fullData = [];
 // ✅ Convert to IST safely
 function toIST(dateInput) {
   if (!dateInput) return null;
-
-  if (typeof dateInput === "string") {
-    dateInput = dateInput.replace(" ", "T") + "+05:30";
-  }
-
-  return new Date(dateInput);
+  return new Date(dateInput); // already IST from backend
 }
 
 function getTodayIST() {
   const now = new Date();
 
-  const year = now.getFullYear();
-  const month = now.getMonth();
-  const date = now.getDate();
-
-  return new Date(year, month, date); // pure date (no time issue)
+  return new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate()
+  );
 }
   
 async function loadData() {
-
   const loading = document.getElementById("loading");
   loading.style.display = "block";
 
   try {
     const res = await fetch(`https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?type=all&t=${Date.now()}`);
     fullData = await res.json();
-
+    console.log(fullData[0].timestamp);
     const today = getTodayIST();
 
     const todayData = fullData.filter(item => {
