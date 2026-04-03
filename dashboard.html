@@ -111,29 +111,25 @@ button {
 
 let fullData = [];
 
-// ✅ Convert backend timestamp → IST
+// ✅ SAFE IST CONVERSION
 function toIST(dateInput) {
   if (!dateInput) return null;
 
   try {
     if (typeof dateInput === "string") {
-      // ✅ Convert to ISO + IST
       dateInput = dateInput.replace(" ", "T") + "+05:30";
     }
 
     const d = new Date(dateInput);
-
-    // ✅ Check if valid
     if (isNaN(d.getTime())) return null;
 
     return d;
-
-  } catch (e) {
+  } catch {
     return null;
   }
 }
 
-// ✅ Get today's IST date
+// ✅ TODAY (IST)
 function getTodayIST() {
   const now = new Date();
 
@@ -148,7 +144,7 @@ function getTodayIST() {
   );
 }
 
-// 🚀 Load Data
+// 🚀 LOAD DATA
 async function loadData() {
   const res = await fetch("https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?type=all&t=" + Date.now());
   fullData = await res.json();
@@ -156,21 +152,21 @@ async function loadData() {
   showToday();
 }
 
-// ✅ Show today's data
+// ✅ SHOW TODAY
 function showToday() {
   const today = getTodayIST();
 
   const todayData = fullData.filter(item => {
     const d = toIST(item.timestamp);
+    if (!d) return false;
 
-if (!d) return; // skip invalid rows
-    return d && d.toDateString() === today.toDateString();
+    return d.toDateString() === today.toDateString();
   });
 
   renderData(todayData, true);
 }
 
-// 🎯 Render Data
+// 🎯 RENDER
 function renderData(data, isToday = false) {
 
   const container = document.getElementById("data");
@@ -186,6 +182,7 @@ function renderData(data, isToday = false) {
   data.slice().reverse().forEach(item => {
 
     const d = toIST(item.timestamp);
+    if (!d) return;
 
     const dateStr = d.toLocaleDateString("en-GB");
 
@@ -211,23 +208,24 @@ function renderData(data, isToday = false) {
   });
 }
 
-// 🔍 Filter
+// 🔍 FILTER (FIXED WITH TIMESTAMP)
 function applyFilter() {
 
   const from = document.getElementById("fromDate").value;
   const to = document.getElementById("toDate").value;
 
+  const fromTime = from ? new Date(from).getTime() : null;
+  const toTime = to ? new Date(to).getTime() : null;
+
   const filtered = fullData.filter(item => {
 
     const d = toIST(item.timestamp);
+    if (!d) return false;
 
-    const date =
-      d.getFullYear() + "-" +
-      String(d.getMonth()+1).padStart(2,"0") + "-" +
-      String(d.getDate()).padStart(2,"0");
+    const time = d.getTime();
 
-    if (from && date < from) return false;
-    if (to && date > to) return false;
+    if (fromTime && time < fromTime) return false;
+    if (toTime && time > toTime + 86400000) return false; // include full day
 
     return true;
   });
@@ -235,7 +233,7 @@ function applyFilter() {
   renderData(filtered, false);
 }
 
-// ❌ Clear filter
+// ❌ CLEAR
 function clearFilter() {
   document.getElementById("fromDate").value = "";
   document.getElementById("toDate").value = "";
