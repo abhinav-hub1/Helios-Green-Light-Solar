@@ -115,26 +115,11 @@ let fullData = [];
 function toIST(dateInput) {
   if (!dateInput) return null;
 
-  try {
-    if (typeof dateInput === "string") {
-      // 🔥 MANUAL PARSE (NO JS AUTO CONVERSION)
-      const parts = dateInput.split(/[- :]/);
+  const d = new Date(dateInput);
 
-      return new Date(
-  Number(parts[0]),
-  Number(parts[1]) - 1,
-  Number(parts[2]),
-  Number(parts[3] || 0),
-  Number(parts[4] || 0),
-  Number(parts[5] || 0)
-);
-    }
+  if (isNaN(d.getTime())) return null;
 
-    return new Date(dateInput);
-
-  } catch {
-    return null;
-  }
+  return d;
 }
 
 // ✅ TODAY (IST)
@@ -182,6 +167,7 @@ function renderData(data, isToday = false) {
   const container = document.getElementById("data");
   container.innerHTML = "";
 
+  // ✅ Count display
   document.getElementById("totalCount").innerText =
     isToday
       ? `Today: ${data.length} | Total: ${fullData.length}`
@@ -189,25 +175,33 @@ function renderData(data, isToday = false) {
 
   let currentDate = "";
 
+  // 🔄 Loop data
   data.slice().reverse().forEach(item => {
 
     const d = toIST(item.timestamp);
-    if (!d) return;
+    if (!d) return; // skip invalid
 
+    // ✅ DATE (manual → no timezone issue)
     const dateStr =
-  String(d.getDate()).padStart(2, "0") + "/" +
-  String(d.getMonth() + 1).padStart(2, "0") + "/" +
-  d.getFullYear();
+      String(d.getDate()).padStart(2, "0") + "/" +
+      String(d.getMonth() + 1).padStart(2, "0") + "/" +
+      d.getFullYear();
 
+    // 📅 Group by date
     if (dateStr !== currentDate) {
       currentDate = dateStr;
       container.innerHTML += `<div class="date-header">${dateStr}</div>`;
     }
 
-   const time =
-  String(d.getHours()).padStart(2, "0") + ":" +
-  String(d.getMinutes()).padStart(2, "0");
-    
+    // ✅ TIME (FORCED IST)
+    const time = d.toLocaleTimeString("en-IN", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+      timeZone: "Asia/Kolkata"
+    });
+
+    // 🧾 Card UI
     container.innerHTML += `
       <div class="card">
         <b>${item.service}</b><br>
@@ -218,6 +212,7 @@ function renderData(data, isToday = false) {
       </div>
     `;
   });
+
 }
 
 // 🔍 FILTER (FIXED WITH TIMESTAMP)
