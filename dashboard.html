@@ -173,23 +173,38 @@ button {
   document.getElementById("divisionSection").style.display = "none";
   document.getElementById("data").style.display = "block";
 
-  const filtered = fullData.filter(item =>
+  let filtered = fullData.filter(item =>
     item.division &&
     item.division.toLowerCase().trim() === divisionName.toLowerCase().trim()
   );
-    
+
+  // ✅ SORT BY DATE (IMPORTANT)
+  filtered.sort((a, b) => {
+    const d1 = toIST(a.timestamp);
+    const d2 = toIST(b.timestamp);
+    return d1 - d2;
+  });
+
   document.getElementById("totalCount").innerText =
-  divisionName + " | Total: " + filtered.length;
+    divisionName + " | Total: " + filtered.length;
 
   renderData(filtered, false);
 }
 
-  function showAllData() {
+function showAllData() {
 
   document.getElementById("divisionSection").style.display = "none";
   document.getElementById("data").style.display = "block";
 
-  renderData(fullData, false);
+  let sorted = [...fullData];
+
+  sorted.sort((a, b) => {
+    const d1 = toIST(a.timestamp);
+    const d2 = toIST(b.timestamp);
+    return d1 - d2;
+  });
+
+  renderData(sorted, false);
 }
   
 let fullData = [];
@@ -355,10 +370,18 @@ function toggleFilter() {
 }
 
 function goBack() {
-  window.location.href = "index.html";
-  document.getElementById("data").style.display = "none";
-  document.getElementById("divisionSection").style.display = "block";
-  document.getElementById("totalCount").style.display = "none"; // ✅ add this
+
+  const dataVisible = document.getElementById("data").style.display === "block";
+
+  if (dataVisible) {
+    // ✅ Entries → Dashboard
+    document.getElementById("data").style.display = "none";
+    document.getElementById("divisionSection").style.display = "block";
+    document.getElementById("totalCount").style.display = "none";
+  } else {
+    // ✅ Dashboard → Index page
+    window.location.href = "index.html";
+  }
 }
 
 // INIT
