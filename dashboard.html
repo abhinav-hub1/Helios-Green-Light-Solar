@@ -24,25 +24,21 @@ body {
 .back-btn { position: absolute; left: 12px; cursor: pointer; }
 
 .search-btn {
-  position: absolute;
-  right: 12px;
-  background: white;
-  color: #1e88e5;
-  padding: 5px 10px;
+  background:  #1e88e5;
+  color: white;
+  padding: 8px 16px;
   border-radius: 8px;
+  border: none;
   cursor: pointer;
 }
 
 #searchPanel {
   display: none;
-  position: absolute;
-  top: 65px;
-  right: 10px;
-  width: 260px;
+  margin: 10px;
   background: #fff;
   padding: 15px;
   border-radius: 12px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 5px 20px rgba(0,0,0,0.15);
 }
 
 .search-option {
@@ -122,7 +118,11 @@ button {
   Dashboard
 </div>
 
-<div id="searchPanel">
+<div class="count-box" id="totalCount" style="display:none;"></div>
+<div id="searchBar" style="display:none; padding:10px; text-align:center;">
+  <button class="search-btn" onclick="toggleSearch()">Search</button>
+</div>
+  <div id="searchPanel">
   
   <div id="searchOptions">
     <div class="search-option" onclick="selectSearch('service', 'Service Number')">Service Number</div>
@@ -138,12 +138,6 @@ button {
     <button class="search-action" onclick="performSearch()">Search</button>
   </div>
 
-</div>
-
-
-<div class="count-box" id="totalCount" style="display:none;"></div>
-<div id="searchBar" style="display:none; padding:10px; text-align:right;">
-  <button class="search-btn" onclick="toggleSearch()">Search</button>
 </div>
 
 <div id="divisionSection" style="padding:20px; text-align:center;">
@@ -213,8 +207,8 @@ async function performSearch() {
   document.getElementById("totalCount").innerText = `Search Results: ${filtered.length}`;
 
   renderData(filtered);
-}
   document.getElementById("searchPanel").style.display = "none";
+}
 
 // CLICK DIVISION
 async function showDivision(e, divisionName) {
@@ -324,22 +318,44 @@ function renderData(data) {
 
 // BACK
 function goBack() {
-  document.getElementById("data").style.display = "none";
-  document.getElementById("divisionSection").style.display = "block";
-  document.getElementById("totalCount").style.display = "none";
-document.getElementById("searchBar").style.display = "none";
-  document.getElementById("searchPanel").style.display = "none";
 
-  document.getElementById("btn1").disabled = false;
-  document.getElementById("btn2").disabled = false;
+  const dataVisible = document.getElementById("data").style.display === "block";
 
-  document.getElementById("btn1").innerText = "Tadepalligudem";
-  document.getElementById("btn2").innerText = "Narsipatnam";
+  if (dataVisible) {
 
-  document.getElementById("btn1").classList.remove("loading");
-  document.getElementById("btn2").classList.remove("loading");
+    // 🔙 go back to dashboard
+    document.getElementById("data").style.display = "none";
+    document.getElementById("divisionSection").style.display = "block";
 
-  isProcessing = false;
+    // hide top sections
+    document.getElementById("totalCount").style.display = "none";
+    document.getElementById("searchBar").style.display = "none";
+    document.getElementById("searchPanel").style.display = "none";
+
+    // 🔄 reset search UI
+    document.getElementById("searchOptions").style.display = "block";
+    document.getElementById("searchInputBox").style.display = "none";
+    document.getElementById("searchInput").value = "";
+
+    // 🔄 reset buttons
+    const btn1 = document.getElementById("btn1");
+    const btn2 = document.getElementById("btn2");
+
+    btn1.disabled = false;
+    btn2.disabled = false;
+
+    btn1.innerText = "Tadepalligudem";
+    btn2.innerText = "Narsipatnam";
+
+    btn1.classList.remove("loading");
+    btn2.classList.remove("loading");
+
+    isProcessing = false;
+
+  } else {
+    // if already on dashboard → go to index
+    window.location.href = "index.html";
+  }
 }
 
 </script>
