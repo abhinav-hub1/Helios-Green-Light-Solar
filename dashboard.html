@@ -145,17 +145,6 @@ button {
   Narsipatnam
 </button>
 </div>
-
-<!-- ✅ MOVE HERE -->
-<div id="loadingText" style="
-  display:none;
-  text-align:center;
-  padding:10px;
-  font-weight:bold;
-  color:#1e88e5;
-">
-  Loading submissions...
-</div>
      <div class="container" id="data" style="display:none;"></div>
 <script>
   
@@ -164,25 +153,20 @@ function showDivision(e, divisionName) {
   const btn1 = document.getElementById("btn1");
   const btn2 = document.getElementById("btn2");
 
-  // 🚫 HARD BLOCK MULTIPLE CLICKS
   if (isProcessing || !fullData.length) return;
 
   isProcessing = true;
 
   const clickedBtn = e.currentTarget;
 
-  // 🔒 Disable both buttons
+  // disable both buttons
   btn1.disabled = true;
   btn2.disabled = true;
 
-  // 🎯 Show loading on clicked button
-  clickedBtn.innerHTML = "Loading...";
+  // show loading ONLY on clicked button
+  clickedBtn.innerHTML = "⏳ Loading...";
   clickedBtn.classList.add("loading");
 
-  // 👉 Optional: show global loading text also
-  document.getElementById("loadingText").style.display = "block";
-
-  // ⚡ SMALL DELAY (VERY IMPORTANT for UI update)
   setTimeout(() => {
 
     let divisionData = fullData.filter(item => {
@@ -208,7 +192,6 @@ function showDivision(e, divisionName) {
              d.getDate() === today.getDate();
     });
 
-    // UI SWITCH
     document.getElementById("divisionSection").style.display = "none";
     document.getElementById("data").style.display = "block";
 
@@ -223,12 +206,9 @@ function showDivision(e, divisionName) {
       renderData(todayData, true);
     }
 
-    // ❌ Hide loading text
-    document.getElementById("loadingText").style.display = "none";
-
     isProcessing = false;
 
-  }, 50); // 👈 THIS FIXES UI NOT UPDATING ISSUE
+  }, 50);
 }
   
 let fullData = [];
