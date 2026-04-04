@@ -167,6 +167,8 @@ button {
 
 function showDivision(divisionName) {
 
+  if (!fullData.length) return;
+
   document.getElementById("divisionSection").style.display = "none";
   document.getElementById("data").style.display = "block";
 
@@ -176,14 +178,12 @@ function showDivision(divisionName) {
     return div.replace(/\s+/g, "") === btn.replace(/\s+/g, "");
   });
 
-  // ✅ SORT
   filtered.sort((a, b) => {
     const d1 = toIST(a.timestamp);
     const d2 = toIST(b.timestamp);
     return d1 - d2;
   });
 
-  // ✅ TODAY COUNT (ONLY THIS DIVISION)
   const today = getTodayIST();
 
   const todayCount = filtered.filter(item => {
@@ -195,13 +195,18 @@ function showDivision(divisionName) {
            d.getDate() === today.getDate();
   }).length;
 
-  // ✅ SET COUNT HERE (IMPORTANT)
+  document.getElementById("totalCount").style.display = "block";
   document.getElementById("totalCount").innerText =
     `${divisionName} | Today: ${todayCount} | Total: ${filtered.length}`;
 
+  if (filtered.length === 0) {
+    document.getElementById("data").innerHTML =
+      `<p style='text-align:center;'>No data found for ${divisionName}</p>`;
+    return;
+  }
+
   renderData(filtered, false);
 }
-
 /*function showAllData() {
 
   document.getElementById("divisionSection").style.display = "none";
