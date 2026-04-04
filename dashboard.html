@@ -136,7 +136,7 @@ button {
 </div>
 
 <div class="count-box" id="totalCount" style="display:none;"></div>
-
+<div id="divisionSection" style="padding:20px; text-align:center;">
 <button id="btn1" class="div-btn" onclick="showDivision(event, 'Tadepalligudem')">
   Tadepalligudem
 </button>
@@ -181,22 +181,28 @@ button {
   renderData(filtered, false);
 }*/
 
-  function showDivision(divisionName) {
+ function showDivision(e, divisionName) {
 
   if (!fullData.length) return;
 
-  // ✅ Step 1: Show loading FIRST
-  document.getElementById("divisionSection").style.display = "none";
-  document.getElementById("loadingText").style.display = "block";
-  document.getElementById("data").style.display = "none";
+  const btn = e.currentTarget;
 
-  // ✅ Step 2: Let browser update UI (CRITICAL)
+  // disable both buttons
+  document.getElementById("btn1").disabled = true;
+  document.getElementById("btn2").disabled = true;
+
+  btn.innerText = "Loading...";
+  btn.classList.add("loading");
+
+  // ✅ FORCE UI repaint
+  btn.offsetHeight;
+
   setTimeout(() => {
 
     let divisionData = fullData.filter(item => {
       const div = (item.division || "").toLowerCase().trim();
-      const btn = divisionName.toLowerCase().trim();
-      return div.replace(/\s+/g, "") === btn.replace(/\s+/g, "");
+      const btnName = divisionName.toLowerCase().trim();
+      return div.replace(/\s+/g, "") === btnName.replace(/\s+/g, "");
     });
 
     divisionData.sort((a, b) => {
@@ -216,8 +222,7 @@ button {
              d.getDate() === today.getDate();
     });
 
-    // ✅ Step 3: Hide loading & show data
-    document.getElementById("loadingText").style.display = "none";
+    document.getElementById("divisionSection").style.display = "none";
     document.getElementById("data").style.display = "block";
 
     document.getElementById("totalCount").style.display = "block";
@@ -227,12 +232,11 @@ button {
     if (todayData.length === 0) {
       document.getElementById("data").innerHTML =
         `<p style='text-align:center;'>No submissions today for ${divisionName}</p>`;
-      return;
+    } else {
+      renderData(todayData, true);
     }
 
-    renderData(todayData, true);
-
-  }, 0); // ✅ ZERO delay (only UI break)
+  }, 0);
 }
   
 /*function showAllData() {
