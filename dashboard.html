@@ -179,6 +179,7 @@ button {
 
   renderData(filtered, false);
 }*/
+
 function showDivision(divisionName) {
 
   if (!fullData.length) return;
@@ -186,55 +187,58 @@ function showDivision(divisionName) {
   // ✅ Show loading immediately
   document.getElementById("loadingText").style.display = "block";
 
-  // ✅ Let browser render loading FIRST
+  // ✅ FORCE browser to paint loading
   requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
 
-    // ✅ Now process data
-    document.getElementById("divisionSection").style.display = "none";
+      // Now safely process data
+      document.getElementById("divisionSection").style.display = "none";
 
-    let divisionData = fullData.filter(item => {
-      const div = (item.division || "").toLowerCase().trim();
-      const btn = divisionName.toLowerCase().trim();
-      return div.replace(/\s+/g, "") === btn.replace(/\s+/g, "");
+      let divisionData = fullData.filter(item => {
+        const div = (item.division || "").toLowerCase().trim();
+        const btn = divisionName.toLowerCase().trim();
+        return div.replace(/\s+/g, "") === btn.replace(/\s+/g, "");
+      });
+
+      divisionData.sort((a, b) => {
+        const d1 = toIST(a.timestamp);
+        const d2 = toIST(b.timestamp);
+        return d1 - d2;
+      });
+
+      const today = getTodayIST();
+
+      const todayData = divisionData.filter(item => {
+        const d = toIST(item.timestamp);
+        if (!d) return false;
+
+        return d.getFullYear() === today.getFullYear() &&
+               d.getMonth() === today.getMonth() &&
+               d.getDate() === today.getDate();
+      });
+
+      // ✅ Hide loading
+      document.getElementById("loadingText").style.display = "none";
+
+      // ✅ Show data
+      document.getElementById("data").style.display = "block";
+
+      document.getElementById("totalCount").style.display = "block";
+      document.getElementById("totalCount").innerText =
+        `${divisionName} | Today: ${todayData.length} | Total: ${divisionData.length}`;
+
+      if (todayData.length === 0) {
+        document.getElementById("data").innerHTML =
+          `<p style='text-align:center;'>No submissions today for ${divisionName}</p>`;
+        return;
+      }
+
+      renderData(todayData, true);
+
     });
-
-    divisionData.sort((a, b) => {
-      const d1 = toIST(a.timestamp);
-      const d2 = toIST(b.timestamp);
-      return d1 - d2;
-    });
-
-    const today = getTodayIST();
-
-    const todayData = divisionData.filter(item => {
-      const d = toIST(item.timestamp);
-      if (!d) return false;
-
-      return d.getFullYear() === today.getFullYear() &&
-             d.getMonth() === today.getMonth() &&
-             d.getDate() === today.getDate();
-    });
-
-    // ✅ Hide loading
-    document.getElementById("loadingText").style.display = "none";
-
-    // ✅ Show data
-    document.getElementById("data").style.display = "block";
-
-    document.getElementById("totalCount").style.display = "block";
-    document.getElementById("totalCount").innerText =
-      `${divisionName} | Today: ${todayData.length} | Total: ${divisionData.length}`;
-
-    if (todayData.length === 0) {
-      document.getElementById("data").innerHTML =
-        `<p style='text-align:center;'>No submissions today for ${divisionName}</p>`;
-      return;
-    }
-
-    renderData(todayData, true);
-
   });
 }
+
   
 /*function showAllData() {
 
