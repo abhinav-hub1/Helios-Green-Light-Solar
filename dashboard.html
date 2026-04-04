@@ -23,7 +23,7 @@ body {
 
 .back-btn { position: absolute; left: 12px; cursor: pointer; }
 
-.filter-btn {
+.search-btn {
   position: absolute;
   right: 12px;
   background: white;
@@ -33,16 +33,29 @@ body {
   cursor: pointer;
 }
 
-#filterPanel {
+#searchPanel {
   display: none;
   position: absolute;
   top: 65px;
   right: 10px;
-  width: 240px;
+  width: 260px;
   background: #fff;
   padding: 15px;
   border-radius: 12px;
   box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.search-option {
+  padding: 8px;
+  margin-bottom: 5px;
+  background: #e3f2fd;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#searchInputBox {
+  display: none;
+  margin-top: 10px;
 }
 
 input { width: 100%; padding: 8px; margin-bottom: 10px; }
@@ -55,8 +68,7 @@ button {
   margin-top: 5px;
 }
 
-.apply-btn { background: #1e88e5; color: white; }
-.clear-btn { background: red; color: white; }
+.search-action { background: #1e88e5; color: white; }
 
 .count-box {
   text-align: center;
@@ -108,16 +120,20 @@ button {
 <div class="header">
   <div class="back-btn" onclick="goBack()">←</div>
   Dashboard
-  <div class="filter-btn" onclick="toggleFilter()">Filter</div>
+  <div class="search-btn" onclick="toggleSearch()">Search</div>
 </div>
 
-<div id="filterPanel">
-  <label>From</label>
-  <input type="date" id="fromDate">
-  <label>To</label>
-  <input type="date" id="toDate">
-  <button class="apply-btn" onclick="applyFilter()">Apply</button>
-  <button class="clear-btn" onclick="clearFilter()">Clear</button>
+<div id="searchPanel">
+  <div class="search-option" onclick="selectSearch('service')">Service Number</div>
+  <div class="search-option" onclick="selectSearch('name')">Consumer Name</div>
+  <div class="search-option" onclick="selectSearch('village')">Village</div>
+  <div class="search-option" onclick="selectSearch('phone')">Phone Number</div>
+  <div class="search-option" onclick="selectSearch('subdivision')">Subdivision</div>
+
+  <div id="searchInputBox">
+    <input type="text" id="searchInput" placeholder="Enter value">
+    <button class="search-action" onclick="performSearch()">Search</button>
+  </div>
 </div>
 
 <div class="count-box" id="totalCount" style="display:none;"></div>
@@ -133,8 +149,39 @@ button {
 
 let fullData = [];
 let isProcessing = false;
+let selectedSearchType = "";
 
-// CLICK
+// SEARCH UI
+function toggleSearch() {
+  const panel = document.getElementById("searchPanel");
+  panel.style.display = panel.style.display === "block" ? "none" : "block";
+}
+
+function selectSearch(type) {
+  selectedSearchType = type;
+  document.getElementById("searchInputBox").style.display = "block";
+  document.getElementById("searchInput").value = "";
+}
+
+function performSearch() {
+
+  const value = document.getElementById("searchInput").value.toLowerCase().trim();
+  if (!value) return;
+
+  const filtered = fullData.filter(item => {
+    const field = (item[selectedSearchType] || "").toLowerCase();
+    return field.includes(value);
+  });
+
+  document.getElementById("divisionSection").style.display = "none";
+  document.getElementById("data").style.display = "block";
+  document.getElementById("totalCount").style.display = "block";
+  document.getElementById("totalCount").innerText = `Search Results: ${filtered.length}`;
+
+  renderData(filtered);
+}
+
+// CLICK DIVISION
 async function showDivision(e, divisionName) {
 
   if (isProcessing) return;
@@ -162,8 +209,6 @@ async function showDivision(e, divisionName) {
       return div.replace(/\s+/g, "") === divisionName.toLowerCase().replace(/\s+/g, "");
     });
 
-    divisionData.sort((a, b) => toIST(a.timestamp) - toIST(b.timestamp));
-
     const today = getTodayIST();
 
     const todayData = divisionData.filter(item => {
@@ -181,12 +226,7 @@ async function showDivision(e, divisionName) {
     document.getElementById("totalCount").innerText =
       `${divisionName} | Today: ${todayData.length} | Total: ${divisionData.length}`;
 
-    if (todayData.length === 0) {
-      document.getElementById("data").innerHTML =
-        `<p style='text-align:center;'>No submissions today for ${divisionName}</p>`;
-    } else {
-      renderData(todayData);
-    }
+    renderData(todayData);
 
   } catch (err) {
     alert("Error loading data");
@@ -195,14 +235,14 @@ async function showDivision(e, divisionName) {
   isProcessing = false;
 }
 
-// FETCH DATA
+// FETCH
 async function loadData() {
   const res = await fetch("https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?type=all&t=" + Date.now());
   fullData = await res.json();
   fullData = fullData.filter(item => item.timestamp);
 }
 
-// DATE HELPERS
+// DATE
 function toIST(dateInput) {
   if (!dateInput) return null;
   const parts = dateInput.split(/[- :]/);
@@ -230,115 +270,41 @@ function renderData(data) {
   const container = document.getElementById("data");
   container.innerHTML = "";
 
-  let currentDate = "";
+  if (!data.length) {
+    container.innerHTML = "<p style='text-align:center;'>No data found</p>";
+    return;
+  }
 
-  data.slice().reverse().forEach(item => {
-
-    const d = toIST(item.timestamp);
-    if (!d) return;
-
-    const dateStr =
-      String(d.getDate()).padStart(2, "0") + "/" +
-      String(d.getMonth() + 1).padStart(2, "0") + "/" +
-      d.getFullYear();
-
-    if (dateStr !== currentDate) {
-      currentDate = dateStr;
-      container.innerHTML += `<div class="date-header">${dateStr}</div>`;
-    }
-
-    const time = d.toLocaleTimeString("en-IN", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-      timeZone: "Asia/Kolkata"
-    });
-
+  data.forEach(item => {
     container.innerHTML += `
       <div class="card">
         <b>${item.service}</b><br>
         ${item.name}<br>
         ${item.phone}<br>
-        ${item.surveyor || "-"}<br>
-        <div class="time">${time}</div>
+        ${item.village || "-"}<br>
       </div>
     `;
   });
 }
 
-// FILTER
-function applyFilter() {
-  const from = document.getElementById("fromDate").value;
-  const to = document.getElementById("toDate").value;
-
-  const fromTime = from ? new Date(from).getTime() : null;
-  const toTime = to ? new Date(to).getTime() : null;
-
-  const divisionName = document.getElementById("totalCount").innerText.split("|")[0].trim();
-
-  let divisionData = fullData.filter(item => {
-    const div = (item.division || "").toLowerCase().trim();
-    return div.replace(/\s+/g, "") === divisionName.toLowerCase().replace(/\s+/g, "");
-  });
-
-  const filtered = divisionData.filter(item => {
-    const d = toIST(item.timestamp);
-    if (!d) return false;
-    const time = d.getTime();
-    if (fromTime && time < fromTime) return false;
-    if (toTime && time > toTime + 86400000) return false;
-    return true;
-  });
-
-  renderData(filtered);
-  document.getElementById("filterPanel").style.display = "none";
-}
-
-function clearFilter() {
-  document.getElementById("fromDate").value = "";
-  document.getElementById("toDate").value = "";
-
-  const divisionName = document.getElementById("totalCount").innerText.split("|")[0].trim();
-
-  let btn = divisionName === "Tadepalligudem"
-    ? document.getElementById("btn1")
-    : document.getElementById("btn2");
-
-  showDivision({ currentTarget: btn }, divisionName);
-  document.getElementById("filterPanel").style.display = "none";
-}
-
-// UI
-function toggleFilter() {
-  const p = document.getElementById("filterPanel");
-  p.style.display = p.style.display === "block" ? "none" : "block";
-}
-
+// BACK
 function goBack() {
-  const dataVisible = document.getElementById("data").style.display === "block";
+  document.getElementById("data").style.display = "none";
+  document.getElementById("divisionSection").style.display = "block";
+  document.getElementById("totalCount").style.display = "none";
 
-  if (dataVisible) {
-    document.getElementById("data").style.display = "none";
-    document.getElementById("divisionSection").style.display = "block";
-    document.getElementById("totalCount").style.display = "none";
+  document.getElementById("searchPanel").style.display = "none";
 
-    const btn1 = document.getElementById("btn1");
-    const btn2 = document.getElementById("btn2");
+  document.getElementById("btn1").disabled = false;
+  document.getElementById("btn2").disabled = false;
 
-    btn1.disabled = false;
-    btn2.disabled = false;
+  document.getElementById("btn1").innerText = "Tadepalligudem";
+  document.getElementById("btn2").innerText = "Narsipatnam";
 
-    btn1.innerText = "Tadepalligudem";
-    btn2.innerText = "Narsipatnam";
+  document.getElementById("btn1").classList.remove("loading");
+  document.getElementById("btn2").classList.remove("loading");
 
-    btn1.classList.remove("loading");
-    btn2.classList.remove("loading");
-
-    isProcessing = false;
-
-  } else {
-    window.location.href = "index.html";
-  }
+  isProcessing = false;
 }
 
 </script>
