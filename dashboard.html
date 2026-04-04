@@ -124,16 +124,21 @@ button {
 </div>
 
 <div id="searchPanel">
-  <div class="search-option" onclick="selectSearch('service')">Service Number</div>
-  <div class="search-option" onclick="selectSearch('name')">Consumer Name</div>
-  <div class="search-option" onclick="selectSearch('village')">Village</div>
-  <div class="search-option" onclick="selectSearch('phone')">Phone Number</div>
-  <div class="search-option" onclick="selectSearch('subdivision')">Subdivision</div>
+  
+  <div id="searchOptions">
+    <div class="search-option" onclick="selectSearch('service', 'Service Number')">Service Number</div>
+    <div class="search-option" onclick="selectSearch('name', 'Consumer Name')">Consumer Name</div>
+    <div class="search-option" onclick="selectSearch('village', 'Village')">Village</div>
+    <div class="search-option" onclick="selectSearch('phone', 'Phone Number')">Phone Number</div>
+    <div class="search-option" onclick="selectSearch('subdivision', 'Subdivision')">Subdivision</div>
+  </div>
 
-  <div id="searchInputBox">
+  <div id="searchInputBox" style="display:none;">
+    <div id="selectedLabel" style="margin-bottom:8px; font-weight:bold;"></div>
     <input type="text" id="searchInput" placeholder="Enter value">
     <button class="search-action" onclick="performSearch()">Search</button>
   </div>
+
 </div>
 
 <div class="count-box" id="totalCount" style="display:none;"></div>
@@ -153,13 +158,34 @@ let selectedSearchType = "";
 
 // SEARCH UI
 function toggleSearch() {
+
   const panel = document.getElementById("searchPanel");
-  panel.style.display = panel.style.display === "block" ? "none" : "block";
+
+  if (panel.style.display === "block") {
+    panel.style.display = "none";
+  } else {
+    panel.style.display = "block";
+
+    // reset UI
+    document.getElementById("searchOptions").style.display = "block";
+    document.getElementById("searchInputBox").style.display = "none";
+  }
 }
 
-function selectSearch(type) {
+function selectSearch(type, label) {
+
   selectedSearchType = type;
+
+  // hide all options
+  document.getElementById("searchOptions").style.display = "none";
+
+  // show input section
   document.getElementById("searchInputBox").style.display = "block";
+
+  // show selected label
+  document.getElementById("selectedLabel").innerText = label;
+
+  // clear input
   document.getElementById("searchInput").value = "";
 }
 
