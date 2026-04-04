@@ -183,13 +183,14 @@ function showDivision(divisionName) {
 
   if (!fullData.length) return;
 
-  // ✅ Hide buttons immediately
-  document.getElementById("divisionSection").style.display = "none";
-
-  // ✅ Show loading text
+  // ✅ Show loading immediately
   document.getElementById("loadingText").style.display = "block";
 
-  setTimeout(() => {
+  // ✅ Let browser render loading FIRST
+  requestAnimationFrame(() => {
+
+    // ✅ Now process data
+    document.getElementById("divisionSection").style.display = "none";
 
     let divisionData = fullData.filter(item => {
       const div = (item.division || "").toLowerCase().trim();
@@ -232,7 +233,7 @@ function showDivision(divisionName) {
 
     renderData(todayData, true);
 
-  }, 80);
+  });
 }
   
 /*function showAllData() {
