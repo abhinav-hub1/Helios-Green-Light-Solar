@@ -142,15 +142,12 @@ button {
     Narsipatnam
   </button>
 
-  <button class="div-btn" onclick="showAllData()">
-    ALL
-  </button>
 </div>
      <div class="container" id="data" style="display:none;"></div>
   
 <script>
 
- function filterDivision(e, divisionName) {
+ /*function filterDivision(e, divisionName) {
 
   document.querySelectorAll("button").forEach(btn => {
     btn.style.background = "";
@@ -166,7 +163,7 @@ button {
   });
 
   renderData(filtered, false);
-}
+}*/
 
   function showDivision(divisionName) {
 
@@ -191,7 +188,7 @@ button {
   renderData(filtered, false);
 }
 
-function showAllData() {
+/*function showAllData() {
 
   document.getElementById("divisionSection").style.display = "none";
   document.getElementById("data").style.display = "block";
@@ -205,7 +202,7 @@ function showAllData() {
   });
 
   renderData(sorted, false);
-}
+}*/
   
 let fullData = [];
 
@@ -254,7 +251,7 @@ async function loadData() {
 }
 
 // ✅ SHOW TODAY
-function showToday() {
+/*function showToday() {
   const today = getTodayIST();
 
   const todayData = fullData.filter(item => {
@@ -267,7 +264,7 @@ d.getDate() === today.getDate()
   });
 
   renderData(todayData, true);
-}
+}*/
 
 // 🎯 RENDER
 function renderData(data, isToday = false) {
