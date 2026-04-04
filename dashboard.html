@@ -304,13 +304,41 @@ function renderData(data) {
     return;
   }
 
-  data.forEach(item => {
+  let currentDate = "";
+
+  data.slice().reverse().forEach(item => {
+
+    const d = toIST(item.timestamp);
+    if (!d) return;
+
+    // 📅 Date format
+    const dateStr =
+      String(d.getDate()).padStart(2, "0") + "/" +
+      String(d.getMonth() + 1).padStart(2, "0") + "/" +
+      d.getFullYear();
+
+    // 🔹 Group by date
+    if (dateStr !== currentDate) {
+      currentDate = dateStr;
+      container.innerHTML += `<div class="date-header">${dateStr}</div>`;
+    }
+
+    // ⏰ Time (IST)
+    const time = d.toLocaleTimeString("en-IN", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+      timeZone: "Asia/Kolkata"
+    });
+
+    // 🧾 Card
     container.innerHTML += `
       <div class="card">
         <b>${item.service}</b><br>
         ${item.name}<br>
         ${item.phone}<br>
-        ${item.village || "-"}<br>
+        ${item.surveyor || "-"}<br>
+        <div class="time">${time}</div>
       </div>
     `;
   });
