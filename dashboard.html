@@ -120,7 +120,6 @@ button {
 <div class="header">
   <div class="back-btn" onclick="goBack()">←</div>
   Dashboard
-  <div class="search-btn" onclick="toggleSearch()">Search</div>
 </div>
 
 <div id="searchPanel">
@@ -141,7 +140,11 @@ button {
 
 </div>
 
+
 <div class="count-box" id="totalCount" style="display:none;"></div>
+<div id="searchBar" style="display:none; padding:10px; text-align:right;">
+  <button class="search-btn" onclick="toggleSearch()">Search</button>
+</div>
 
 <div id="divisionSection" style="padding:20px; text-align:center;">
   <button id="btn1" class="div-btn" onclick="showDivision(event, 'Tadepalligudem')">Tadepalligudem</button>
@@ -189,10 +192,15 @@ function selectSearch(type, label) {
   document.getElementById("searchInput").value = "";
 }
 
-function performSearch() {
+async function performSearch() {
 
   const value = document.getElementById("searchInput").value.toLowerCase().trim();
   if (!value) return;
+
+  // 🔥 ensure data is loaded
+  if (!fullData.length) {
+    await loadData();
+  }
 
   const filtered = fullData.filter(item => {
     const field = (item[selectedSearchType] || "").toLowerCase();
@@ -206,6 +214,7 @@ function performSearch() {
 
   renderData(filtered);
 }
+  document.getElementById("searchPanel").style.display = "none";
 
 // CLICK DIVISION
 async function showDivision(e, divisionName) {
@@ -248,7 +257,7 @@ async function showDivision(e, divisionName) {
     document.getElementById("divisionSection").style.display = "none";
     document.getElementById("data").style.display = "block";
     document.getElementById("totalCount").style.display = "block";
-
+document.getElementById("searchBar").style.display = "block";
     document.getElementById("totalCount").innerText =
       `${divisionName} | Today: ${todayData.length} | Total: ${divisionData.length}`;
 
@@ -318,7 +327,7 @@ function goBack() {
   document.getElementById("data").style.display = "none";
   document.getElementById("divisionSection").style.display = "block";
   document.getElementById("totalCount").style.display = "none";
-
+document.getElementById("searchBar").style.display = "none";
   document.getElementById("searchPanel").style.display = "none";
 
   document.getElementById("btn1").disabled = false;
