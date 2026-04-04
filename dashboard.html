@@ -23,41 +23,6 @@ body {
 
 .back-btn { position: absolute; left: 12px; cursor: pointer; }
 
-.filter-btn {
-  position: absolute;
-  right: 12px;
-  background: white;
-  color: #1e88e5;
-  padding: 5px 10px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-#filterPanel {
-  display: none;
-  position: absolute;
-  top: 65px;
-  right: 10px;
-  width: 240px;
-  background: #fff;
-  padding: 15px;
-  border-radius: 12px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-}
-
-input { width: 100%; padding: 8px; margin-bottom: 10px; }
-
-button {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  margin-top: 5px;
-}
-
-.apply-btn { background: #1e88e5; color: white; }
-.clear-btn { background: red; color: white; }
-
 .count-box {
   text-align: center;
   padding: 10px;
@@ -65,7 +30,7 @@ button {
   font-weight: bold;
 }
 
-   .div-btn {
+.div-btn {
   width: 90%;
   padding: 16px;
   margin: 12px auto;
@@ -76,21 +41,14 @@ button {
   color: white;
   font-size: 16px;
   font-weight: 600;
-  letter-spacing: 0.5px;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  transition: all 0.25s ease;
-}
-  .div-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
 }
 
-.div-btn:active {
-  transform: scale(0.98);
-  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+.div-btn.loading {
+  opacity: 0.6;
+  pointer-events: none;
 }
-  
+
 .container { padding: 10px; }
 
 .card {
@@ -107,12 +65,6 @@ button {
 }
 
 .time { font-size: 12px; color: gray; }
-
-  .div-btn.loading {
-  opacity: 0.6;
-  pointer-events: none;
-}
-
 </style>
 </head>
 
@@ -121,248 +73,105 @@ button {
 <div class="header">
   <div class="back-btn" onclick="goBack()">←</div>
   Dashboard
-  <div class="filter-btn" onclick="toggleFilter()">Filter</div>
 </div>
 
-<div id="filterPanel">
-  <label>From</label>
-  <input type="date" id="fromDate">
+<div id="totalCount" class="count-box" style="display:none;"></div>
 
-  <label>To</label>
-  <input type="date" id="toDate">
-
-  <button class="apply-btn" onclick="applyFilter()">Apply</button>
-  <button class="clear-btn" onclick="clearFilter()">Clear</button>
-</div>
-
-<div class="count-box" id="totalCount" style="display:none;"></div>
 <div id="divisionSection" style="padding:20px; text-align:center;">
-<button id="btn1" class="div-btn" onclick="showDivision(event, 'Tadepalligudem')">
-  Tadepalligudem
-</button>
+  <button id="btn1" class="div-btn" onclick="showDivision(event, 'Tadepalligudem')">
+    Tadepalligudem
+  </button>
 
-<button id="btn2" class="div-btn" onclick="showDivision(event, 'Narsipatnam')">
-  Narsipatnam
-</button>
+  <button id="btn2" class="div-btn" onclick="showDivision(event, 'Narsipatnam')">
+    Narsipatnam
+  </button>
 </div>
 
-<!-- ✅ MOVE HERE -->
-<div id="loadingText" style="
-  display:none;
-  text-align:center;
-  padding:10px;
-  font-weight:bold;
-  color:#1e88e5;
-">
-  Loading submissions...
-</div>
+<div id="data" class="container" style="display:none;"></div>
 
-
-     <div class="container" id="data" style="display:none;"></div>
-
-  
 <script>
 
- /*function filterDivision(e, divisionName) {
+let fullData = [];
+let isProcessing = false;
 
-  document.querySelectorAll("button").forEach(btn => {
-    btn.style.background = "";
-    btn.style.color = "";
-  });
-
-  e.target.style.background = "#1e88e5";
-  e.target.style.color = "white";
-
-  const filtered = fullData.filter(item => {
-    return item.division &&
-      item.division.toLowerCase().trim() === divisionName.toLowerCase().trim();
-  });
-
-  renderData(filtered, false);
-}*/
-
+// ✅ MAIN FUNCTION (FINAL)
 function showDivision(e, divisionName) {
 
-  if (!fullData.length || isProcessing) return;
+  const btn1 = document.getElementById("btn1");
+  const btn2 = document.getElementById("btn2");
+
+  // ✅ VALIDATION
+  if (!fullData.length || isProcessing || btn1.disabled || btn2.disabled) return;
 
   isProcessing = true;
 
   const btn = e.currentTarget;
 
-  // disable buttons
-  document.getElementById("btn1").disabled = true;
-  document.getElementById("btn2").disabled = true;
+  btn1.disabled = true;
+  btn2.disabled = true;
 
-  // show loading immediately
   btn.innerText = "Loading...";
   btn.classList.add("loading");
 
-  // 🔥 CRITICAL: stop here, let UI update first
-  requestAnimationFrame(() => {
-
-    requestAnimationFrame(() => {
-
-      let divisionData = fullData.filter(item => {
-        const div = (item.division || "").toLowerCase().trim();
-        const btnName = divisionName.toLowerCase().trim();
-        return div.replace(/\s+/g, "") === btnName.replace(/\s+/g, "");
-      });
-
-      divisionData.sort((a, b) => {
-        const d1 = toIST(a.timestamp);
-        const d2 = toIST(b.timestamp);
-        return d1 - d2;
-      });
-
-      const today = getTodayIST();
-
-      const todayData = divisionData.filter(item => {
-        const d = toIST(item.timestamp);
-        if (!d) return false;
-
-        return d.getFullYear() === today.getFullYear() &&
-               d.getMonth() === today.getMonth() &&
-               d.getDate() === today.getDate();
-      });
-
-      document.getElementById("divisionSection").style.display = "none";
-      document.getElementById("data").style.display = "block";
-
-      document.getElementById("totalCount").style.display = "block";
-      document.getElementById("totalCount").innerText =
-        `${divisionName} | Today: ${todayData.length} | Total: ${divisionData.length}`;
-
-      if (todayData.length === 0) {
-        document.getElementById("data").innerHTML =
-          `<p style='text-align:center;'>No submissions today for ${divisionName}</p>`;
-      } else {
-        renderData(todayData, true);
-      }
-
-      isProcessing = false;
-
-    });
-
+  let divisionData = fullData.filter(item => {
+    const div = (item.division || "").toLowerCase().trim();
+    const btnName = divisionName.toLowerCase().trim();
+    return div.replace(/\s+/g, "") === btnName.replace(/\s+/g, "");
   });
-}
-  
-/*function showAllData() {
+
+  divisionData.sort((a, b) => {
+    return toIST(a.timestamp) - toIST(b.timestamp);
+  });
+
+  const today = getTodayIST();
+
+  const todayData = divisionData.filter(item => {
+    const d = toIST(item.timestamp);
+    return d &&
+      d.getFullYear() === today.getFullYear() &&
+      d.getMonth() === today.getMonth() &&
+      d.getDate() === today.getDate();
+  });
 
   document.getElementById("divisionSection").style.display = "none";
   document.getElementById("data").style.display = "block";
 
-  let sorted = [...fullData];
-
-  sorted.sort((a, b) => {
-    const d1 = toIST(a.timestamp);
-    const d2 = toIST(b.timestamp);
-    return d1 - d2;
-  });
-
-  renderData(sorted, false);
-}*/
-  
-let fullData = [];
-let isProcessing = false;
-// ✅ SAFE IST CONVERSION
-function toIST(dateInput) {
-  if (!dateInput) return null;
-
-  // convert "yyyy-MM-dd HH:mm:ss" → proper Date
-  const parts = dateInput.split(/[- :]/);
-
-  return new Date(
-    parts[0],
-    parts[1] - 1,
-    parts[2],
-    parts[3],
-    parts[4],
-    parts[5]
-  );
-}
-
-// ✅ TODAY (IST)
-function getTodayIST() {
-  const now = new Date();
-
-  // ✅ Get IST parts directly
-  const formatter = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Asia/Kolkata",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit"
-  });
-
-  const parts = formatter.formatToParts(now);
-
-  const year = parts.find(p => p.type === "year").value;
-  const month = parts.find(p => p.type === "month").value;
-  const day = parts.find(p => p.type === "day").value;
-
-  return new Date(year, month - 1, day);
-}
-
-// 🚀 LOAD DATA
-async function loadData() {
-  const res = await fetch("https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?type=all&t=" + Date.now());
-  fullData = await res.json();
-
-// ✅ Remove unnecessary re-renders
-fullData = fullData.filter(item => item.timestamp);
-  document.getElementById("btn1").disabled = false;
-  document.getElementById("btn2").disabled = false;
-}
-
-// ✅ SHOW TODAY
-/*function showToday() {
-  const today = getTodayIST();
-
-  const todayData = fullData.filter(item => {
-    const d = toIST(item.timestamp);
-    if (!d) return false;
-
-    return d.getFullYear() === today.getFullYear() &&
-d.getMonth() === today.getMonth() &&
-d.getDate() === today.getDate()
-  });
-
-  renderData(todayData, true);
-}*/
-
-// 🎯 RENDER
-function renderData(data, isToday = false) {
-
   document.getElementById("totalCount").style.display = "block";
-    const container = document.getElementById("data");
+  document.getElementById("totalCount").innerText =
+    `${divisionName} | Today: ${todayData.length} | Total: ${divisionData.length}`;
+
+  renderData(todayData);
+
+  isProcessing = false;
+}
+
+// ✅ RENDER
+function renderData(data) {
+
+  const container = document.getElementById("data");
   container.innerHTML = "";
 
-  if (data.length === 0) {
-  container.innerHTML = "<p style='text-align:center;'>No data found</p>";
+  if (!data.length) {
+    container.innerHTML = "<p style='text-align:center;'>No data found</p>";
     return;
-}
-
+  }
 
   let currentDate = "";
 
-  // 🔄 Loop data
   data.slice().reverse().forEach(item => {
 
     const d = toIST(item.timestamp);
-    if (!d) return; // skip invalid
 
-    // ✅ DATE (manual → no timezone issue)
     const dateStr =
       String(d.getDate()).padStart(2, "0") + "/" +
       String(d.getMonth() + 1).padStart(2, "0") + "/" +
       d.getFullYear();
 
-    // 📅 Group by date
     if (dateStr !== currentDate) {
       currentDate = dateStr;
       container.innerHTML += `<div class="date-header">${dateStr}</div>`;
     }
 
-    // ✅ TIME (FORCED IST)
     const time = d.toLocaleTimeString("en-IN", {
       hour: "2-digit",
       minute: "2-digit",
@@ -370,82 +179,27 @@ function renderData(data, isToday = false) {
       timeZone: "Asia/Kolkata"
     });
 
-    // 🧾 Card UI
     container.innerHTML += `
       <div class="card">
         <b>${item.service}</b><br>
         ${item.name}<br>
         ${item.phone}<br>
-        ${item.surveyor || "-"}<br>
         <div class="time">${time}</div>
       </div>
     `;
   });
-
 }
 
-// 🔍 FILTER (FIXED WITH TIMESTAMP)
-function applyFilter() {
-
-  const from = document.getElementById("fromDate").value;
-  const to = document.getElementById("toDate").value;
-
-  const fromTime = from ? new Date(from).getTime() : null;
-  const toTime = to ? new Date(to).getTime() : null;
-
-  const divisionName = document.getElementById("totalCount").innerText.split("|")[0].trim();
-
-  // ✅ Filter only selected division
-  let divisionData = fullData.filter(item => {
-    const div = (item.division || "").toLowerCase().trim();
-    return div.replace(/\s+/g, "") === divisionName.toLowerCase().replace(/\s+/g, "");
-  });
-
-  const filtered = divisionData.filter(item => {
-
-    const d = toIST(item.timestamp);
-    if (!d) return false;
-
-    const time = d.getTime();
-
-    if (fromTime && time < fromTime) return false;
-    if (toTime && time > toTime + 86400000) return false;
-
-    return true;
-  });
-
-  renderData(filtered, false);
-  document.getElementById("filterPanel").style.display = "none";
-}
-
-// ❌ CLEAR
-function clearFilter() {
-  document.getElementById("fromDate").value = "";
-  document.getElementById("toDate").value = "";
-  // reload current division (today view)
-  const divisionName = document.getElementById("totalCount").innerText.split("|")[0].trim();
-  showDivision(divisionName);
-    
-  document.getElementById("filterPanel").style.display = "none";
-}
-
-// UI
-function toggleFilter() {
-  const p = document.getElementById("filterPanel");
-  p.style.display = p.style.display === "block" ? "none" : "block";
-}
-
+// ✅ BACK BUTTON FIX
 function goBack() {
 
   const dataVisible = document.getElementById("data").style.display === "block";
 
   if (dataVisible) {
-    // show dashboard
     document.getElementById("data").style.display = "none";
     document.getElementById("divisionSection").style.display = "block";
     document.getElementById("totalCount").style.display = "none";
 
-    // 🔄 RESET BUTTONS FULLY
     const btn1 = document.getElementById("btn1");
     const btn2 = document.getElementById("btn2");
 
@@ -458,14 +212,46 @@ function goBack() {
     btn1.classList.remove("loading");
     btn2.classList.remove("loading");
 
-    isProcessing = false; // 🔓 reset lock
+    isProcessing = false;
 
   } else {
     window.location.href = "index.html";
   }
 }
 
-// INIT
+// ✅ IST FIX
+function toIST(dateInput) {
+  const parts = dateInput.split(/[- :]/);
+  return new Date(parts[0], parts[1]-1, parts[2], parts[3], parts[4], parts[5]);
+}
+
+function getTodayIST() {
+  const now = new Date();
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Kolkata",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  });
+
+  const parts = formatter.formatToParts(now);
+  return new Date(
+    parts.find(p=>p.type==="year").value,
+    parts.find(p=>p.type==="month").value-1,
+    parts.find(p=>p.type==="day").value
+  );
+}
+
+// ✅ LOAD DATA
+async function loadData() {
+  const res = await fetch("https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec");
+  fullData = await res.json();
+  fullData = fullData.filter(item => item.timestamp);
+
+  document.getElementById("btn1").disabled = false;
+  document.getElementById("btn2").disabled = false;
+}
+
 loadData();
 
 </script>
