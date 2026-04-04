@@ -65,6 +65,32 @@ button {
   font-weight: bold;
 }
 
+   .div-btn {
+  width: 90%;
+  padding: 16px;
+  margin: 12px auto;
+  display: block;
+  border-radius: 14px;
+  border: none;
+  background: linear-gradient(135deg, #1e88e5, #1565c0);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: all 0.25s ease;
+}
+  .div-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+
+.div-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
+  
 .container { padding: 10px; }
 
 .card {
@@ -81,6 +107,7 @@ button {
 }
 
 .time { font-size: 12px; color: gray; }
+
 </style>
 </head>
 
@@ -103,16 +130,23 @@ button {
   <button class="clear-btn" onclick="clearFilter()">Clear</button>
 </div>
 
-<div class="count-box" id="totalCount">Loading...</div>
+<div class="count-box" id="totalCount" style="display:none;"></div>
 
-<div class="container" id="data"></div>
+ <div id="divisionSection" style="padding:20px; text-align:center;">
 
-  <div style="display:flex; gap:10px; padding:10px;">
-  <button onclick="filterDivision(event, 'Thadepalligudem')">Thadepalligudem</button>
-<button onclick="filterDivision(event, 'Narsipatnam')">Narsipatnam</button>
-  <button onclick="showToday()">All</button>
-    
+  <button class="div-btn" onclick="showDivision('Thadepalligudem')">
+    Thadepalligudem
+  </button>
+
+  <button class="div-btn" onclick="showDivision('Narsipatnam')">
+    Narsipatnam
+  </button>
+
+  <button class="div-btn" onclick="showAllData()">
+    ALL
+  </button>
 </div>
+     <div class="container" id="data" style="display:none;"></div>
   
 <script>
 
@@ -134,6 +168,30 @@ button {
   renderData(filtered, false);
 }
 
+  function showDivision(divisionName) {
+
+  document.getElementById("divisionSection").style.display = "none";
+  document.getElementById("data").style.display = "block";
+
+  const filtered = fullData.filter(item =>
+    item.division &&
+    item.division.toLowerCase().trim() === divisionName.toLowerCase().trim()
+  );
+    
+  document.getElementById("totalCount").innerText =
+  divisionName + " | Total: " + filtered.length;
+
+  renderData(filtered, false);
+}
+
+  function showAllData() {
+
+  document.getElementById("divisionSection").style.display = "none";
+  document.getElementById("data").style.display = "block";
+
+  renderData(fullData, false);
+}
+  
 let fullData = [];
 
 // ✅ SAFE IST CONVERSION
@@ -178,8 +236,6 @@ function getTodayIST() {
 async function loadData() {
   const res = await fetch("https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?type=all&t=" + Date.now());
   fullData = await res.json();
-
-  showToday();
 }
 
 // ✅ SHOW TODAY
@@ -201,13 +257,15 @@ d.getDate() === today.getDate()
 // 🎯 RENDER
 function renderData(data, isToday = false) {
 
-  if (data.length === 0) {
-  container.innerHTML = "<p style='text-align:center;'>No data found</p>";
-}
-  
-  const container = document.getElementById("data");
+  document.getElementById("totalCount").style.display = "block";
+    const container = document.getElementById("data");
   container.innerHTML = "";
 
+  if (data.length === 0) {
+  container.innerHTML = "<p style='text-align:center;'>No data found</p>";
+    return;
+}
+  
   // ✅ Count display
   document.getElementById("totalCount").innerText =
     isToday
@@ -286,7 +344,7 @@ function applyFilter() {
 function clearFilter() {
   document.getElementById("fromDate").value = "";
   document.getElementById("toDate").value = "";
-  showToday();
+  renderData(fullData, false);
   document.getElementById("filterPanel").style.display = "none";
 }
 
@@ -297,7 +355,9 @@ function toggleFilter() {
 }
 
 function goBack() {
-  window.location.href = "index.html";
+  document.getElementById("data").style.display = "none";
+  document.getElementById("divisionSection").style.display = "block";
+  document.getElementById("totalCount").style.display = "none"; // ✅ add this
 }
 
 // INIT
