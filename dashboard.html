@@ -165,17 +165,22 @@ button {
   renderData(filtered, false);
 }*/
 
-  function showDivision(divisionName) {
+function showDivision(divisionName) {
+
+  if (!fullData.length) {
+    alert("⏳ Data is loading... Please wait");
+    return;
+  }
 
   document.getElementById("divisionSection").style.display = "none";
   document.getElementById("data").style.display = "block";
 
-  let filtered = fullData.filter(item =>
-    item.division &&
-    item.division.toLowerCase().trim() === divisionName.toLowerCase().trim()
-  );
+  let filtered = fullData.filter(item => {
+    const div = (item.division || "").toLowerCase().trim();
+    const btn = divisionName.toLowerCase().trim();
+    return div.replace(/\s+/g, "") === btn.replace(/\s+/g, "");
+  });
 
-  // ✅ SORT BY DATE (IMPORTANT)
   filtered.sort((a, b) => {
     const d1 = toIST(a.timestamp);
     const d2 = toIST(b.timestamp);
@@ -248,6 +253,9 @@ function getTodayIST() {
 async function loadData() {
   const res = await fetch("https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?type=all&t=" + Date.now());
   fullData = await res.json();
+
+  document.getElementById("btn1").disabled = false;
+  document.getElementById("btn2").disabled = false;
 }
 
 // ✅ SHOW TODAY
