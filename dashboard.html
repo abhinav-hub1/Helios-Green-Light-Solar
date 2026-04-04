@@ -107,7 +107,32 @@ button {
 
 <div class="container" id="data"></div>
 
+  <div style="display:flex; gap:10px; padding:10px;">
+  <button onclick="filterDivision(event, 'Thadepalligudem')">Thadepalligudem</button>
+<button onclick="filterDivision(event, 'Narsipatnam')">Narsipatnam</button>
+  <button onclick="showToday()">All</button>
+    
+</div>
+  
 <script>
+
+ function filterDivision(e, divisionName) {
+
+  document.querySelectorAll("button").forEach(btn => {
+    btn.style.background = "";
+    btn.style.color = "";
+  });
+
+  e.target.style.background = "#1e88e5";
+  e.target.style.color = "white";
+
+  const filtered = fullData.filter(item => {
+    return item.division &&
+      item.division.toLowerCase().trim() === divisionName.toLowerCase().trim();
+  });
+
+  renderData(filtered, false);
+}
 
 let fullData = [];
 
@@ -176,6 +201,10 @@ d.getDate() === today.getDate()
 // 🎯 RENDER
 function renderData(data, isToday = false) {
 
+  if (data.length === 0) {
+  container.innerHTML = "<p style='text-align:center;'>No data found</p>";
+}
+  
   const container = document.getElementById("data");
   container.innerHTML = "";
 
@@ -250,6 +279,7 @@ function applyFilter() {
   });
 
   renderData(filtered, false);
+  document.getElementById("filterPanel").style.display = "none";
 }
 
 // ❌ CLEAR
@@ -257,6 +287,7 @@ function clearFilter() {
   document.getElementById("fromDate").value = "";
   document.getElementById("toDate").value = "";
   showToday();
+  document.getElementById("filterPanel").style.display = "none";
 }
 
 // UI
