@@ -100,8 +100,14 @@ function showDivision(e, divisionName) {
   const btn1 = document.getElementById("btn1");
   const btn2 = document.getElementById("btn2");
 
-  // ✅ VALIDATION
-  if (!fullData.length || isProcessing || btn1.disabled || btn2.disabled) return;
+  // ✅ VALIDATION FIX
+  if (isProcessing || btn1.disabled || btn2.disabled) return;
+
+  // 🔴 HANDLE DATA NOT LOADED
+  if (!fullData.length) {
+    alert("⏳ Data is still loading, please wait...");
+    return;
+  }
 
   isProcessing = true;
 
@@ -113,36 +119,40 @@ function showDivision(e, divisionName) {
   btn.innerText = "Loading...";
   btn.classList.add("loading");
 
-  let divisionData = fullData.filter(item => {
-    const div = (item.division || "").toLowerCase().trim();
-    const btnName = divisionName.toLowerCase().trim();
-    return div.replace(/\s+/g, "") === btnName.replace(/\s+/g, "");
-  });
+  setTimeout(() => {
 
-  divisionData.sort((a, b) => {
-    return toIST(a.timestamp) - toIST(b.timestamp);
-  });
+    let divisionData = fullData.filter(item => {
+      const div = (item.division || "").toLowerCase().trim();
+      const btnName = divisionName.toLowerCase().trim();
+      return div.replace(/\s+/g, "") === btnName.replace(/\s+/g, "");
+    });
 
-  const today = getTodayIST();
+    divisionData.sort((a, b) => {
+      return toIST(a.timestamp) - toIST(b.timestamp);
+    });
 
-  const todayData = divisionData.filter(item => {
-    const d = toIST(item.timestamp);
-    return d &&
-      d.getFullYear() === today.getFullYear() &&
-      d.getMonth() === today.getMonth() &&
-      d.getDate() === today.getDate();
-  });
+    const today = getTodayIST();
 
-  document.getElementById("divisionSection").style.display = "none";
-  document.getElementById("data").style.display = "block";
+    const todayData = divisionData.filter(item => {
+      const d = toIST(item.timestamp);
+      return d &&
+        d.getFullYear() === today.getFullYear() &&
+        d.getMonth() === today.getMonth() &&
+        d.getDate() === today.getDate();
+    });
 
-  document.getElementById("totalCount").style.display = "block";
-  document.getElementById("totalCount").innerText =
-    `${divisionName} | Today: ${todayData.length} | Total: ${divisionData.length}`;
+    document.getElementById("divisionSection").style.display = "none";
+    document.getElementById("data").style.display = "block";
 
-  renderData(todayData);
+    document.getElementById("totalCount").style.display = "block";
+    document.getElementById("totalCount").innerText =
+      `${divisionName} | Today: ${todayData.length} | Total: ${divisionData.length}`;
 
-  isProcessing = false;
+    renderData(todayData);
+
+    isProcessing = false;
+
+  }, 0);
 }
 
 // ✅ RENDER
@@ -243,11 +253,17 @@ function getTodayIST() {
 }
 
 // ✅ LOAD DATA
-async function loadData() {
-  const res = await fetch("https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec");
+  async function loadData() {
+
+  document.getElementById("btn1").disabled = true;
+  document.getElementById("btn2").disabled = true;
+
+   const res = await fetch("https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec");
   fullData = await res.json();
+
   fullData = fullData.filter(item => item.timestamp);
 
+  // ✅ Enable after load
   document.getElementById("btn1").disabled = false;
   document.getElementById("btn2").disabled = false;
 }
