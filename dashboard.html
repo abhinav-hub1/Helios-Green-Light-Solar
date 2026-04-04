@@ -195,45 +195,49 @@ function showDivision(divisionName) {
   // ✅ SHOW LOADER
   document.getElementById("loader").style.display = "block";
 
-  // ⚡ RUN IMMEDIATELY (NO DELAY)
-  let divisionData = fullData.filter(item => {
-    const div = (item.division || "").toLowerCase().trim();
-    const btn = divisionName.toLowerCase().trim();
-    return div.replace(/\s+/g, "") === btn.replace(/\s+/g, "");
-  });
+  // ✅ ALLOW UI TO RENDER FIRST
+  setTimeout(() => {
 
-  divisionData.sort((a, b) => {
-    const d1 = toIST(a.timestamp);
-    const d2 = toIST(b.timestamp);
-    return d1 - d2;
-  });
+    let divisionData = fullData.filter(item => {
+      const div = (item.division || "").toLowerCase().trim();
+      const btn = divisionName.toLowerCase().trim();
+      return div.replace(/\s+/g, "") === btn.replace(/\s+/g, "");
+    });
 
-  const today = getTodayIST();
+    divisionData.sort((a, b) => {
+      const d1 = toIST(a.timestamp);
+      const d2 = toIST(b.timestamp);
+      return d1 - d2;
+    });
 
-  const todayData = divisionData.filter(item => {
-    const d = toIST(item.timestamp);
-    if (!d) return false;
+    const today = getTodayIST();
 
-    return d.getFullYear() === today.getFullYear() &&
-           d.getMonth() === today.getMonth() &&
-           d.getDate() === today.getDate();
-  });
+    const todayData = divisionData.filter(item => {
+      const d = toIST(item.timestamp);
+      if (!d) return false;
 
-  document.getElementById("totalCount").style.display = "block";
-  document.getElementById("totalCount").innerText =
-    `${divisionName} | Today: ${todayData.length} | Total: ${divisionData.length}`;
+      return d.getFullYear() === today.getFullYear() &&
+             d.getMonth() === today.getMonth() &&
+             d.getDate() === today.getDate();
+    });
 
-  // ❌ HIDE LOADER
-  document.getElementById("loader").style.display = "none";
-  document.getElementById("data").style.display = "block";
+    document.getElementById("totalCount").style.display = "block";
+    document.getElementById("totalCount").innerText =
+      `${divisionName} | Today: ${todayData.length} | Total: ${divisionData.length}`;
 
-  if (todayData.length === 0) {
-    document.getElementById("data").innerHTML =
-      `<p style='text-align:center;'>No submissions today for ${divisionName}</p>`;
-    return;
-  }
+    // ❌ HIDE LOADER AFTER WORK
+    document.getElementById("loader").style.display = "none";
+    document.getElementById("data").style.display = "block";
 
-  renderData(todayData, true);
+    if (todayData.length === 0) {
+      document.getElementById("data").innerHTML =
+        `<p style='text-align:center;'>No submissions today for ${divisionName}</p>`;
+      return;
+    }
+
+    renderData(todayData, true);
+
+  }, 10); // 🔥 small delay is enough
 }
   
 /*function showAllData() {
