@@ -181,9 +181,11 @@ button {
   renderData(filtered, false);
 }*/
 
- function showDivision(e, divisionName) {
+function showDivision(e, divisionName) {
 
-  if (!fullData.length) return;
+  if (!fullData.length || isProcessing) return;
+
+  isProcessing = true; // 🔒 lock
 
   const btn = e.currentTarget;
 
@@ -194,8 +196,7 @@ button {
   btn.innerText = "Loading...";
   btn.classList.add("loading");
 
-  // ✅ FORCE UI repaint
-  btn.offsetHeight;
+  btn.offsetHeight; // force repaint
 
   setTimeout(() => {
 
@@ -236,6 +237,8 @@ button {
       renderData(todayData, true);
     }
 
+    isProcessing = false; // 🔓 unlock
+
   }, 0);
 }
   
@@ -256,7 +259,7 @@ button {
 }*/
   
 let fullData = [];
-
+let isProcessing = false;
 // ✅ SAFE IST CONVERSION
 function toIST(dateInput) {
   if (!dateInput) return null;
@@ -433,12 +436,27 @@ function goBack() {
   const dataVisible = document.getElementById("data").style.display === "block";
 
   if (dataVisible) {
-    // ✅ Entries → Dashboard
+    // show dashboard
     document.getElementById("data").style.display = "none";
     document.getElementById("divisionSection").style.display = "block";
     document.getElementById("totalCount").style.display = "none";
+
+    // 🔄 RESET BUTTONS FULLY
+    const btn1 = document.getElementById("btn1");
+    const btn2 = document.getElementById("btn2");
+
+    btn1.disabled = false;
+    btn2.disabled = false;
+
+    btn1.innerText = "Tadepalligudem";
+    btn2.innerText = "Narsipatnam";
+
+    btn1.classList.remove("loading");
+    btn2.classList.remove("loading");
+
+    isProcessing = false; // 🔓 reset lock
+
   } else {
-    // ✅ Dashboard → Index page
     window.location.href = "index.html";
   }
 }
