@@ -164,49 +164,58 @@ button {
 
   renderData(filtered, false);
 }*/
-
 function showDivision(divisionName) {
 
+  // ❌ Prevent click before data loads
   if (!fullData.length) return;
 
+  // ✅ Switch UI
   document.getElementById("divisionSection").style.display = "none";
   document.getElementById("data").style.display = "block";
 
-  let filtered = fullData.filter(item => {
+  // ✅ Filter division data
+  let divisionData = fullData.filter(item => {
     const div = (item.division || "").toLowerCase().trim();
     const btn = divisionName.toLowerCase().trim();
     return div.replace(/\s+/g, "") === btn.replace(/\s+/g, "");
   });
 
-  filtered.sort((a, b) => {
+  // ✅ Sort by date
+  divisionData.sort((a, b) => {
     const d1 = toIST(a.timestamp);
     const d2 = toIST(b.timestamp);
     return d1 - d2;
   });
 
+  // ✅ Get today date (IST)
   const today = getTodayIST();
 
-  const todayCount = filtered.filter(item => {
+  // ✅ Filter ONLY today's data
+  const todayData = divisionData.filter(item => {
     const d = toIST(item.timestamp);
     if (!d) return false;
 
     return d.getFullYear() === today.getFullYear() &&
            d.getMonth() === today.getMonth() &&
            d.getDate() === today.getDate();
-  }).length;
+  });
 
+  // ✅ Show count
   document.getElementById("totalCount").style.display = "block";
   document.getElementById("totalCount").innerText =
-    `${divisionName} | Today: ${todayCount} | Total: ${filtered.length}`;
+    `${divisionName} | Today: ${todayData.length} | Total: ${divisionData.length}`;
 
-  if (filtered.length === 0) {
+  // ✅ If no today data
+  if (todayData.length === 0) {
     document.getElementById("data").innerHTML =
-      `<p style='text-align:center;'>No data found for ${divisionName}</p>`;
+      `<p style='text-align:center;'>No submissions today for ${divisionName}</p>`;
     return;
   }
 
-  renderData(filtered, false);
+  // ✅ Render only today data
+  renderData(todayData, true);
 }
+  
 /*function showAllData() {
 
   document.getElementById("divisionSection").style.display = "none";
@@ -268,6 +277,8 @@ async function loadData() {
   const res = await fetch("https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?type=all&t=" + Date.now());
   fullData = await res.json();
 
+// ✅ Remove unnecessary re-renders
+fullData = fullData.filter(item => item.timestamp);
   document.getElementById("btn1").disabled = false;
   document.getElementById("btn2").disabled = false;
 }
@@ -352,7 +363,15 @@ function applyFilter() {
   const fromTime = from ? new Date(from).getTime() : null;
   const toTime = to ? new Date(to).getTime() : null;
 
-  const filtered = fullData.filter(item => {
+  const divisionName = document.getElementById("totalCount").innerText.split("|")[0].trim();
+
+  // ✅ Filter only selected division
+  let divisionData = fullData.filter(item => {
+    const div = (item.division || "").toLowerCase().trim();
+    return div.replace(/\s+/g, "") === divisionName.toLowerCase().replace(/\s+/g, "");
+  });
+
+  const filtered = divisionData.filter(item => {
 
     const d = toIST(item.timestamp);
     if (!d) return false;
@@ -360,7 +379,7 @@ function applyFilter() {
     const time = d.getTime();
 
     if (fromTime && time < fromTime) return false;
-    if (toTime && time > toTime + 86400000) return false; // include full day
+    if (toTime && time > toTime + 86400000) return false;
 
     return true;
   });
@@ -373,7 +392,10 @@ function applyFilter() {
 function clearFilter() {
   document.getElementById("fromDate").value = "";
   document.getElementById("toDate").value = "";
-  renderData(fullData, false);
+  // reload current division (today view)
+  const divisionName = document.getElementById("totalCount").innerText.split("|")[0].trim();
+  showDivision(divisionName);
+    
   document.getElementById("filterPanel").style.display = "none";
 }
 
