@@ -110,20 +110,6 @@ button {
   #data {
   transition: opacity 0.3s ease;
 }
-  
-.spinner {
-  width: 30px;
-  height: 30px;
-  border: 4px solid #ccc;
-  border-top: 4px solid #1e88e5;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: auto;
-}
-
-@keyframes spin {
-  100% { transform: rotate(360deg); }
-}
 
 </style>
 </head>
@@ -149,22 +135,30 @@ button {
 
 <div class="count-box" id="totalCount" style="display:none;"></div>
 
- <div id="divisionSection" style="padding:20px; text-align:center;">
-
- <button id="btn1" class="div-btn" disabled onclick="showDivision('Tadepalligudem')">
+<div id="divisionSection" style="padding:20px; text-align:center;">
+  <button id="btn1" class="div-btn" disabled onclick="showDivision('Tadepalligudem')">
     Tadepalligudem
   </button>
 
   <button id="btn2" class="div-btn" disabled onclick="showDivision('Narsipatnam')">
     Narsipatnam
   </button>
-
 </div>
+
+<!-- ✅ MOVE HERE -->
+<div id="loadingText" style="
+  display:none;
+  text-align:center;
+  padding:10px;
+  font-weight:bold;
+  color:#1e88e5;
+">
+  Loading submissions...
+</div>
+
+
      <div class="container" id="data" style="display:none;"></div>
 
-  <div id="loader" style="display:none; text-align:center; padding:20px;">
-  <div class="spinner"></div>
-</div>
   
 <script>
 
@@ -189,13 +183,12 @@ function showDivision(divisionName) {
 
   if (!fullData.length) return;
 
+  // ✅ Hide buttons immediately
   document.getElementById("divisionSection").style.display = "none";
-  document.getElementById("data").style.display = "none";
 
-  // ✅ SHOW LOADER
-  document.getElementById("loader").style.display = "block";
+  // ✅ Show loading text
+  document.getElementById("loadingText").style.display = "block";
 
-  // ✅ ALLOW UI TO RENDER FIRST
   setTimeout(() => {
 
     let divisionData = fullData.filter(item => {
@@ -221,13 +214,15 @@ function showDivision(divisionName) {
              d.getDate() === today.getDate();
     });
 
+    // ✅ Hide loading
+    document.getElementById("loadingText").style.display = "none";
+
+    // ✅ Show data
+    document.getElementById("data").style.display = "block";
+
     document.getElementById("totalCount").style.display = "block";
     document.getElementById("totalCount").innerText =
       `${divisionName} | Today: ${todayData.length} | Total: ${divisionData.length}`;
-
-    // ❌ HIDE LOADER AFTER WORK
-    document.getElementById("loader").style.display = "none";
-    document.getElementById("data").style.display = "block";
 
     if (todayData.length === 0) {
       document.getElementById("data").innerHTML =
@@ -237,7 +232,7 @@ function showDivision(divisionName) {
 
     renderData(todayData, true);
 
-  }, 10); // 🔥 small delay is enough
+  }, 80);
 }
   
 /*function showAllData() {
