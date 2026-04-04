@@ -180,56 +180,59 @@ button {
 
   renderData(filtered, false);
 }*/
-function showDivision(e, divisionName) {
+
+  function showDivision(divisionName) {
 
   if (!fullData.length) return;
 
-  const btn = e.currentTarget; // ✅ correct button
-
-  const originalText = btn.innerText;
-  btn.innerText = "Loading...";
-  btn.classList.add("loading");
-
-  let divisionData = fullData.filter(item => {
-    const div = (item.division || "").toLowerCase().trim();
-    const btnName = divisionName.toLowerCase().trim();
-    return div.replace(/\s+/g, "") === btnName.replace(/\s+/g, "");
-  });
-
-  divisionData.sort((a, b) => {
-    const d1 = toIST(a.timestamp);
-    const d2 = toIST(b.timestamp);
-    return d1 - d2;
-  });
-
-  const today = getTodayIST();
-
-  const todayData = divisionData.filter(item => {
-    const d = toIST(item.timestamp);
-    if (!d) return false;
-
-    return d.getFullYear() === today.getFullYear() &&
-           d.getMonth() === today.getMonth() &&
-           d.getDate() === today.getDate();
-  });
-
+  // ✅ Step 1: Show loading FIRST
   document.getElementById("divisionSection").style.display = "none";
-  document.getElementById("data").style.display = "block";
+  document.getElementById("loadingText").style.display = "block";
+  document.getElementById("data").style.display = "none";
 
-  document.getElementById("totalCount").style.display = "block";
-  document.getElementById("totalCount").innerText =
-    `${divisionName} | Today: ${todayData.length} | Total: ${divisionData.length}`;
+  // ✅ Step 2: Let browser update UI (CRITICAL)
+  setTimeout(() => {
 
-  if (todayData.length === 0) {
-    document.getElementById("data").innerHTML =
-      `<p style='text-align:center;'>No submissions today for ${divisionName}</p>`;
-  } else {
+    let divisionData = fullData.filter(item => {
+      const div = (item.division || "").toLowerCase().trim();
+      const btn = divisionName.toLowerCase().trim();
+      return div.replace(/\s+/g, "") === btn.replace(/\s+/g, "");
+    });
+
+    divisionData.sort((a, b) => {
+      const d1 = toIST(a.timestamp);
+      const d2 = toIST(b.timestamp);
+      return d1 - d2;
+    });
+
+    const today = getTodayIST();
+
+    const todayData = divisionData.filter(item => {
+      const d = toIST(item.timestamp);
+      if (!d) return false;
+
+      return d.getFullYear() === today.getFullYear() &&
+             d.getMonth() === today.getMonth() &&
+             d.getDate() === today.getDate();
+    });
+
+    // ✅ Step 3: Hide loading & show data
+    document.getElementById("loadingText").style.display = "none";
+    document.getElementById("data").style.display = "block";
+
+    document.getElementById("totalCount").style.display = "block";
+    document.getElementById("totalCount").innerText =
+      `${divisionName} | Today: ${todayData.length} | Total: ${divisionData.length}`;
+
+    if (todayData.length === 0) {
+      document.getElementById("data").innerHTML =
+        `<p style='text-align:center;'>No submissions today for ${divisionName}</p>`;
+      return;
+    }
+
     renderData(todayData, true);
-  }
 
-  // restore
-  btn.innerText = originalText;
-  btn.classList.remove("loading");
+  }, 0); // ✅ ZERO delay (only UI break)
 }
   
 /*function showAllData() {
