@@ -59,13 +59,6 @@ button {
 
 .search-action { background: #1e88e5; color: white; }
 
-.count-box {
-  text-align: center;
-  padding: 10px;
-  background: #e3f2fd;
-  font-weight: bold;
-}
-
 .div-btn {
   width: 90%;
   padding: 16px;
@@ -80,7 +73,11 @@ button {
   cursor: pointer;
 }
 
-.div-btn.loading { opacity: 0.6; pointer-events: none; }
+/* 🔥 Loading state */
+.div-btn.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
 
 .container { padding: 10px; }
 
@@ -92,14 +89,6 @@ button {
   cursor: pointer;
 }
 
-.date-header {
-  font-weight: bold;
-  margin: 10px 5px;
-  color: #1e88e5;
-}
-
-.time { font-size: 12px; color: gray; }
-
 img { width: 100%; margin-bottom: 10px; border-radius: 8px; }
 </style>
 </head>
@@ -110,8 +99,6 @@ img { width: 100%; margin-bottom: 10px; border-radius: 8px; }
   <div class="back-btn" onclick="goBack()">←</div>
   Dashboard
 </div>
-
-<div class="count-box" id="totalCount" style="display:none;"></div>
 
 <div id="searchBar" style="display:none; padding:10px; text-align:center;">
   <button class="search-btn" onclick="toggleSearch()">Search By</button>
@@ -132,8 +119,8 @@ img { width: 100%; margin-bottom: 10px; border-radius: 8px; }
 </div>
 
 <div id="divisionSection" style="padding:20px; text-align:center;">
-  <button id="btn1" class="div-btn" onclick="showDivision(event,'Tadepalligudem')">Tadepalligudem</button>
-  <button id="btn2" class="div-btn" onclick="showDivision(event,'Narsipatnam')">Narsipatnam</button>
+  <button class="div-btn" onclick="showDivision(event,'Tadepalligudem')">Tadepalligudem</button>
+  <button class="div-btn" onclick="showDivision(event,'Narsipatnam')">Narsipatnam</button>
 </div>
 
 <div class="container" id="data" style="display:none;"></div>
@@ -168,18 +155,21 @@ async function performSearch(){
   document.getElementById("divisionSection").style.display="none";
   document.getElementById("data").style.display="block";
 
-  const res=await fetch(`https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?action=search&field=${selectedSearchType}&value=${value}`);
-  const result=await res.json();
-
-  renderData(result);
+  try {
+    const res=await fetch(`https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?action=search&field=${selectedSearchType}&value=${value}`);
+    const result=await res.json();
+    renderData(result);
+  } catch(err){
+    alert("Search failed");
+    console.log(err);
+  }
 }
 
-// DIVISION
+// 🔥 DIVISION WITH LOADING FIX
 async function showDivision(e, divisionName){
 
   const btn = e.target;
 
-  // 🔥 Prevent multiple clicks
   if (btn.classList.contains("loading")) return;
 
   btn.classList.add("loading");
@@ -208,268 +198,9 @@ async function showDivision(e, divisionName){
     console.log(err);
   }
 
-  // 🔥 Restore button
   btn.classList.remove("loading");
   btn.innerText = originalText;
 }
-// RENDER
-function renderData(data){
-
-  const container=document.getElementById("data");
-  container.innerHTML="";
-
-  if(!data.length){
-    container.innerHTML="No data";
-    return;
-  }
-
-  data.reverse().forEach(item=>{
-    container.innerHTML+=`
-      <div class="card" onclick="openDetails(this)" data-item='${encodeURIComponent(JSON.stringify(item))}'>
-        <b>${item.service}</b><br>
-        ${item.name}<br>
-        ${item.phone}
-      </div>
-    `;
-  });
-}
-
-// DETAILS
-function openDetails(el){
-
-  const item=JSON.parse(decodeURIComponent(el.getAttribute("data-item")));
-
-  document.getElementById("data").style.display="none";
-  document.getElementById("detailsScreen").style.display="block";
-
-  const convert=(url)=>{
-    if(!url) return "";
-    const id=url.match(/[-\w]{25,}/);
-    return id?`https://drive.google.com/uc?export=view&id=${id[0]}`:"";
-  };
-
-  document.getElementById("detailsScreen").innerHTML=`
-    <h3>${item.name}</h3>
-    <p>${item.service}</p>
-    <p>${item.phone}</p>
-    <p>${item.address||""}</p>
-
-    ${item.panels?`<img src="${convert(item.panels)}">`:""}
-    ${item.inverter?`<img src="${convert(item.inverter)}">`:""}
-    ${item.earth?`<img src="${convert(item.earth)}">`:""}
-
-    <button onclick="goBack()">Back</button>
-  `;
-}
-
-// BACK
-function goBack(){
-
-  document.getElementById("detailsScreen").style.display="none";
-  document.getElementById("data").style.display="block";
-
-  if(currentView==="home"){
-    location.href="index.html";
-  }
-}
-
-</script>
-
-</body>
-</html><!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-body { font-family: Arial; background: #f4f6f8; margin: 0; }
-
-.header {
-  background: #1e88e5;
-  height: 55px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  color: white;
-  font-weight: bold;
-}
-
-.back-btn { position: absolute; left: 12px; cursor: pointer; }
-
-.search-btn {
-  background: #1e88e5;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-}
-
-#searchPanel {
-  display: none;
-  margin: 10px;
-  background: #fff;
-  padding: 15px;
-  border-radius: 12px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-}
-
-.search-option {
-  padding: 8px;
-  margin-bottom: 5px;
-  background: #e3f2fd;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-#searchInputBox { display: none; margin-top: 10px; }
-
-input { width: 100%; padding: 8px; margin-bottom: 10px; }
-
-button {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  margin-top: 5px;
-}
-
-.search-action { background: #1e88e5; color: white; }
-
-.count-box {
-  text-align: center;
-  padding: 10px;
-  background: #e3f2fd;
-  font-weight: bold;
-}
-
-.div-btn {
-  width: 90%;
-  padding: 16px;
-  margin: 12px auto;
-  display: block;
-  border-radius: 14px;
-  border: none;
-  background: linear-gradient(135deg, #1e88e5, #1565c0);
-  color: white;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.div-btn.loading { opacity: 0.6; pointer-events: none; }
-
-.container { padding: 10px; }
-
-.card {
-  background: white;
-  padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-.date-header {
-  font-weight: bold;
-  margin: 10px 5px;
-  color: #1e88e5;
-}
-
-.time { font-size: 12px; color: gray; }
-
-img { width: 100%; margin-bottom: 10px; border-radius: 8px; }
-</style>
-</head>
-
-<body>
-
-<div class="header">
-  <div class="back-btn" onclick="goBack()">←</div>
-  Dashboard
-</div>
-
-<div class="count-box" id="totalCount" style="display:none;"></div>
-
-<div id="searchBar" style="display:none; padding:10px; text-align:center;">
-  <button class="search-btn" onclick="toggleSearch()">Search By</button>
-</div>
-
-<div id="searchPanel">
-  <div id="searchOptions">
-    <div class="search-option" onclick="selectSearch('service','Service Number')">Service Number</div>
-    <div class="search-option" onclick="selectSearch('name','Customer Name')">Customer Name</div>
-    <div class="search-option" onclick="selectSearch('phone','Phone Number')">Phone Number</div>
-  </div>
-
-  <div id="searchInputBox">
-    <div id="selectedLabel"></div>
-    <input type="text" id="searchInput">
-    <button class="search-action" onclick="performSearch()">Search</button>
-  </div>
-</div>
-
-<div id="divisionSection" style="padding:20px; text-align:center;">
-  <button id="btn1" class="div-btn" onclick="showDivision(event,'Tadepalligudem')">Tadepalligudem</button>
-  <button id="btn2" class="div-btn" onclick="showDivision(event,'Narsipatnam')">Narsipatnam</button>
-</div>
-
-<div class="container" id="data" style="display:none;"></div>
-<div id="detailsScreen" style="display:none; padding:15px;"></div>
-
-<script>
-
-let fullData = [];
-let selectedSearchType = "";
-let currentView = "home";
-
-// SEARCH
-function toggleSearch(){
-  const panel = document.getElementById("searchPanel");
-  panel.style.display = panel.style.display==="block"?"none":"block";
-}
-
-function selectSearch(type,label){
-  selectedSearchType = type;
-  document.getElementById("searchOptions").style.display="none";
-  document.getElementById("searchInputBox").style.display="block";
-  document.getElementById("selectedLabel").innerText=label;
-}
-
-async function performSearch(){
-
-  currentView="search";
-
-  const value=document.getElementById("searchInput").value.trim();
-  if(!value) return;
-
-  document.getElementById("divisionSection").style.display="none";
-  document.getElementById("data").style.display="block";
-
-  const res=await fetch(`https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?action=search&field=${selectedSearchType}&value=${value}`);
-  const result=await res.json();
-
-  renderData(result);
-}
-
-// DIVISION
-async function showDivision(e,divisionName){
-
-  currentView="division";
-
-  if(!fullData.length){
-    const res=await fetch("https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?type=all");
-    fullData=await res.json();
-  }
-
-  const filtered=fullData.filter(x=>x.division===divisionName);
-
-  document.getElementById("divisionSection").style.display="none";
-  document.getElementById("data").style.display="block";
-  document.getElementById("searchBar").style.display="block";
-
-  renderData(filtered);
-}
 
 // RENDER
 function renderData(data){
@@ -496,6 +227,8 @@ function renderData(data){
 // DETAILS
 function openDetails(el){
 
+  currentView="details";
+
   const item=JSON.parse(decodeURIComponent(el.getAttribute("data-item")));
 
   document.getElementById("data").style.display="none";
@@ -521,15 +254,26 @@ function openDetails(el){
   `;
 }
 
-// BACK
+// BACK FIXED
 function goBack(){
 
-  document.getElementById("detailsScreen").style.display="none";
-  document.getElementById("data").style.display="block";
-
-  if(currentView==="home"){
-    location.href="index.html";
+  if(currentView==="details"){
+    document.getElementById("detailsScreen").style.display="none";
+    document.getElementById("data").style.display="block";
+    currentView="division";
+    return;
   }
+
+  if(currentView==="division" || currentView==="search"){
+    document.getElementById("data").style.display="none";
+    document.getElementById("divisionSection").style.display="block";
+    document.getElementById("searchBar").style.display="none";
+    currentView="home";
+    return;
+  }
+
+  // Home → go to main page
+  window.location.href="index.html";
 }
 
 </script>
