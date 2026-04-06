@@ -506,56 +506,40 @@ async function fetchData() {
 
   try {
 
-    // ✅ STEP 1: CHECK EXISTS FIRST
-    const checkUrl =
-      "https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec"
-      + "?action=search"
-      + "&field=service"
-      + "&value=" + encodeURIComponent(service)
-      + "&t=" + Date.now();
+    // 🔴 CHECK EXISTS FIRST
+   const checkRes = await fetch(
+  "https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?action=search&field=service&value=" 
+  + encodeURIComponent(service)
+  + "&t=" + Date.now()
+);
 
-    const checkRes = await fetch(checkUrl);
     const checkData = await checkRes.json();
-
     const exists = Array.isArray(checkData) && checkData.length > 0;
 
-    // =========================
-    // 🟢 CREATE MODE
-    // =========================
     if (mode === "create" && exists) {
-
       loading.style.display = "none";
 
-      duplicateMsg.innerText = "⚠️ Service already submitted";
+      duplicateMsg.innerText = "⚠️ Service Number already submitted";
       duplicateMsg.style.display = "block";
 
-      clearFields();
+		clearFields();
       lockFields(true);
       submitBtn.disabled = true;
-
-      return; // 🚨 STOP HERE
+      return;
     }
 
-    // =========================
-    // 🔵 EDIT MODE
-    // =========================
     if (mode === "edit" && !exists) {
-
       loading.style.display = "none";
 
-      errorMsg.innerText = "❌ Service not submitted";
+      errorMsg.innerText = "❌ Service Number not submitted";
       errorMsg.style.display = "block";
-
-      clearFields();
+		
       lockFields(false);
       submitBtn.disabled = true;
-
-      return; // 🚨 STOP HERE
+      return;
     }
 
-    // =========================
-    // ✅ STEP 2: FETCH DATA
-    // =========================
+    // 🔵 FETCH DETAILS
     loading.innerHTML = "Fetching details... ⏳";
 
     const res = await fetch(
@@ -566,7 +550,7 @@ async function fetchData() {
 
     loading.style.display = "none";
 
-    if (!data || data.name === "NOT FOUND") {
+    if (!data || typeof data !== "object" || !data.name || data.name === "NOT FOUND") {
 
       errorMsg.innerText = "❌ Service Number not found";
       errorMsg.style.display = "block";
@@ -586,7 +570,6 @@ async function fetchData() {
     document.getElementById("section").value = data.section;
     document.getElementById("distribution").value = data.distribution;
 
-    // 🔒 LOCK RULES
     if (mode === "edit") {
       serviceInput.readOnly = true;
       serviceInput.style.background = "#e0e0e0";
@@ -602,10 +585,11 @@ async function fetchData() {
 
     loading.style.display = "none";
 
-    errorMsg.innerText = "❌ Network error";
+    errorMsg.innerText = "❌ Network error. Try again.";
     errorMsg.style.display = "block";
 
     submitBtn.disabled = true;
+    console.log(err);
   }
 }
 	
