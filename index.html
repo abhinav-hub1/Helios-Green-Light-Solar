@@ -513,16 +513,29 @@ async function fetchData() {
   + "&t=" + Date.now()
 );
 
-    const checkData = await checkRes.json();
-    const exists = Array.isArray(checkData) && checkData.length > 0;
+	const checkData = await checkRes.json();
+	console.log("checkData:", checkData);
+	  
+    let exists = false;
+
+if (Array.isArray(checkData)) {
+  exists = checkData.length > 0;
+} else if (checkData && typeof checkData === "object") {
+  exists =
+    checkData.status === "FOUND" ||
+    checkData.result === "exists" ||
+    checkData.exists === true ||
+    (Array.isArray(checkData.data) && checkData.data.length > 0);
+}
 
     if (mode === "create" && exists) {
       loading.style.display = "none";
 
       duplicateMsg.innerText = "⚠️ Service Number already submitted";
       duplicateMsg.style.display = "block";
-
-		clearFields();
+	  serviceInput.readOnly = false;
+	  serviceInput.style.background = "#eee";
+	  clearFields();
       lockFields(true);
       submitBtn.disabled = true;
       return;
