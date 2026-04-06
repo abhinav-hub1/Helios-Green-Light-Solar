@@ -120,7 +120,7 @@ button {
 
 <div class="count-box" id="totalCount" style="display:none;"></div>
 <div id="searchBar" style="display:none; padding:10px; text-align:center;">
-  <button class="search-btn" onclick="toggleSearch()">Search</button>
+  <button class="search-btn" onclick="toggleSearch()">Search By</button>
 </div>
   <div id="searchPanel">
   
@@ -153,6 +153,7 @@ button {
 let fullData = [];
 let isProcessing = false;
 let selectedSearchType = "";
+let currentView = "home";
 
 // SEARCH UI
 function toggleSearch() {
@@ -188,6 +189,8 @@ function selectSearch(type, label) {
 }
 
   async function performSearch() {
+
+    currentView = "search";
 
   const value = document.getElementById("searchInput").value.trim();
   if (!value) return;
@@ -227,6 +230,8 @@ function selectSearch(type, label) {
 
 // CLICK DIVISION
 async function showDivision(e, divisionName) {
+
+  currentView = "division";
 
   if (isProcessing) return;
   isProcessing = true;
@@ -362,45 +367,36 @@ function renderData(data) {
 // BACK
 function goBack() {
 
-  const dataVisible = document.getElementById("data").style.display === "block";
+  if (currentView === "search" || currentView === "division") {
 
-  if (dataVisible) {
-
-    // 🔙 go back to dashboard
     document.getElementById("data").style.display = "none";
     document.getElementById("divisionSection").style.display = "block";
 
-    // hide top sections
     document.getElementById("totalCount").style.display = "none";
     document.getElementById("searchBar").style.display = "none";
     document.getElementById("searchPanel").style.display = "none";
 
-    // 🔄 reset search UI
-    document.getElementById("searchOptions").style.display = "block";
-    document.getElementById("searchInputBox").style.display = "none";
-    document.getElementById("searchInput").value = "";
-
-    // 🔄 reset buttons
-    const btn1 = document.getElementById("btn1");
-    const btn2 = document.getElementById("btn2");
-
-    btn1.disabled = false;
-    btn2.disabled = false;
-
-    btn1.innerText = "Tadepalligudem";
-    btn2.innerText = "Narsipatnam";
-
-    btn1.classList.remove("loading");
-    btn2.classList.remove("loading");
-
-    isProcessing = false;
+    currentView = "home";
 
   } else {
-    // if already on dashboard → go to index
     window.location.href = "index.html";
   }
-}
 
+  // reset buttons
+  const btn1 = document.getElementById("btn1");
+  const btn2 = document.getElementById("btn2");
+
+  btn1.disabled = false;
+  btn2.disabled = false;
+
+  btn1.innerText = "Tadepalligudem";
+  btn2.innerText = "Narsipatnam";
+
+  btn1.classList.remove("loading");
+  btn2.classList.remove("loading");
+
+  isProcessing = false;
+}
 </script>
 
 </body>
