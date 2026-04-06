@@ -364,7 +364,9 @@ container.innerHTML += `
     `;
   });
 }
- function openDetails(item) {
+function openDetails(item) {
+
+  console.log(item); // 🔥 check actual keys
 
   currentView = "details";
 
@@ -382,56 +384,61 @@ container.innerHTML += `
   }
 
   detail.innerHTML = `
-    <div class="card">
+    <div class="card" style="position:relative;">
+
+      <!-- ❌ CLOSE BUTTON -->
+      <span onclick="closeDetails()" 
+        style="position:absolute; top:10px; right:15px; font-size:20px; cursor:pointer;">
+        ❌
+      </span>
 
       <h3 style="text-align:center;">Service Details</h3>
 
-      <b>Service No:</b> ${val(item["Service Number"])}<br><br>
-      <b>Name:</b> ${val(item["Customer Name"])}<br><br>
-      <b>Phone:</b> ${val(item["Customer Phone Number"])}<br><br>
-      <b>Address:</b> ${val(item["Address"])}<br><br>
+      <b>Service No:</b> ${val(item.service)}<br><br>
+      <b>Name:</b> ${val(item.name)}<br><br>
+      <b>Phone:</b> ${val(item.phone)}<br><br>
+      <b>Address:</b> ${val(item.address)}<br><br>
 
-      <b>Division:</b> ${val(item["Division Name"])}<br><br>
-      <b>Subdivision:</b> ${val(item["Sub Division Name"])}<br><br>
-      <b>Section:</b> ${val(item["Section Name"])}<br><br>
-      <b>Distribution:</b> ${val(item["Distribution Name"])}<br><br>
+      <b>Division:</b> ${val(item.division)}<br><br>
+      <b>Subdivision:</b> ${val(item.subdivision)}<br><br>
+      <b>Section:</b> ${val(item.section)}<br><br>
+      <b>Distribution:</b> ${val(item.distribution)}<br><br>
 
-      <b>Panel No 1:</b> ${val(item["Panel No.1"])}<br><br>
-      <b>Panel No 2:</b> ${val(item["Panel No.2"])}<br><br>
-      <b>Panel No 3:</b> ${val(item["Panel No.3"])}<br><br>
-      <b>Panel No 4:</b> ${val(item["Panel No.4"])}<br><br>
+      <b>Panel No 1:</b> ${val(item.panel1)}<br><br>
+      <b>Panel No 2:</b> ${val(item.panel2)}<br><br>
+      <b>Panel No 3:</b> ${val(item.panel3)}<br><br>
+      <b>Panel No 4:</b> ${val(item.panel4)}<br><br>
 
-      <b>Inverter Service No:</b> ${val(item["Inverter Service No."])}<br><br>
+      <b>Inverter Service No:</b> ${val(item.inverterService)}<br><br>
+
+      <b>Surveyor:</b> ${val(item.surveyor)}<br><br>
 
       <hr>
 
       <b>Panel Image:</b><br>
-      ${link(item["Panal Image"])}<br><br>
+      ${link(item.panelImage)}<br><br>
 
       <b>Inverter Image:</b><br>
-      ${link(item["Inverter Image"])}<br><br>
+      ${link(item.inverterImage)}<br><br>
 
       <b>Earth Image:</b><br>
-      ${link(item["Earth Image"])}<br><br>
+      ${link(item.earthImage)}<br><br>
 
       <b>Current Bill:</b><br>
-      ${link(item["Current Bill"])}<br><br>
+      ${link(item.currentBill)}<br><br>
 
       <b>Aadhar Card:</b><br>
-      ${link(item["Aadhar Card"])}<br><br>
+      ${link(item.aadhar)}<br><br>
 
       <b>Document 1:</b><br>
-      ${link(item["Document Image 1"])}<br><br>
+      ${link(item.doc1)}<br><br>
 
       <b>Document 2:</b><br>
-      ${link(item["Document Image 2"])}<br><br>
-
-      <b>Surveyor:</b> ${val(item["Surveyor Name"])}<br><br>
+      ${link(item.doc2)}<br><br>
 
     </div>
   `;
 }
-
 // BACK
 function goBack() {
 
@@ -464,6 +471,11 @@ document.getElementById("detailView").style.display = "none";
   btn2.classList.remove("loading");
 
   isProcessing = false;
+}
+  function closeDetails() {
+  document.getElementById("detailView").style.display = "none";
+  document.getElementById("data").style.display = "block";
+  currentView = "division";
 }
 </script>
 
