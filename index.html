@@ -165,7 +165,7 @@ loading.style.display="block";
 
 try{
 
-const res=await fetch("YOUR_API?service="+service);
+const res=await fetch("https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?service="+service);
 const data=await res.json();
 
 if(!data || data.name==="NOT FOUND"){
@@ -183,7 +183,7 @@ document.getElementById("subdivision").value=data.subdivision;
 document.getElementById("section").value=data.section;
 document.getElementById("distribution").value=data.distribution;
 
-const checkRes=await fetch("YOUR_API_CHECK");
+const checkRes=await fetch("https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec");
 const checkData=await checkRes.json();
 
 const exists=checkData.length>0;
@@ -249,7 +249,7 @@ name:document.getElementById("name").value,
 panels:panelsData
 };
 
-await fetch("YOUR_POST_API",{
+await fetch("https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec",{
 method:"POST",
 body:JSON.stringify(data)
 });
