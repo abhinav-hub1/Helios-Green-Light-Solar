@@ -366,8 +366,6 @@ container.innerHTML += `
 }
 function openDetails(item) {
 
-  console.log(item); // 🔥 check actual keys
-
   currentView = "details";
 
   const detail = document.getElementById("detailView");
@@ -409,23 +407,23 @@ function openDetails(item) {
       <b>Panel No 3:</b> ${val(item.panel3)}<br><br>
       <b>Panel No 4:</b> ${val(item.panel4)}<br><br>
 
-      <b>Inverter Service No:</b> ${val(item.inverterService)}<br><br>
+      <b>Inverter Service No:</b> ${val(item.inverterSerial)}<br><br>
 
       <b>Surveyor:</b> ${val(item.surveyor)}<br><br>
 
       <hr>
 
       <b>Panel Image:</b><br>
-      ${link(item.panelImage)}<br><br>
+      ${link(item.panels)}<br><br>
 
       <b>Inverter Image:</b><br>
-      ${link(item.inverterImage)}<br><br>
+      ${link(item.inverterSerial)}<br><br>
 
       <b>Earth Image:</b><br>
-      ${link(item.earthImage)}<br><br>
+      ${link(item.earth)}<br><br>
 
       <b>Current Bill:</b><br>
-      ${link(item.currentBill)}<br><br>
+      ${link(item.bill)}<br><br>
 
       <b>Aadhar Card:</b><br>
       ${link(item.aadhar)}<br><br>
