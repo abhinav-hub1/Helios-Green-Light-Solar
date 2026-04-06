@@ -317,6 +317,7 @@ function getTodayIST() {
 // RENDER
 function renderData(data) {
 
+  currentData = Data;
   const container = document.getElementById("data");
   container.innerHTML = "";
 
@@ -327,7 +328,7 @@ function renderData(data) {
 
   let currentDate = "";
 
-  data.slice().reverse().forEach(item => {
+  data.slice().reverse().forEach(item, index ) => {
 
     const d = toIST(item.timestamp);
     if (!d) return;
@@ -354,7 +355,7 @@ function renderData(data) {
 
     // 🧾 Card
 container.innerHTML += `  
-  <div class="card" onclick='openDetails(${JSON.stringify(item)})' style="cursor:pointer;">
+  <div class="card" onclick="openDetailsByIndex(${index})" style="cursor:pointer;">
         <b>${item.service}</b><br>
         ${item.name}<br>
         ${item.phone}<br>
@@ -363,6 +364,12 @@ container.innerHTML += `
       </div>
     `;
   });
+}
+  let currentData = [];
+
+function openDetailsByIndex(index) {
+  const item = currentData.slice().reverse()[index];
+  openDetails(item);
 }
 function openDetails(item) {
 
@@ -420,7 +427,7 @@ function openDetails(item) {
       ${link(item.inverter)}<br><br>
 
       <b>Earth Image:</b><br>
-      ${(item.earth)}<br><br>
+      ${link(item.earth)}<br><br>
 
       <b>Current Bill:</b><br>
       ${link(item.bill)}<br><br>
