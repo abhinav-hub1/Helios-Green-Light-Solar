@@ -368,15 +368,17 @@ let currentData = [];
 function openDetails(item) {
 
   currentView = "details";
-
+   alert(item.panel1);
   const detail = document.getElementById("detailView");
 
   document.getElementById("data").style.display = "none";
   detail.style.display = "block";
 
-  function val(v) {
-    return v && v.toString().trim() !== "" ? v : "Not Available";
-  }
+ function val(v) {
+  if (v === undefined || v === null) return "-";
+  const cleaned = v.toString().trim();
+  return cleaned !== "" ? cleaned : "-";
+}
 
   function link(url) {
     return url ? `<a href="${url}" target="_blank">View</a>` : "-";
@@ -403,13 +405,12 @@ function openDetails(item) {
       <b>Section:</b> ${val(item.section)}<br><br>
       <b>Distribution:</b> ${val(item.distribution)}<br><br>
 
-     <b>Panel No 1:</b> ${(item.panel1 || item["Panel No.1"])}<br><br>
-<b>Panel No 2:</b> ${(item.panel2 || item["Panel No.2"])}<br><br>
-<b>Panel No 3:</b> ${(item.panel3 || item["Panel No.3"])}<br><br>
-<b>Panel No 4:</b> ${(item.panel4 || item["Panel No.4"])}<br><br>
+    <b>Panel No 1:</b> ${val(item.panel1)}<br><br>
+<b>Panel No 2:</b> ${val(item.panel2)}<br><br>
+<b>Panel No 3:</b> ${val(item.panel3)}<br><br>
+<b>Panel No 4:</b> ${val(item.panel4)}<br><br>
 
-<b>Inverter Service No:</b> ${(item.inverterSerial || item["Inverter Service No."])}<br><br>
-      <b>Surveyor:</b> ${val(item.surveyor)}<br><br>
+<b>Inverter Service No:</b> ${val(item.inverterSerial)}<br><br>
 
       <hr>
 
