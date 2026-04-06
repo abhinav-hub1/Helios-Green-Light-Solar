@@ -375,7 +375,7 @@ function openDetails(item) {
   detail.style.display = "block";
 
   function val(v) {
-    return v && v.toString().trim() !== "" ? v : "-";
+    return v && v.toString().trim() !== "" ? v : "Not Available";
   }
 
   function link(url) {
@@ -403,12 +403,12 @@ function openDetails(item) {
       <b>Section:</b> ${val(item.section)}<br><br>
       <b>Distribution:</b> ${val(item.distribution)}<br><br>
 
-     <b>Panel No 1:</b> ${val(item.panel1 || item["Panel No.1"])}<br><br>
-<b>Panel No 2:</b> ${val(item.panel2 || item["Panel No.2"])}<br><br>
-<b>Panel No 3:</b> ${val(item.panel3 || item["Panel No.3"])}<br><br>
-<b>Panel No 4:</b> ${val(item.panel4 || item["Panel No.4"])}<br><br>
+     <b>Panel No 1:</b> ${(item.panel1 || item["Panel No.1"])}<br><br>
+<b>Panel No 2:</b> ${(item.panel2 || item["Panel No.2"])}<br><br>
+<b>Panel No 3:</b> ${(item.panel3 || item["Panel No.3"])}<br><br>
+<b>Panel No 4:</b> ${(item.panel4 || item["Panel No.4"])}<br><br>
 
-<b>Inverter Service No:</b> ${val(item.inverterSerial || item["Inverter Service No."])}<br><br>
+<b>Inverter Service No:</b> ${(item.inverterSerial || item["Inverter Service No."])}<br><br>
       <b>Surveyor:</b> ${val(item.surveyor)}<br><br>
 
       <hr>
