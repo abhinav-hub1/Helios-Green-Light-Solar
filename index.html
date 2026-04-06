@@ -492,89 +492,47 @@ function handleKey(e){
 
 async function fetchData() {
 
+  // 🔥 Reset verification
   isVerified = false;
 
   const serviceInput = document.getElementById("service");
   const service = serviceInput.value.trim();
   if (!service) return;
 
+  // 🔥 Reset UI
   duplicateMsg.style.display = "none";
   errorMsg.style.display = "none";
 
-  loading.innerHTML = "Checking... ⏳";
+  loading.innerHTML = "Loading... ⏳";
   loading.style.display = "block";
 
   try {
 
-    // 🔴 CHECK EXISTS FIRST
-   const checkRes = await fetch(
-  "https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?action=search&field=service&value=" 
-  + encodeURIComponent(service)
-  + "&t=" + Date.now()
-);
-
-	const checkData = await checkRes.json();
-	console.log("checkData:", checkData);
-	  
-    let exists = false;
-
-if (Array.isArray(checkData)) {
-  exists = checkData.length > 0;
-} else if (checkData && typeof checkData === "object") {
-  exists =
-    checkData.status === "FOUND" ||
-    checkData.result === "exists" ||
-    checkData.exists === true ||
-    (Array.isArray(checkData.data) && checkData.data.length > 0);
-}
-
-    if (mode === "create" && exists) {
-      loading.style.display = "none";
-
-      duplicateMsg.innerText = "⚠️ Service Number already submitted";
-      duplicateMsg.style.display = "block";
-	  serviceInput.readOnly = false;
-	  serviceInput.style.background = "#eee";
-	  clearFields();
-      lockFields(true);
-      submitBtn.disabled = true;
-      return;
-    }
-
-    if (mode === "edit" && !exists) {
-      loading.style.display = "none";
-
-      errorMsg.innerText = "❌ Service Number not submitted";
-      errorMsg.style.display = "block";
-		
-      lockFields(false);
-      submitBtn.disabled = true;
-      return;
-    }
-
-    // 🔵 FETCH DETAILS
-    loading.innerHTML = "Fetching details... ⏳";
-
+    // =========================
+    // 🔵 STEP 1: FETCH FROM DATA SHEET
+    // =========================
     const res = await fetch(
       "https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?service=" + service
     );
 
     const data = await res.json();
 
-    loading.style.display = "none";
-
-    if (!data || typeof data !== "object" || !data.name || data.name === "NOT FOUND") {
+    if (!data || data.name === "NOT FOUND") {
+      loading.style.display = "none";
 
       errorMsg.innerText = "❌ Service Number not found";
       errorMsg.style.display = "block";
 
       clearFields();
       lockFields(false);
+
       submitBtn.disabled = true;
       return;
     }
 
+    // =========================
     // ✅ AUTO FILL
+    // =========================
     document.getElementById("name").value = data.name;
     document.getElementById("phone").value = data.phone;
     document.getElementById("address").value = data.address;
@@ -583,16 +541,80 @@ if (Array.isArray(checkData)) {
     document.getElementById("section").value = data.section;
     document.getElementById("distribution").value = data.distribution;
 
-    if (mode === "edit") {
-      serviceInput.readOnly = true;
-      serviceInput.style.background = "#e0e0e0";
-      lockFields(true);
-    } else {
-      lockFields(false);
+    // =========================
+    // 🔴 STEP 2: CHECK SUBMISSION
+    // =========================
+    const checkUrl =
+      "https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec"
+      + "?action=search"
+      + "&division=" + encodeURIComponent(data.division)
+      + "&field=service"
+      + "&value=" + encodeURIComponent(service)
+      + "&t=" + Date.now();
+
+    const checkRes = await fetch(checkUrl);
+    const checkData = await checkRes.json();
+
+    loading.style.display = "none";
+
+    const exists = Array.isArray(checkData) && checkData.length > 0;
+
+    // =========================
+    // 🟢 CREATE MODE
+    // =========================
+    if (mode === "create") {
+
+      serviceInput.readOnly = false;
+
+      if (exists) {
+        duplicateMsg.innerText = "⚠️ Service already submitted";
+        duplicateMsg.style.display = "block";
+
+        lockFields(true);
+        submitBtn.disabled = true;
+
+      } else {
+        duplicateMsg.style.display = "none";
+
+        lockFields(false);
+        submitBtn.disabled = false;
+      }
     }
 
-    submitBtn.disabled = false;
-    isVerified = true;
+    // =========================
+    // 🔵 EDIT MODE
+    // =========================
+    if (mode === "edit") {
+
+      serviceInput.readOnly = true;
+      serviceInput.style.background = "#e0e0e0";
+
+      if (!exists) {
+        errorMsg.innerText = "❌ Service not submitted";
+        errorMsg.style.display = "block";
+
+        submitBtn.disabled = true;
+        lockFields(false);
+
+      } else {
+        errorMsg.style.display = "none";
+
+        lockFields(true);   // 🔒 lock base data
+        submitBtn.disabled = false;
+      }
+    }
+
+    // =========================
+    // ✅ FINAL VERIFICATION FLAG
+    // =========================
+    if (
+      (mode === "create" && !exists) ||
+      (mode === "edit" && exists)
+    ) {
+      isVerified = true;
+    } else {
+      isVerified = false;
+    }
 
   } catch (err) {
 
@@ -602,6 +624,7 @@ if (Array.isArray(checkData)) {
     errorMsg.style.display = "block";
 
     submitBtn.disabled = true;
+
     console.log(err);
   }
 }
