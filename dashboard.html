@@ -147,7 +147,9 @@ button {
 </div>
 
 <div class="container" id="data" style="display:none;"></div>
-
+<div id="detailsScreen" style="display:none; padding:15px;"></div>
+  
+  
 <script>
 
 let fullData = [];
@@ -352,8 +354,8 @@ function renderData(data) {
     });
 
     // 🧾 Card
-    container.innerHTML += `
-      <div class="card">
+container.innerHTML += `
+  <div class="card" onclick="openDetails(this)" data-item='${encodeURIComponent(JSON.stringify(item))}' style="cursor:pointer;">
         <b>${item.service}</b><br>
         ${item.name}<br>
         ${item.phone}<br>
@@ -366,6 +368,9 @@ function renderData(data) {
 
 // BACK
 function goBack() {
+
+  // 🔥 ALWAYS hide details first
+  document.getElementById("detailsScreen").style.display = "none";
 
   if (currentView === "search" || currentView === "division") {
 
@@ -381,6 +386,7 @@ function goBack() {
   } else {
     window.location.href = "index.html";
   }
+}
 
   // reset buttons
   const btn1 = document.getElementById("btn1");
@@ -397,6 +403,50 @@ function goBack() {
 
   isProcessing = false;
 }
+  function openDetails(el) {
+
+  const item = JSON.parse(decodeURIComponent(el.getAttribute("data-item")));
+
+  document.getElementById("data").style.display = "none";
+  document.getElementById("detailsScreen").style.display = "block";
+
+  const convertDriveLink = (url) => {
+    if (!url) return "";
+    const match = url.match(/[-\w]{25,}/);
+    return match
+      ? `https://drive.google.com/uc?export=view&id=${match[0]}`
+      : url;
+  };
+
+  const detailsHTML = `
+    <h3>${item.name}</h3>
+
+    <p><b>Service:</b> ${item.service}</p>
+    <p><b>Phone:</b> ${item.phone}</p>
+    <p><b>Address:</b> ${item.address || "-"}</p>
+    <p><b>Division:</b> ${item.division}</p>
+    <p><b>Sub Division:</b> ${item.subdivision}</p>
+    <p><b>Section:</b> ${item.section}</p>
+    <p><b>Distribution:</b> ${item.distribution}</p>
+    <p><b>Surveyor:</b> ${item.surveyor || "-"}</p>
+
+    <h4>Images</h4>
+
+    ${item.panels ? `<img src="${convertDriveLink(item.panels)}" width="100%">` : ""}
+    ${item.inverter ? `<img src="${convertDriveLink(item.inverter)}" width="100%">` : ""}
+    ${item.earth ? `<img src="${convertDriveLink(item.earth)}" width="100%">` : ""}
+    ${item.bill ? `<img src="${convertDriveLink(item.bill)}" width="100%">` : ""}
+    ${item.aadhar ? `<img src="${convertDriveLink(item.aadhar)}" width="100%">` : ""}
+    ${item.doc1 ? `<img src="${convertDriveLink(item.doc1)}" width="100%">` : ""}
+    ${item.doc2 ? `<img src="${convertDriveLink(item.doc2)}" width="100%">` : ""}
+
+    <br><br>
+    <button onclick="goBack()">⬅ Back</button>
+  `;
+
+  document.getElementById("detailsScreen").innerHTML = detailsHTML;
+}
+
 </script>
 
 </body>
