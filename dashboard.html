@@ -175,24 +175,43 @@ async function performSearch(){
 }
 
 // DIVISION
-async function showDivision(e,divisionName){
+async function showDivision(e, divisionName){
+
+  const btn = e.target;
+
+  // 🔥 Prevent multiple clicks
+  if (btn.classList.contains("loading")) return;
+
+  btn.classList.add("loading");
+  const originalText = btn.innerText;
+  btn.innerText = "Loading... ⏳";
 
   currentView="division";
 
-  if(!fullData.length){
-    const res=await fetch("https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?type=all");
-    fullData=await res.json();
+  try {
+
+    if(!fullData.length){
+      const res = await fetch("https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?type=all");
+      fullData = await res.json();
+    }
+
+    const filtered = fullData.filter(x=>x.division===divisionName);
+
+    document.getElementById("divisionSection").style.display="none";
+    document.getElementById("data").style.display="block";
+    document.getElementById("searchBar").style.display="block";
+
+    renderData(filtered);
+
+  } catch (err) {
+    alert("Failed to load data");
+    console.log(err);
   }
 
-  const filtered=fullData.filter(x=>x.division===divisionName);
-
-  document.getElementById("divisionSection").style.display="none";
-  document.getElementById("data").style.display="block";
-  document.getElementById("searchBar").style.display="block";
-
-  renderData(filtered);
+  // 🔥 Restore button
+  btn.classList.remove("loading");
+  btn.innerText = originalText;
 }
-
 // RENDER
 function renderData(data){
 
