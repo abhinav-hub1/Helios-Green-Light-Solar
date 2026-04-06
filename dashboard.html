@@ -4,7 +4,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body { font-family: Arial; background: #f4f6f8; margin: 0; }
+body {
+  font-family: Arial;
+  background: #f4f6f8;
+  margin: 0;
+}
 
 .header {
   background: #1e88e5;
@@ -25,7 +29,6 @@ body { font-family: Arial; background: #f4f6f8; margin: 0; }
   padding: 8px 16px;
   border-radius: 8px;
   border: none;
-  cursor: pointer;
 }
 
 #searchPanel {
@@ -34,7 +37,6 @@ body { font-family: Arial; background: #f4f6f8; margin: 0; }
   background: #fff;
   padding: 15px;
   border-radius: 12px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.15);
 }
 
 .search-option {
@@ -45,19 +47,7 @@ body { font-family: Arial; background: #f4f6f8; margin: 0; }
   cursor: pointer;
 }
 
-#searchInputBox { display: none; margin-top: 10px; }
-
-input { width: 100%; padding: 8px; margin-bottom: 10px; }
-
-button {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  margin-top: 5px;
-}
-
-.search-action { background: #1e88e5; color: white; }
+#searchInputBox { display: none; }
 
 .div-btn {
   width: 90%;
@@ -69,11 +59,9 @@ button {
   background: linear-gradient(135deg, #1e88e5, #1565c0);
   color: white;
   font-size: 16px;
-  font-weight: 600;
   cursor: pointer;
 }
 
-/* 🔥 Loading state */
 .div-btn.loading {
   opacity: 0.6;
   pointer-events: none;
@@ -89,7 +77,7 @@ button {
   cursor: pointer;
 }
 
-img { width: 100%; margin-bottom: 10px; border-radius: 8px; }
+img { width: 100%; margin-top: 10px; border-radius: 8px; }
 </style>
 </head>
 
@@ -109,18 +97,21 @@ img { width: 100%; margin-bottom: 10px; border-radius: 8px; }
     <div class="search-option" onclick="selectSearch('service','Service Number')">Service Number</div>
     <div class="search-option" onclick="selectSearch('name','Customer Name')">Customer Name</div>
     <div class="search-option" onclick="selectSearch('phone','Phone Number')">Phone Number</div>
+    <div class="search-option" onclick="selectSearch('subdivision','Sub Division')">Sub Division</div>
+    <div class="search-option" onclick="selectSearch('section','Section')">Section</div>
+    <div class="search-option" onclick="selectSearch('distribution','Distribution')">Distribution</div>
   </div>
 
   <div id="searchInputBox">
     <div id="selectedLabel"></div>
     <input type="text" id="searchInput">
-    <button class="search-action" onclick="performSearch()">Search</button>
+    <button onclick="performSearch()">Search</button>
   </div>
 </div>
 
 <div id="divisionSection" style="padding:20px; text-align:center;">
-  <button class="div-btn" onclick="showDivision(event,'Tadepalligudem')">Tadepalligudem</button>
-  <button class="div-btn" onclick="showDivision(event,'Narsipatnam')">Narsipatnam</button>
+  <button id="btn1" class="div-btn" onclick="showDivision(event,'Tadepalligudem')">Tadepalligudem</button>
+  <button id="btn2" class="div-btn" onclick="showDivision(event,'Narsipatnam')">Narsipatnam</button>
 </div>
 
 <div class="container" id="data" style="display:none;"></div>
@@ -129,17 +120,18 @@ img { width: 100%; margin-bottom: 10px; border-radius: 8px; }
 <script>
 
 let fullData = [];
+let isProcessing = false;
 let selectedSearchType = "";
 let currentView = "home";
 
 // SEARCH
 function toggleSearch(){
-  const panel = document.getElementById("searchPanel");
-  panel.style.display = panel.style.display==="block"?"none":"block";
+  const panel=document.getElementById("searchPanel");
+  panel.style.display=panel.style.display==="block"?"none":"block";
 }
 
 function selectSearch(type,label){
-  selectedSearchType = type;
+  selectedSearchType=type;
   document.getElementById("searchOptions").style.display="none";
   document.getElementById("searchInputBox").style.display="block";
   document.getElementById("selectedLabel").innerText=label;
@@ -155,37 +147,35 @@ async function performSearch(){
   document.getElementById("divisionSection").style.display="none";
   document.getElementById("data").style.display="block";
 
-  try {
+  try{
     const res=await fetch(`https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?action=search&field=${selectedSearchType}&value=${value}`);
     const result=await res.json();
     renderData(result);
-  } catch(err){
+  }catch(err){
     alert("Search failed");
-    console.log(err);
   }
 }
 
-// 🔥 DIVISION WITH LOADING FIX
-async function showDivision(e, divisionName){
+// DIVISION
+async function showDivision(e,divisionName){
 
-  const btn = e.target;
+  if(isProcessing) return;
+  isProcessing=true;
 
-  if (btn.classList.contains("loading")) return;
-
+  const btn=e.target;
   btn.classList.add("loading");
-  const originalText = btn.innerText;
-  btn.innerText = "Loading... ⏳";
+  const original=btn.innerText;
+  btn.innerText="Loading... ⏳";
 
   currentView="division";
 
-  try {
-
+  try{
     if(!fullData.length){
-      const res = await fetch("https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?type=all");
-      fullData = await res.json();
+      const res=await fetch("https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?type=all");
+      fullData=await res.json();
     }
 
-    const filtered = fullData.filter(x=>x.division===divisionName);
+    const filtered=fullData.filter(x=>x.division===divisionName);
 
     document.getElementById("divisionSection").style.display="none";
     document.getElementById("data").style.display="block";
@@ -193,13 +183,13 @@ async function showDivision(e, divisionName){
 
     renderData(filtered);
 
-  } catch (err) {
-    alert("Failed to load data");
-    console.log(err);
+  }catch(err){
+    alert("Error loading data");
   }
 
   btn.classList.remove("loading");
-  btn.innerText = originalText;
+  btn.innerText=original;
+  isProcessing=false;
 }
 
 // RENDER
@@ -215,10 +205,12 @@ function renderData(data){
 
   data.reverse().forEach(item=>{
     container.innerHTML+=`
-      <div class="card" onclick="openDetails(this)" data-item='${encodeURIComponent(JSON.stringify(item))}'>
+      <div class="card" onclick="openDetails(this)"
+        data-item='${encodeURIComponent(JSON.stringify(item))}'>
         <b>${item.service}</b><br>
         ${item.name}<br>
-        ${item.phone}
+        ${item.phone}<br>
+        ${item.surveyor || "-"}
       </div>
     `;
   });
@@ -234,7 +226,7 @@ function openDetails(el){
   document.getElementById("data").style.display="none";
   document.getElementById("detailsScreen").style.display="block";
 
-  const convert=(url)=>{
+  const convert=url=>{
     if(!url) return "";
     const id=url.match(/[-\w]{25,}/);
     return id?`https://drive.google.com/uc?export=view&id=${id[0]}`:"";
@@ -242,19 +234,30 @@ function openDetails(el){
 
   document.getElementById("detailsScreen").innerHTML=`
     <h3>${item.name}</h3>
-    <p>${item.service}</p>
-    <p>${item.phone}</p>
-    <p>${item.address||""}</p>
+    <p><b>Service:</b> ${item.service}</p>
+    <p><b>Phone:</b> ${item.phone}</p>
+    <p><b>Address:</b> ${item.address || "-"}</p>
+
+    <p><b>Division:</b> ${item.division}</p>
+    <p><b>Sub Division:</b> ${item.subdivision}</p>
+    <p><b>Section:</b> ${item.section}</p>
+    <p><b>Distribution:</b> ${item.distribution}</p>
+
+    <p><b>Surveyor:</b> ${item.surveyor || "-"}</p>
 
     ${item.panels?`<img src="${convert(item.panels)}">`:""}
     ${item.inverter?`<img src="${convert(item.inverter)}">`:""}
     ${item.earth?`<img src="${convert(item.earth)}">`:""}
+    ${item.bill?`<img src="${convert(item.bill)}">`:""}
+    ${item.aadhar?`<img src="${convert(item.aadhar)}">`:""}
+    ${item.doc1?`<img src="${convert(item.doc1)}">`:""}
+    ${item.doc2?`<img src="${convert(item.doc2)}">`:""}
 
     <button onclick="goBack()">Back</button>
   `;
 }
 
-// BACK FIXED
+// BACK
 function goBack(){
 
   if(currentView==="details"){
@@ -272,7 +275,6 @@ function goBack(){
     return;
   }
 
-  // Home → go to main page
   window.location.href="index.html";
 }
 
