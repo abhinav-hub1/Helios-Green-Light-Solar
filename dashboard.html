@@ -155,6 +155,7 @@ let fullData = [];
 let isProcessing = false;
 let selectedSearchType = "";
 let currentView = "home";
+  let selectedDivision = "";
 
 // SEARCH UI
 function toggleSearch() {
@@ -196,8 +197,8 @@ function selectSearch(type, label) {
   const value = document.getElementById("searchInput").value.trim();
   if (!value) return;
 
-  const divisionName = document.getElementById("totalCount").innerText.split("|")[0].trim();
-
+ /*const divisionName = document.getElementById("totalCount").innerText.split("|")[0].trim();*/
+const divisionName = selectedDivision;
   const container = document.getElementById("data");
   container.innerHTML = "<p style='text-align:center;'>⏳ Searching...</p>";
 
@@ -231,7 +232,7 @@ function selectSearch(type, label) {
 
 // CLICK DIVISION
 async function showDivision(e, divisionName) {
-
+selectedDivision = divisionName;
   currentView = "division";
 
   if (isProcessing) return;
@@ -368,7 +369,6 @@ let currentData = [];
 function openDetails(item) {
 
   currentView = "details";
-   alert(item.panel1);
   const detail = document.getElementById("detailView");
 
   document.getElementById("data").style.display = "none";
