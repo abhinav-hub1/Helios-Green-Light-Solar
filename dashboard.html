@@ -24,11 +24,12 @@ body {
 .back-btn { position: absolute; left: 12px; cursor: pointer; }
 
 .search-btn {
-  background: #1e88e5;
+  background:  #1e88e5;
   color: white;
   padding: 8px 16px;
   border-radius: 8px;
   border: none;
+  cursor: pointer;
 }
 
 #searchPanel {
@@ -37,6 +38,7 @@ body {
   background: #fff;
   padding: 15px;
   border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.15);
 }
 
 .search-option {
@@ -47,7 +49,29 @@ body {
   cursor: pointer;
 }
 
-#searchInputBox { display: none; }
+#searchInputBox {
+  display: none;
+  margin-top: 10px;
+}
+
+input { width: 100%; padding: 8px; margin-bottom: 10px; }
+
+button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  margin-top: 5px;
+}
+
+.search-action { background: #1e88e5; color: white; }
+
+.count-box {
+  text-align: center;
+  padding: 10px;
+  background: #e3f2fd;
+  font-weight: bold;
+}
 
 .div-btn {
   width: 90%;
@@ -59,6 +83,7 @@ body {
   background: linear-gradient(135deg, #1e88e5, #1565c0);
   color: white;
   font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
 }
 
@@ -74,10 +99,15 @@ body {
   padding: 12px;
   margin-bottom: 10px;
   border-radius: 10px;
-  cursor: pointer;
 }
 
-img { width: 100%; margin-top: 10px; border-radius: 8px; }
+.date-header {
+  font-weight: bold;
+  margin: 10px 5px;
+  color: #1e88e5;
+}
+
+.time { font-size: 12px; color: gray; }
 </style>
 </head>
 
@@ -88,35 +118,37 @@ img { width: 100%; margin-top: 10px; border-radius: 8px; }
   Dashboard
 </div>
 
+<div class="count-box" id="totalCount" style="display:none;"></div>
 <div id="searchBar" style="display:none; padding:10px; text-align:center;">
   <button class="search-btn" onclick="toggleSearch()">Search By</button>
 </div>
+  <div id="searchPanel">
+  
+ <div id="searchOptions">
+  <div class="search-option" onclick="selectSearch('service', 'Service Number')">Service Number</div>
+  <div class="search-option" onclick="selectSearch('name', 'Customer Name')">Customer Name</div>
+  <div class="search-option" onclick="selectSearch('phone', 'Phone Number')">Phone Number</div>
+  <div class="search-option" onclick="selectSearch('subdivision', 'Sub Division Name')">Sub Division Name</div>
+  <div class="search-option" onclick="selectSearch('section', 'Section Name')">Section Name</div>
+  <div class="search-option" onclick="selectSearch('distribution', 'Distribution Name')">Distribution Name</div>
+</div>
 
-<div id="searchPanel">
-  <div id="searchOptions">
-    <div class="search-option" onclick="selectSearch('service','Service Number')">Service Number</div>
-    <div class="search-option" onclick="selectSearch('name','Customer Name')">Customer Name</div>
-    <div class="search-option" onclick="selectSearch('phone','Phone Number')">Phone Number</div>
-    <div class="search-option" onclick="selectSearch('subdivision','Sub Division')">Sub Division</div>
-    <div class="search-option" onclick="selectSearch('section','Section')">Section</div>
-    <div class="search-option" onclick="selectSearch('distribution','Distribution')">Distribution</div>
+  <div id="searchInputBox" style="display:none;">
+    <div id="selectedLabel" style="margin-bottom:8px; font-weight:bold;"></div>
+    <input type="text" id="searchInput" placeholder="Enter value">
+    <button class="search-action" onclick="performSearch()">Search</button>
   </div>
 
-  <div id="searchInputBox">
-    <div id="selectedLabel"></div>
-    <input type="text" id="searchInput">
-    <button onclick="performSearch()">Search</button>
-  </div>
 </div>
 
 <div id="divisionSection" style="padding:20px; text-align:center;">
-  <button id="btn1" class="div-btn" onclick="showDivision(event,'Tadepalligudem')">Tadepalligudem</button>
-  <button id="btn2" class="div-btn" onclick="showDivision(event,'Narsipatnam')">Narsipatnam</button>
+  <button id="btn1" class="div-btn" onclick="showDivision(event, 'Tadepalligudem')">Tadepalligudem</button>
+  <button id="btn2" class="div-btn" onclick="showDivision(event, 'Narsipatnam')">Narsipatnam</button>
 </div>
 
 <div class="container" id="data" style="display:none;"></div>
-<div id="detailsScreen" style="display:none; padding:15px;"></div>
-
+<!-- DETAILS VIEW -->
+<div id="detailView" style="display:none; padding:15px;"></div>
 <script>
 
 let fullData = [];
@@ -124,160 +156,315 @@ let isProcessing = false;
 let selectedSearchType = "";
 let currentView = "home";
 
-// SEARCH
-function toggleSearch(){
-  const panel=document.getElementById("searchPanel");
-  panel.style.display=panel.style.display==="block"?"none":"block";
-}
+// SEARCH UI
+function toggleSearch() {
 
-function selectSearch(type,label){
-  selectedSearchType=type;
-  document.getElementById("searchOptions").style.display="none";
-  document.getElementById("searchInputBox").style.display="block";
-  document.getElementById("selectedLabel").innerText=label;
-}
+  const panel = document.getElementById("searchPanel");
 
-async function performSearch(){
+  if (panel.style.display === "block") {
+    panel.style.display = "none";
+  } else {
+    panel.style.display = "block";
 
-  currentView="search";
-
-  const value=document.getElementById("searchInput").value.trim();
-  if(!value) return;
-
-  document.getElementById("divisionSection").style.display="none";
-  document.getElementById("data").style.display="block";
-
-  try{
-    const res=await fetch(`https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?action=search&field=${selectedSearchType}&value=${value}`);
-    const result=await res.json();
-    renderData(result);
-  }catch(err){
-    alert("Search failed");
+    // reset UI
+    document.getElementById("searchOptions").style.display = "block";
+    document.getElementById("searchInputBox").style.display = "none";
   }
 }
 
-// DIVISION
-async function showDivision(e,divisionName){
+function selectSearch(type, label) {
 
-  if(isProcessing) return;
-  isProcessing=true;
+  selectedSearchType = type;
 
-  const btn=e.target;
-  btn.classList.add("loading");
-  const original=btn.innerText;
-  btn.innerText="Loading... ⏳";
+  // hide all options
+  document.getElementById("searchOptions").style.display = "none";
 
-  currentView="division";
+  // show input section
+  document.getElementById("searchInputBox").style.display = "block";
 
-  try{
-    if(!fullData.length){
-      const res=await fetch("https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?type=all");
-      fullData=await res.json();
+  // show selected label
+  document.getElementById("selectedLabel").innerText = label;
+
+  // clear input
+  document.getElementById("searchInput").value = "";
+}
+
+  async function performSearch() {
+
+    currentView = "search";
+
+  const value = document.getElementById("searchInput").value.trim();
+  if (!value) return;
+
+  const divisionName = document.getElementById("totalCount").innerText.split("|")[0].trim();
+
+  const container = document.getElementById("data");
+  container.innerHTML = "<p style='text-align:center;'>⏳ Searching...</p>";
+
+  document.getElementById("divisionSection").style.display = "none";
+  document.getElementById("data").style.display = "block";
+  document.getElementById("totalCount").style.display = "block";
+
+  try {
+
+    const url = "https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec"
+      + "?action=search"
+      + "&division=" + encodeURIComponent(divisionName)
+      + "&field=" + encodeURIComponent(selectedSearchType)
+      + "&value=" + encodeURIComponent(value)
+      + "&t=" + Date.now();
+
+    const res = await fetch(url);
+    const result = await res.json();
+
+    document.getElementById("totalCount").innerText =
+      `Search Results: ${result.length}`;
+
+    renderData(result);
+
+  } catch (err) {
+    container.innerHTML = "<p style='text-align:center;'>Error fetching data</p>";
+  }
+
+  document.getElementById("searchPanel").style.display = "none";
+}
+
+// CLICK DIVISION
+async function showDivision(e, divisionName) {
+
+  currentView = "division";
+
+  if (isProcessing) return;
+  isProcessing = true;
+
+  const btn1 = document.getElementById("btn1");
+  const btn2 = document.getElementById("btn2");
+
+  const clickedBtn = e.currentTarget;
+
+  btn1.disabled = true;
+  btn2.disabled = true;
+
+  clickedBtn.innerText = "⏳ Loading...";
+  clickedBtn.classList.add("loading");
+
+  try {
+
+    if (!fullData.length) {
+      await loadData();
     }
 
-    const filtered=fullData.filter(x=>x.division===divisionName);
+    let divisionData = fullData.filter(item => {
+      const div = (item.division || "").toLowerCase().trim();
+      return div.replace(/\s+/g, "") === divisionName.toLowerCase().replace(/\s+/g, "");
+    });
 
-    document.getElementById("divisionSection").style.display="none";
-    document.getElementById("data").style.display="block";
-    document.getElementById("searchBar").style.display="block";
+    const today = getTodayIST();
 
-    renderData(filtered);
+    const todayData = divisionData.filter(item => {
+      const d = toIST(item.timestamp);
+      if (!d) return false;
+      return d.getFullYear() === today.getFullYear() &&
+             d.getMonth() === today.getMonth() &&
+             d.getDate() === today.getDate();
+    });
 
-  }catch(err){
+    document.getElementById("divisionSection").style.display = "none";
+    document.getElementById("data").style.display = "block";
+    document.getElementById("totalCount").style.display = "block";
+document.getElementById("searchBar").style.display = "block";
+    document.getElementById("totalCount").innerText =
+      `${divisionName} | Today: ${todayData.length} | Total: ${divisionData.length}`;
+
+    renderData(todayData);
+
+  } catch (err) {
     alert("Error loading data");
   }
 
-  btn.classList.remove("loading");
-  btn.innerText=original;
-  isProcessing=false;
+  isProcessing = false;
+}
+
+// FETCH
+async function loadData() {
+  const res = await fetch("https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?type=all&t=" + Date.now());
+  fullData = await res.json();
+  fullData = fullData.filter(item => item.timestamp);
+}
+
+// DATE
+function toIST(dateInput) {
+  if (!dateInput) return null;
+  const parts = dateInput.split(/[- :]/);
+  return new Date(parts[0], parts[1] - 1, parts[2], parts[3], parts[4], parts[5]);
+}
+
+function getTodayIST() {
+  const now = new Date();
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Kolkata",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  });
+  const parts = formatter.formatToParts(now);
+  const year = parts.find(p => p.type === "year").value;
+  const month = parts.find(p => p.type === "month").value;
+  const day = parts.find(p => p.type === "day").value;
+  return new Date(year, month - 1, day);
 }
 
 // RENDER
-function renderData(data){
+function renderData(data) {
 
-  const container=document.getElementById("data");
-  container.innerHTML="";
+  const container = document.getElementById("data");
+  container.innerHTML = "";
 
-  if(!data.length){
-    container.innerHTML="No data";
+  if (!data.length) {
+    container.innerHTML = "<p style='text-align:center;'>No data found</p>";
     return;
   }
 
-  data.reverse().forEach(item=>{
-    container.innerHTML+=`
-      <div class="card" onclick="openDetails(this)"
-        data-item='${encodeURIComponent(JSON.stringify(item))}'>
+  let currentDate = "";
+
+  data.slice().reverse().forEach(item => {
+
+    const d = toIST(item.timestamp);
+    if (!d) return;
+
+    // 📅 Date format
+    const dateStr =
+      String(d.getDate()).padStart(2, "0") + "/" +
+      String(d.getMonth() + 1).padStart(2, "0") + "/" +
+      d.getFullYear();
+
+    // 🔹 Group by date
+    if (dateStr !== currentDate) {
+      currentDate = dateStr;
+      container.innerHTML += `<div class="date-header">${dateStr}</div>`;
+    }
+
+    // ⏰ Time (IST)
+    const time = d.toLocaleTimeString("en-IN", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+      timeZone: "Asia/Kolkata"
+    });
+
+    // 🧾 Card
+container.innerHTML += `  
+  <div class="card" onclick='openDetails(${JSON.stringify(item)})' style="cursor:pointer;">
         <b>${item.service}</b><br>
         ${item.name}<br>
         ${item.phone}<br>
-        ${item.surveyor || "-"}
+        ${item.surveyor || "-"}<br>
+        <div class="time">${time}</div>
       </div>
     `;
   });
 }
+ function openDetails(item) {
 
-// DETAILS
-function openDetails(el){
+  currentView = "details";
 
-  currentView="details";
+  const detail = document.getElementById("detailView");
 
-  const item=JSON.parse(decodeURIComponent(el.getAttribute("data-item")));
+  document.getElementById("data").style.display = "none";
+  detail.style.display = "block";
 
-  document.getElementById("data").style.display="none";
-  document.getElementById("detailsScreen").style.display="block";
+  function val(v) {
+    return v && v !== "" ? v : "-";
+  }
 
-  const convert=url=>{
-    if(!url) return "";
-    const id=url.match(/[-\w]{25,}/);
-    return id?`https://drive.google.com/uc?export=view&id=${id[0]}`:"";
-  };
+  function link(url) {
+    return url ? `<a href="${url}" target="_blank">View</a>` : "-";
+  }
 
-  document.getElementById("detailsScreen").innerHTML=`
-    <h3>${item.name}</h3>
-    <p><b>Service:</b> ${item.service}</p>
-    <p><b>Phone:</b> ${item.phone}</p>
-    <p><b>Address:</b> ${item.address || "-"}</p>
+  detail.innerHTML = `
+    <div class="card">
 
-    <p><b>Division:</b> ${item.division}</p>
-    <p><b>Sub Division:</b> ${item.subdivision}</p>
-    <p><b>Section:</b> ${item.section}</p>
-    <p><b>Distribution:</b> ${item.distribution}</p>
+      <h3 style="text-align:center;">Service Details</h3>
 
-    <p><b>Surveyor:</b> ${item.surveyor || "-"}</p>
+      <b>Service No:</b> ${val(item["Service Number"])}<br><br>
+      <b>Name:</b> ${val(item["Customer Name"])}<br><br>
+      <b>Phone:</b> ${val(item["Customer Phone Number"])}<br><br>
+      <b>Address:</b> ${val(item["Address"])}<br><br>
 
-    ${item.panels?`<img src="${convert(item.panels)}">`:""}
-    ${item.inverter?`<img src="${convert(item.inverter)}">`:""}
-    ${item.earth?`<img src="${convert(item.earth)}">`:""}
-    ${item.bill?`<img src="${convert(item.bill)}">`:""}
-    ${item.aadhar?`<img src="${convert(item.aadhar)}">`:""}
-    ${item.doc1?`<img src="${convert(item.doc1)}">`:""}
-    ${item.doc2?`<img src="${convert(item.doc2)}">`:""}
+      <b>Division:</b> ${val(item["Division Name"])}<br><br>
+      <b>Subdivision:</b> ${val(item["Sub Division Name"])}<br><br>
+      <b>Section:</b> ${val(item["Section Name"])}<br><br>
+      <b>Distribution:</b> ${val(item["Distribution Name"])}<br><br>
 
-    <button onclick="goBack()">Back</button>
+      <b>Panel No 1:</b> ${val(item["Panel No.1"])}<br><br>
+      <b>Panel No 2:</b> ${val(item["Panel No.2"])}<br><br>
+      <b>Panel No 3:</b> ${val(item["Panel No.3"])}<br><br>
+      <b>Panel No 4:</b> ${val(item["Panel No.4"])}<br><br>
+
+      <b>Inverter Service No:</b> ${val(item["Inverter Service No."])}<br><br>
+
+      <hr>
+
+      <b>Panel Image:</b><br>
+      ${link(item["Panal Image"])}<br><br>
+
+      <b>Inverter Image:</b><br>
+      ${link(item["Inverter Image"])}<br><br>
+
+      <b>Earth Image:</b><br>
+      ${link(item["Earth Image"])}<br><br>
+
+      <b>Current Bill:</b><br>
+      ${link(item["Current Bill"])}<br><br>
+
+      <b>Aadhar Card:</b><br>
+      ${link(item["Aadhar Card"])}<br><br>
+
+      <b>Document 1:</b><br>
+      ${link(item["Document Image 1"])}<br><br>
+
+      <b>Document 2:</b><br>
+      ${link(item["Document Image 2"])}<br><br>
+
+      <b>Surveyor:</b> ${val(item["Surveyor Name"])}<br><br>
+
+    </div>
   `;
 }
 
 // BACK
-function goBack(){
+function goBack() {
 
-  if(currentView==="details"){
-    document.getElementById("detailsScreen").style.display="none";
-    document.getElementById("data").style.display="block";
-    currentView="division";
-    return;
+  if (currentView === "search" || currentView === "division" || currentView === "details") {
+
+    document.getElementById("data").style.display = "none";
+    document.getElementById("divisionSection").style.display = "block";
+
+    document.getElementById("totalCount").style.display = "none";
+    document.getElementById("searchBar").style.display = "none";
+    document.getElementById("searchPanel").style.display = "none";
+document.getElementById("detailView").style.display = "none";
+    currentView = "home";
+
+  } else {
+    window.location.href = "index.html";
   }
 
-  if(currentView==="division" || currentView==="search"){
-    document.getElementById("data").style.display="none";
-    document.getElementById("divisionSection").style.display="block";
-    document.getElementById("searchBar").style.display="none";
-    currentView="home";
-    return;
-  }
+  // reset buttons
+  const btn1 = document.getElementById("btn1");
+  const btn2 = document.getElementById("btn2");
 
-  window.location.href="index.html";
+  btn1.disabled = false;
+  btn2.disabled = false;
+
+  btn1.innerText = "Tadepalligudem";
+  btn2.innerText = "Narsipatnam";
+
+  btn1.classList.remove("loading");
+  btn2.classList.remove("loading");
+
+  isProcessing = false;
 }
-
 </script>
 
 </body>
