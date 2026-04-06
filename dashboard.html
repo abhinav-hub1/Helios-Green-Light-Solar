@@ -328,7 +328,7 @@ function renderData(data) {
 
   let currentDate = "";
 
-  data.slice().reverse().forEach(item, index ) => {
+  data.slice().reverse().forEach((item, index ) => {
 
     const d = toIST(item.timestamp);
     if (!d) return;
