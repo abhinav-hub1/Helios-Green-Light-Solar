@@ -124,13 +124,14 @@ button {
 </div>
   <div id="searchPanel">
   
-  <div id="searchOptions">
-    <div class="search-option" onclick="selectSearch('service', 'Service Number')">Service Number</div>
-    <div class="search-option" onclick="selectSearch('name', 'Consumer Name')">Consumer Name</div>
-    <div class="search-option" onclick="selectSearch('village', 'Village')">Village</div>
-    <div class="search-option" onclick="selectSearch('phone', 'Phone Number')">Phone Number</div>
-    <div class="search-option" onclick="selectSearch('subdivision', 'Subdivision')">Subdivision</div>
-  </div>
+ <div id="searchOptions">
+  <div class="search-option" onclick="selectSearch('service', 'Service Number')">Service Number</div>
+  <div class="search-option" onclick="selectSearch('name', 'Customer Name')">Customer Name</div>
+  <div class="search-option" onclick="selectSearch('phone', 'Phone Number')">Phone Number</div>
+  <div class="search-option" onclick="selectSearch('subdivision', 'Sub Division Name')">Sub Division Name</div>
+  <div class="search-option" onclick="selectSearch('section', 'Section Name')">Section Name</div>
+  <div class="search-option" onclick="selectSearch('distribution', 'Distribution Name')">Distribution Name</div>
+</div>
 
   <div id="searchInputBox" style="display:none;">
     <div id="selectedLabel" style="margin-bottom:8px; font-weight:bold;"></div>
@@ -186,27 +187,41 @@ function selectSearch(type, label) {
   document.getElementById("searchInput").value = "";
 }
 
-async function performSearch() {
+  async function performSearch() {
 
-  const value = document.getElementById("searchInput").value.toLowerCase().trim();
+  const value = document.getElementById("searchInput").value.trim();
   if (!value) return;
 
-  // 🔥 ensure data is loaded
-  if (!fullData.length) {
-    await loadData();
-  }
+  const divisionName = document.getElementById("totalCount").innerText.split("|")[0].trim();
 
-  const filtered = fullData.filter(item => {
-    const field = (item[selectedSearchType] || "").toLowerCase();
-    return field.includes(value);
-  });
+  const container = document.getElementById("data");
+  container.innerHTML = "<p style='text-align:center;'>⏳ Searching...</p>";
 
   document.getElementById("divisionSection").style.display = "none";
   document.getElementById("data").style.display = "block";
   document.getElementById("totalCount").style.display = "block";
-  document.getElementById("totalCount").innerText = `Search Results: ${filtered.length}`;
 
-  renderData(filtered);
+  try {
+
+    const url = "https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec"
+      + "?action=search"
+      + "&division=" + encodeURIComponent(divisionName)
+      + "&field=" + encodeURIComponent(selectedSearchType)
+      + "&value=" + encodeURIComponent(value)
+      + "&t=" + Date.now();
+
+    const res = await fetch(url);
+    const result = await res.json();
+
+    document.getElementById("totalCount").innerText =
+      `Search Results: ${result.length}`;
+
+    renderData(result);
+
+  } catch (err) {
+    container.innerHTML = "<p style='text-align:center;'>Error fetching data</p>";
+  }
+
   document.getElementById("searchPanel").style.display = "none";
 }
 
