@@ -6,286 +6,101 @@
 <meta name="theme-color" content="#1e88e5">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	
-<style>
 
-body {
-  font-family: Arial, sans-serif;
-  background: #f1f1f1;
-  margin: 0;
-}
+<style>
+body { font-family: Arial; background:#f1f1f1; margin:0; }
 
 .header {
-  background: #1e88e5;
-  height: 55px;
-  display: flex;
-  align-items: center;
-  justify-content: center; /* center title */
-  position: relative;
-  color: white;
+  background:#1e88e5; height:55px;
+  display:flex; align-items:center; justify-content:center;
+  position:relative; color:white;
 }
 
-.header-title {
-  font-size: 18px;
-  font-weight: 600;
-}
+.header-title { font-size:18px; font-weight:600; }
 
-/* keep profile on right */
 .profile-circle {
-  position: absolute;
-  right: 12px;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: white;
-  color: #1e88e5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  cursor: pointer;
-}
-/* CONTAINER */
-.container {
-  padding: 12px;
+  position:absolute; right:12px;
+  width:38px; height:38px; border-radius:50%;
+  background:white; color:#1e88e5;
+  display:flex; align-items:center; justify-content:center;
 }
 
-/* LABEL */
-label {
-  font-size: 14px;
-  font-weight: 600;
-  display: block;
-  margin-top: 12px;
-}
+.container { padding:12px; }
 
-/* INPUT */
+label { margin-top:12px; font-weight:600; display:block; }
+
 input {
-  width: 100%;
-  padding: 12px;
-  margin-top: 5px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  background: #eee;
-  font-size: 15px;
+  width:100%; padding:12px; margin-top:5px;
+  border-radius:6px; border:1px solid #ccc;
+  background:#eee;
 }
 
-/* READONLY STYLE */
-input[readonly] {
-  background: #e0e0e0;
-}
+input[readonly] { background:#e0e0e0; }
 
-/* ROW FOR SEARCH */
-.row {
-  display: flex;
-  gap: 6px;
-}
+.row { display:flex; gap:6px; }
 
-.row input {
-  flex: 1;
-}
-
-/* ICON BUTTON */
 .icon-btn {
-  width: 45px;
-  border: none;
-  border-radius: 6px;
-  background: #1e88e5;
-  color: white;
-  font-size: 18px;
+  width:45px; border:none; border-radius:6px;
+  background:#1e88e5; color:white;
 }
 
-/* FILE BOX */
 .file-box {
-  background: #eee;
-  border-radius: 6px;
-  padding: 10px;
-  margin-top: 8px;
-  padding-bottom: 20px;
-	box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-	.file-box input[type="text"] {
-  margin-top: 8px;
+  background:#eee; padding:10px; margin-top:8px;
+  border-radius:6px; position:relative;
 }
 
-/* BUTTON */
-.submit-btn {
-  width: 100%;
-  margin-top: 20px;
-  padding: 14px;
-  background: #2e7d32;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-}
-
-/* ERROR */
-.error {
-  color: red;
-  text-align: center;
-  display: none;
-}
-
-/* LOADING */
-#loading {
-  text-align: center;
-  display: none;
-  color: blue;
-}
-
-#successScreen {
-  display: none;
-  text-align: center;
-  padding: 30px;
-}
-.new-entry-btn {
-  margin-top: 20px;
-  padding: 14px 20px;
-  background: linear-gradient(45deg, #2196F3, #21CBF3);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 16px;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  transition: all 0.2s ease;
-}
-
-.new-entry-btn:active {
-  transform: scale(0.96);
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-.file-wrapper {
-  position: relative;
-  padding-top: 10px; /* 👈 ADD THIS */
-}
 .delete-btn {
-  position: absolute;
-  right: 10px;
-  top: 5px;
-  background: white;
-  border-radius: 50%;
-  padding: 6px;
-  border: none;
-  cursor: pointer;
-  display: none;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-}
-.delete-btn .material-icons {
-  font-size: 20px;
-  color: #e53935;
-}
-	.menu-btn {
-  position: absolute;
-  left: 12px;
-  cursor: pointer;
+  position:absolute; right:10px; top:35px;
+  display:none; border:none; background:white;
+  border-radius:50%;
 }
 
-.menu-btn .material-icons {
-  font-size: 26px;
-  color: white;
+.submit-btn {
+  width:100%; margin-top:20px;
+  padding:14px; background:#2e7d32;
+  color:white; border:none;
 }
 
-/* SIDE MENU */
-.side-menu {
-  position: fixed;
-  top: 0;
-  left: -250px;
-  width: 250px;
-  height: 100%;
-  background: white;
-  box-shadow: 2px 0 10px rgba(0,0,0,0.2);
-  transition: 0.3s;
-  z-index: 1000;
+.error {
+  background:#ffebee;
+  color:#c62828;
+  padding:10px;
+  border-radius:6px;
+  margin-top:10px;
+  display:none;
 }
 
-.side-menu.open {
-  left: 0;
-}
-.menu-header {
-  padding: 18px;
-  font-size: 18px;
-  font-weight: bold;
-  background: #1e88e5;
-  color: white;
-  text-align: center;
-}
-.menu-item {
-  padding: 15px;
-  border-bottom: 1px solid #eee;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.menu-item:hover {
-  background: #f5f5f5;
-}
-
-/* OVERLAY */
-#overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.3);
-  display: none;
-  z-index: 999;
+#duplicateMsg {
+  background:#fff3e0;
+  color:#ef6c00;
+  padding:10px;
+  border-radius:6px;
+  margin-top:10px;
+  display:none;
 }
 </style>
 </head>
 
 <body>
-<div id="sideMenu" class="side-menu">
 
-  <!-- 🔵 HEADER -->
-  <div class="menu-header">
-    Solar Installation
-  </div>
-
-  <!-- MENU ITEMS -->
-  <div class="menu-item" onclick="setMode('create')">
-    Create New
-  </div>
-
-  <div class="menu-item" onclick="setMode('edit')">
-    Edit Existing
-  </div>
-
-</div>
-<div id="overlay" onclick="toggleMenu()"></div>
-	
 <div class="header">
-  
-  <div class="menu-btn" onclick="toggleMenu()">
-    <span class="material-icons">menu</span>
-  </div>
-	
   <div class="header-title">Solar Installation</div>
-
-  <div class="profile-circle" onclick="openDashboard()">👤</div>
-
 </div>
-	
-<div class="container" id="formScreen">
-  
+
+<div class="container">
+
 <div id="loading">Loading... ⏳</div>
 
 <label>Service Number</label>
 <div class="row">
-<input id="service" placeholder="Enter Service Number"
-       oninput="resetMessages()" onkeypress="handleKey(event)">
+  <input id="service" oninput="resetMessages()">
   <button class="icon-btn" onclick="fetchData()">🔍</button>
-  <button class="icon-btn" onclick="reloadForm()">⟳</button>
 </div>
 
-<div id="duplicateMsg" style="color:red; display:none; margin-top:5px;">
-  ⚠️ This service number already submitted
-</div>
+<div id="duplicateMsg"></div>
+<div id="errorMsg" class="error"></div>
 
-<div id="errorMsg" class="error">Service Number not found </div>
-
-<label>Customer Name</label>
+<label>Name</label>
 <input id="name">
 
 <label>Phone</label>
@@ -308,559 +123,169 @@ input[readonly] {
 
 <h3>Upload Images</h3>
 
-<div class="file-box file-wrapper">
-  <label>Panels Image</label>
-  <input type="file" id="panels" accept="image/*,application/pdf" onchange="showDelete(this)">
-
-  <label>Panel No.1</label>
-  <input type="text" id="panel1" placeholder="Enter Panel Number 1">
-
-  <label>Panel No.2</label>
-  <input type="text" id="panel2" placeholder="Enter Panel Number 2">
-	
-  <label>Panel No.3</label>
-  <input type="text" id="panel3" placeholder="Enter Panel Number 3">
-
-  <label>Panel No.4</label>
-  <input type="text" id="panel4" placeholder="Enter Panel Number 4">
-
-  <button type="button" class="delete-btn" onclick="removeFile('panels')">
+<div class="file-box">
+  <label>Panels</label>
+  <input type="file" id="panels" onchange="showDelete(this)">
+  <button class="delete-btn" onclick="removeFile('panels')">
     <span class="material-icons">delete</span>
   </button>
 </div>
 
-<div class="file-box file-wrapper">
-  <label>Inverter Image</label>
-  <input type="file" id="inverter" accept="image/*,application/pdf" onchange="showDelete(this)">
+<button class="submit-btn" onclick="submitForm()">Submit</button>
 
-  <label>Inverter Serial Number</label>
-  <input type="text" id="inverterSerial" placeholder="Enter Inverter Serial Number">
-
-  <button type="button" class="delete-btn" onclick="removeFile('inverter')">
-    <span class="material-icons">delete</span>
-  </button>
-</div>
-
-<div class="file-box file-wrapper">
-<label>Earth Image</label>
-<input type="file" id="earth" accept="image/*,application/pdf" onchange="showDelete(this)">
-<button type="button" class="delete-btn" onclick="removeFile('earth')">
-    <span class="material-icons">delete</span>
-  </button>
-</div>
-
-<div class="file-box file-wrapper">
-  <label>Current Bill</label>
-<input type="file" id="bill" accept="image/*,application/pdf" onchange="showDelete(this)">
-<button type="button" class="delete-btn" onclick="removeFile('bill')">
-    <span class="material-icons">delete</span>
-  </button>
-</div>
-
-<div class="file-box file-wrapper">
-<label>Aadhar Card</label>
-<input type="file" id="aadhar" accept="image/*,application/pdf" onchange="showDelete(this)">
-<button type="button" class="delete-btn" onclick="removeFile('aadhar')">
-    <span class="material-icons">delete</span>
-  </button>
-</div>
-	
-<div class="file-box file-wrapper">
-<label>Document Image 1</label>
-<input type="file" id="doc1" accept="image/*,application/pdf" onchange="showDelete(this)">
-<button type="button" class="delete-btn" onclick="removeFile('doc1')">
-    <span class="material-icons">delete</span>
-  </button>
-</div>
-	
-<div class="file-box file-wrapper">
-<label>Document Image 2</label>
-<input type="file" id="doc2" accept="image/*,application/pdf" onchange="showDelete(this)">
-<button type="button" class="delete-btn" onclick="removeFile('doc2')">
-    <span class="material-icons">delete</span>
-  </button>
-</div>
-	
-<div class="form-group" id="surveyorGroup">
-  <label>Surveyor Name</label>
-  <input type="text" id="surveyor" placeholder="Enter Surveyor Name" required>
-</div>
-
-<button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit</button>
-
-</div>
-
-<!-- SUCCESS SCREEN -->
-<div id="successScreen">
-  <h2 style="color:green;">✅ Submitted Successfully</h2>
-  <p>Your data has been saved.</p>
-  <button class="new-entry-btn" onclick="reloadForm()">New Entry</button>
 </div>
 
 <script>
-  const loading = document.getElementById("loading");
-  const errorMsg = document.getElementById("errorMsg");
-  const duplicateMsg = document.getElementById("duplicateMsg");
-  const submitBtn = document.getElementById("submitBtn");
-  const formScreen = document.getElementById("formScreen");
-  const successScreen = document.getElementById("successScreen");
 
 let mode = "create";
+let isVerified = false;
+let verifiedService = "";
 
-const params = new URLSearchParams(window.location.search);
-const urlMode = params.get("mode");
+const loading = document.getElementById("loading");
+const errorMsg = document.getElementById("errorMsg");
+const duplicateMsg = document.getElementById("duplicateMsg");
 
-if (urlMode === "edit") {
-  mode = "edit";
-} else {
-  mode = "create";
+function lockFields(lock=true){
+["name","phone","address","division","subdivision","section","distribution"]
+.forEach(id=>{
+  const el=document.getElementById(id);
+  el.readOnly=lock;
+});
 }
 
-// 🔥 SET HEADER TEXT
-const titleEl = document.querySelector(".header-title");
-if (titleEl) {
-  titleEl.innerText = mode === "edit" ? "Edit Entry" : "Create New";
-}
-	if (mode === "edit") {
-  const surveyorField = document.getElementById("surveyorGroup");
-  if (surveyorField) {
-    surveyorField.style.display = "none";  // ✅ hide
-  }
-}
-	
-function readFile(input) {
-  return new Promise((resolve) => {
-    const file = input.files[0];
-    if (!file) return resolve("");
-    const reader = new FileReader();
-    reader.onload = e => resolve(e.target.result);
-    reader.readAsDataURL(file);
-  });
-}
-async function compressImage(input) {
-  return new Promise(resolve => {
-    const file = input.files[0];
-    if (!file) return resolve("");
+async function fetchData(){
 
-    // If PDF → don't compress
-    if (file.type === "application/pdf") {
-      const reader = new FileReader();
-      reader.onload = e => resolve(e.target.result);
-      reader.readAsDataURL(file);
-      return;
-    }
+isVerified=false;
 
-    const img = new Image();
-    const reader = new FileReader();
+const serviceInput=document.getElementById("service");
+const service=serviceInput.value.trim();
+if(!service) return;
 
-    reader.onload = e => {
-      img.src = e.target.result;
-    };
+loading.style.display="block";
 
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
+try{
 
-      const MAX_WIDTH = 800;
-      const scale = MAX_WIDTH / img.width;
+const res=await fetch("YOUR_API?service="+service);
+const data=await res.json();
 
-      canvas.width = MAX_WIDTH;
-      canvas.height = img.height * scale;
-
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-      resolve(canvas.toDataURL("image/jpeg", 0.7));
-    };
-
-    reader.readAsDataURL(file);
-  });
+if(!data || data.name==="NOT FOUND"){
+errorMsg.innerText="❌ Not found";
+errorMsg.style.display="block";
+lockFields(false);
+return;
 }
 
-function handleKey(e){
+document.getElementById("name").value=data.name;
+document.getElementById("phone").value=data.phone;
+document.getElementById("address").value=data.address;
+document.getElementById("division").value=data.division;
+document.getElementById("subdivision").value=data.subdivision;
+document.getElementById("section").value=data.section;
+document.getElementById("distribution").value=data.distribution;
 
-  // 🔥 Hide old messages
-  document.getElementById("duplicateMsg").style.display = "none";
-  document.getElementById("errorMsg").style.display = "none";
+const checkRes=await fetch("YOUR_API_CHECK");
+const checkData=await checkRes.json();
 
-  // 🔥 Reset loading text
-  loading.innerHTML = "Loading... ⏳";
+const exists=checkData.length>0;
 
-  if(e.key==="Enter") fetchData();
+if(mode==="create"){
+if(exists){
+duplicateMsg.innerText="Already exists";
+duplicateMsg.style.display="block";
+lockFields(true);
+}else{
+lockFields(false);
+serviceInput.readOnly=true;
+}
 }
 
-async function fetchData() {
-
-  const service = document.getElementById("service").value.trim();
-  if (!service) return;
-
-  loading.innerHTML = "Loading... ⏳";
-  loading.style.display = "block";
-
-  try {
-
-    // 🔵 STEP 1: Get master data (DATA sheet)
-    const res = await fetch("https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?service=" + service);
-    const data = await res.json();
-
-    if (!data || data.name === "NOT FOUND") {
-      loading.style.display = "none";
-      errorMsg.style.display = "block";
-      clearFields();
-      lockFields(false);
-      return;
-    }
-
-    // ✅ Fill fields
-    document.getElementById("name").value = data.name;
-    document.getElementById("phone").value = data.phone;
-    document.getElementById("address").value = data.address;
-    document.getElementById("division").value = data.division;
-    document.getElementById("subdivision").value = data.subdivision;
-    document.getElementById("section").value = data.section;
-    document.getElementById("distribution").value = data.distribution;
-
-    errorMsg.style.display = "none";
-
-    // 🔴 STEP 2: Check if already submitted
-    const checkUrl = "YOUR_URL"
-      + "?action=search"
-      + "&division=" + encodeURIComponent(data.division)
-      + "&field=service"
-      + "&value=" + encodeURIComponent(service)
-      + "&t=" + Date.now();
-
-    const checkRes = await fetch(checkUrl);
-    const checkData = await checkRes.json();
-
-    loading.style.display = "none";
-
-    if (checkData.length > 0) {
-
-      // 🔥 ALREADY EXISTS
-      duplicateMsg.innerText = "⚠️ Already submitted";
-      duplicateMsg.style.display = "block";
-
-      lockFields(true);   // 🔒 lock fields
-
-    } else {
-
-      // 🟢 NEW ENTRY
-      duplicateMsg.style.display = "none";
-      lockFields(false);  // 🔓 allow editing
-    }
-
-  } catch (err) {
-    loading.style.display = "none";
-    alert("Error fetching data ❌");
-    console.log(err);
-  }
+if(mode==="edit"){
+if(!exists){
+errorMsg.innerText="Not submitted";
+errorMsg.style.display="block";
+}else{
+lockFields(true);
 }
-	
-function isValidID(value) {
-  return /^[A-Z0-9]+$/.test(value);
-}
-async function submitForm() {
-let surveyor = null;
-
-if (mode === "create") {
-  surveyor = document.getElementById("surveyor").value.trim();
-
-  if (!surveyor) {
-    alert("Please enter Surveyor Name");
-    return;
-  }
-}
-  errorMsg.style.display = "none";
-duplicateMsg.style.display = "none";
-
-	const panelIds = [
-  document.getElementById("panel1").value.trim(),
-  document.getElementById("panel2").value.trim(),
-  document.getElementById("panel3").value.trim(),
-  document.getElementById("panel4").value.trim()
-];
-
-const inverterId = document.getElementById("inverterSerial").value.trim();
-
-// 🔴 Validate Panel IDs
-const panelInputs = ["panel1","panel2","panel3","panel4"];
-
-// 🔴 Validate Panel IDs + Highlight
-for (let i = 0; i < panelIds.length; i++) {
-
-  const inputField = document.getElementById(panelInputs[i]);
-
-  if (panelIds[i] && !isValidID(panelIds[i])) {
-
-    // ❌ Highlight wrong field
-    inputField.style.border = "2px solid red";
-
-    errorMsg.innerText = `Panel ${i+1}: Only A-Z and 0-9 allowed`;
-    errorMsg.style.display = "block";
-    return;
-
-  } else {
-    // ✅ Reset border if correct
-    inputField.style.border = "1px solid #ccc";
-  }
 }
 
-// 🔴 Validate Inverter ID
-const inverterInput = document.getElementById("inverterSerial");
-
-if (inverterId && !isValidID(inverterId)) {
-  inverterInput.style.border = "2px solid red";
-
-  errorMsg.innerText = "Inverter: Only A-Z and 0-9 allowed";
-  errorMsg.style.display = "block";
-  return;
-} else {
-  inverterInput.style.border = "1px solid #ccc";
-}
-	
-if (!document.getElementById("service").value.trim()) {
-  document.getElementById("errorMsg").innerText = "Service Number is required";
-  document.getElementById("errorMsg").style.display = "block";
-  return;
+if((mode==="create" && !exists)||(mode==="edit" && exists)){
+isVerified=true;
+verifiedService=service;
 }
 
-loading.innerHTML = "Uploading... Please wait ⏳";
-loading.style.display = "block";
+}catch(err){
+errorMsg.innerText="Error";
+errorMsg.style.display="block";
+}
 
-submitBtn.innerText = "Uploading...";
-submitBtn.disabled = true;
+loading.style.display="none";
+}
 
-const [
-  panelsData,
-  inverterData,
-  earthData,
-  billData,
-  aadharData,
-  doc1Data,
-  doc2Data
-] = await Promise.all([
-compressImage(document.getElementById("panels")),
-compressImage(document.getElementById("inverter")),
-compressImage(document.getElementById("earth")),
-compressImage(document.getElementById("bill")),
-compressImage(document.getElementById("aadhar")),
-compressImage(document.getElementById("doc1")),
-compressImage(document.getElementById("doc2"))
-]);
+async function submitForm(){
 
-const data = {
-  mode: mode,
-  serviceNumber: document.getElementById("service").value,
-  name: document.getElementById("name").value,
-  phone: document.getElementById("phone").value,
-  address: document.getElementById("address").value,
-  division: document.getElementById("division").value,
-  subdivision: document.getElementById("subdivision").value,
-  section: document.getElementById("section").value,
-  distribution: document.getElementById("distribution").value,
+const service=document.getElementById("service").value.trim();
 
-  panels: panelsData,
-  panel1: document.getElementById("panel1").value,
-  panel2: document.getElementById("panel2").value,
-  panel3: document.getElementById("panel3").value,
-  panel4: document.getElementById("panel4").value,
-	
-  inverter: inverterData,
-  inverterSerial: document.getElementById("inverterSerial").value,
-	
-  earth: earthData,
-  bill: billData,
-  aadhar: aadharData,
-  doc1: doc1Data,
-  doc2: doc2Data,
-  surveyor: surveyor
+if(!isVerified){
+errorMsg.innerText="Verify first";
+errorMsg.style.display="block";
+return;
+}
+
+if(service!==verifiedService){
+errorMsg.innerText="Service changed";
+errorMsg.style.display="block";
+return;
+}
+
+const panelsInput=document.getElementById("panels");
+
+const panelsData = panelsInput.files.length
+? await compressImage(panelsInput)
+: undefined;
+
+const data={
+serviceNumber:service,
+name:document.getElementById("name").value,
+panels:panelsData
 };
 
-  try {
-const res = await fetch("https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec", {
-  method: "POST",
-  body: JSON.stringify(data)
+await fetch("YOUR_POST_API",{
+method:"POST",
+body:JSON.stringify(data)
 });
 
-const result = await res.json();
+alert("Done");
 
-loading.style.display = "none";
-
-if (result.status === "NOT_FOUND") {
-  errorMsg.innerText = "❌ Service number not found for editing";
-  errorMsg.style.display = "block";
-
-  submitBtn.innerText = "Submit";
-  submitBtn.disabled = false;
-  loading.style.display = "none";
-  return;
 }
 
-if (result.status === "ALREADY_SUBMITTED") {
-
-  if (mode === "create") {
-    duplicateMsg.innerText = "This service number already exists";
-    duplicateMsg.style.display = "block";
-
-    submitBtn.innerText = "Submit";
-    submitBtn.disabled = false;
-    loading.style.display = "none";
-    return;
-  }
-
-  // ✅ EDIT MODE → treat as SUCCESS
-  formScreen.style.display = "none";
-  successScreen.style.display = "block";
-
-  submitBtn.innerText = "Submit";
-  submitBtn.disabled = false;
-  loading.style.display = "none";
-  return;
-}
-
-    loading.style.display = "none";
-    submitBtn.innerText = "Submit";
-
-
-    formScreen.style.display = "none";
-    loading.innerHTML = "Loading... ⏳";
-    successScreen.style.display = "block";
-
-  } catch (err) {
-  loading.innerHTML = "Loading... ⏳";
-    loading.style.display = "none";
-    submitBtn.innerText = "Submit";
-    alert("Submission failed");
-    console.log(err);
-  }
-
-submitBtn.disabled = false;
-}
-
-function reloadForm(){
-
-  // Show form again
-  document.getElementById("formScreen").style.display = "block";
-
-  // Hide success screen
-  document.getElementById("successScreen").style.display = "none";
-
-  // Clear text fields
-  document.getElementById("service").value = "";
-  document.getElementById("name").value = "";
-  document.getElementById("phone").value = "";
-  document.getElementById("address").value = "";
-  document.getElementById("division").value = "";
-  document.getElementById("subdivision").value = "";
-  document.getElementById("section").value = "";
-  document.getElementById("distribution").value = "";
-
-  // Clear file inputs
-  document.getElementById("panels").value = "";
-	document.getElementById("panel1").value = "";
-document.getElementById("panel2").value = "";
-	document.getElementById("panel3").value = "";
-document.getElementById("panel4").value = "";
-  document.getElementById("inverter").value = "";
-	document.getElementById("inverterSerial").value = "";
-  document.getElementById("earth").value = "";
-  document.getElementById("bill").value = "";
-  document.getElementById("aadhar").value = "";
-  document.getElementById("doc1").value = "";
-  document.getElementById("doc2").value = "";
-document.getElementById("surveyor").value = "";
-  // Hide error message
-  document.getElementById("errorMsg").style.display = "none";
-
-  // Focus back to first field
-  document.getElementById("service").focus();
-	document.querySelectorAll(".delete-btn").forEach(btn => {
-  btn.style.display = "none";
+function compressImage(input){
+return new Promise(resolve=>{
+const file=input.files[0];
+if(!file) return resolve("");
+const reader=new FileReader();
+reader.onload=e=>resolve(e.target.result);
+reader.readAsDataURL(file);
 });
 }
 
-function clearFields(){
-  document.getElementById("name").value="";
-  document.getElementById("phone").value="";
-  document.getElementById("address").value="";
-  document.getElementById("division").value="";
-  document.getElementById("subdivision").value="";
-  document.getElementById("section").value="";
-  document.getElementById("distribution").value="";
-	document.getElementById("surveyor").value = "";
+function showDelete(input){
+const btn=input.parentElement.querySelector(".delete-btn");
+btn.style.display=input.files.length?"block":"none";
+}
+
+function removeFile(id){
+const input=document.getElementById(id);
+input.value="";
+input.parentElement.querySelector(".delete-btn").style.display="none";
 }
 
 function resetMessages(){
-  document.getElementById("duplicateMsg").style.display = "none";
-  document.getElementById("errorMsg").style.display = "none";
+errorMsg.style.display="none";
+duplicateMsg.style.display="none";
+isVerified=false;
 }
 
-function openDashboard() {
-  window.location.href = "dashboard.html";
-}
-function showDelete(input) {
-  const btn = input.parentElement.querySelector(".delete-btn");
-  btn.style.display = input.files.length ? "block" : "none";
-
-  // 🔥 Force remove any green color
-  input.style.background = "#eee";
-}
-
-function removeFile(id) {
-  const input = document.getElementById(id);
-  input.value = "";
-  input.style.background = "#eee"; // 🔥 reset color
-  input.parentElement.querySelector(".delete-btn").style.display = "none";
-}
-	function toggleMenu() {
-  const menu = document.getElementById("sideMenu");
-  const overlay = document.getElementById("overlay");
-
-  menu.classList.toggle("open");
-
-  if (menu.classList.contains("open")) {
-    overlay.style.display = "block";
-  } else {
-    overlay.style.display = "none";
-  }
-}
-
-function setMode(selectedMode) {
-  window.location.href = `index.html?mode=${selectedMode}`;
-}
-	
-["panel1","panel2","panel3","panel4","inverterSerial"].forEach(id => {
-  const input = document.getElementById(id);
-  if (!input) return;   // ✅ prevent crash
-
-  input.addEventListener("input", () => {
-    input.value = input.value.toUpperCase();
-    input.value = input.value.replace(/[^A-Z0-9]/g, "");
-    input.style.border = "1px solid #ccc";
-  });
-});
-
-	function lockFields(lock = true) {
-
-  const ids = [
-    "name","phone","address","division",
-    "subdivision","section","distribution"
-  ];
-
-  ids.forEach(id => {
-    const el = document.getElementById(id);
-    el.readOnly = lock;
-    el.disabled = lock; // 🔥 extra lock
-    el.style.background = lock ? "#e0e0e0" : "#eee";
-  });
-}
 </script>
-	<!-- <script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js')
-    .then(() => console.log("Service Worker Registered"))
-    .catch(err => console.log("SW error:", err));
-}
-</script> -->
+
 </body>
 </html>
