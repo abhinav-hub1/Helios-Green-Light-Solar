@@ -518,8 +518,16 @@ async function fetchData() {
 
     const checkRes = await fetch(checkUrl);
     const checkData = await checkRes.json();
+let exists = false;
 
-    const exists = Array.isArray(checkData) && checkData.length > 0;
+if (Array.isArray(checkData)) {
+  exists = checkData.length > 0;
+} else if (checkData && typeof checkData === "object") {
+  exists =
+    checkData.status === "FOUND" ||
+    checkData.exists === true ||
+    (checkData.data && checkData.data.length > 0);
+}
 
     // =========================
     // 🟢 CREATE MODE
