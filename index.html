@@ -489,27 +489,28 @@ function handleKey(e){
 }
 
 async function fetchData() {
-  const service = document.getElementById("service").value;
+
+  const service = document.getElementById("service").value.trim();
   if (!service) return;
 
-loading.innerHTML = "Loading... ⏳";
+  loading.innerHTML = "Loading... ⏳";
   loading.style.display = "block";
 
-const url = "https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?service=" + service;
   try {
-    const res = await fetch(url);
+
+    // 🔵 STEP 1: Get master data (DATA sheet)
+    const res = await fetch("https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?service=" + service);
     const data = await res.json();
 
-    loading.style.display = "none";
-
     if (!data || data.name === "NOT FOUND") {
+      loading.style.display = "none";
       errorMsg.style.display = "block";
       clearFields();
+      lockFields(false);
       return;
     }
 
-    errorMsg.style.display = "none";
-
+    // ✅ Fill fields
     document.getElementById("name").value = data.name;
     document.getElementById("phone").value = data.phone;
     document.getElementById("address").value = data.address;
@@ -518,13 +519,43 @@ const url = "https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwE
     document.getElementById("section").value = data.section;
     document.getElementById("distribution").value = data.distribution;
 
+    errorMsg.style.display = "none";
+
+    // 🔴 STEP 2: Check if already submitted
+    const checkUrl = "YOUR_URL"
+      + "?action=search"
+      + "&division=" + encodeURIComponent(data.division)
+      + "&field=service"
+      + "&value=" + encodeURIComponent(service)
+      + "&t=" + Date.now();
+
+    const checkRes = await fetch(checkUrl);
+    const checkData = await checkRes.json();
+
+    loading.style.display = "none";
+
+    if (checkData.length > 0) {
+
+      // 🔥 ALREADY EXISTS
+      duplicateMsg.innerText = "⚠️ Already submitted";
+      duplicateMsg.style.display = "block";
+
+      lockFields(true);   // 🔒 lock fields
+
+    } else {
+
+      // 🟢 NEW ENTRY
+      duplicateMsg.style.display = "none";
+      lockFields(false);  // 🔓 allow editing
+    }
+
   } catch (err) {
     loading.style.display = "none";
     alert("Error fetching data ❌");
     console.log(err);
   }
 }
-
+	
 function isValidID(value) {
   return /^[A-Z0-9]+$/.test(value);
 }
@@ -808,6 +839,21 @@ function setMode(selectedMode) {
     input.style.border = "1px solid #ccc";
   });
 });
+
+	function lockFields(lock = true) {
+
+  const ids = [
+    "name","phone","address","division",
+    "subdivision","section","distribution"
+  ];
+
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    el.readOnly = lock;
+    el.disabled = lock; // 🔥 extra lock
+    el.style.background = lock ? "#e0e0e0" : "#eee";
+  });
+}
 </script>
 	<!-- <script>
 if ('serviceWorker' in navigator) {
