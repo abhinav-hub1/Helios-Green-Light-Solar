@@ -492,47 +492,92 @@ function handleKey(e){
 
 async function fetchData() {
 
-  // 🔥 Reset verification
   isVerified = false;
 
   const serviceInput = document.getElementById("service");
   const service = serviceInput.value.trim();
   if (!service) return;
 
-  // 🔥 Reset UI
   duplicateMsg.style.display = "none";
   errorMsg.style.display = "none";
 
-  loading.innerHTML = "Loading... ⏳";
+  loading.innerHTML = "Checking... ⏳";
   loading.style.display = "block";
 
   try {
 
+    // ✅ STEP 1: CHECK EXISTS FIRST
+    const checkUrl =
+      "https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec"
+      + "?action=search"
+      + "&field=service"
+      + "&value=" + encodeURIComponent(service)
+      + "&t=" + Date.now();
+
+    const checkRes = await fetch(checkUrl);
+    const checkData = await checkRes.json();
+
+    const exists = Array.isArray(checkData) && checkData.length > 0;
+
     // =========================
-    // 🔵 STEP 1: FETCH FROM DATA SHEET
+    // 🟢 CREATE MODE
     // =========================
+    if (mode === "create" && exists) {
+
+      loading.style.display = "none";
+
+      duplicateMsg.innerText = "⚠️ Service already submitted";
+      duplicateMsg.style.display = "block";
+
+      clearFields();
+      lockFields(true);
+      submitBtn.disabled = true;
+
+      return; // 🚨 STOP HERE
+    }
+
+    // =========================
+    // 🔵 EDIT MODE
+    // =========================
+    if (mode === "edit" && !exists) {
+
+      loading.style.display = "none";
+
+      errorMsg.innerText = "❌ Service not submitted";
+      errorMsg.style.display = "block";
+
+      clearFields();
+      lockFields(false);
+      submitBtn.disabled = true;
+
+      return; // 🚨 STOP HERE
+    }
+
+    // =========================
+    // ✅ STEP 2: FETCH DATA
+    // =========================
+    loading.innerHTML = "Fetching details... ⏳";
+
     const res = await fetch(
       "https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?service=" + service
     );
 
     const data = await res.json();
 
+    loading.style.display = "none";
+
     if (!data || data.name === "NOT FOUND") {
-      loading.style.display = "none";
 
       errorMsg.innerText = "❌ Service Number not found";
       errorMsg.style.display = "block";
 
       clearFields();
       lockFields(false);
-
       submitBtn.disabled = true;
       return;
     }
 
-    // =========================
     // ✅ AUTO FILL
-    // =========================
     document.getElementById("name").value = data.name;
     document.getElementById("phone").value = data.phone;
     document.getElementById("address").value = data.address;
@@ -541,91 +586,26 @@ async function fetchData() {
     document.getElementById("section").value = data.section;
     document.getElementById("distribution").value = data.distribution;
 
-    // =========================
-    // 🔴 STEP 2: CHECK SUBMISSION
-    // =========================
-    const checkUrl =
-      "https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec"
-      + "?action=search"
-      + "&division=" + encodeURIComponent(data.division)
-      + "&field=service"
-      + "&value=" + encodeURIComponent(service)
-      + "&t=" + Date.now();
-
-    const checkRes = await fetch(checkUrl);
-    const checkData = await checkRes.json();
-
-    loading.style.display = "none";
-
-    const exists = Array.isArray(checkData) && checkData.length > 0;
-
-    // =========================
-    // 🟢 CREATE MODE
-    // =========================
-    if (mode === "create") {
-
-      serviceInput.readOnly = false;
-
-      if (exists) {
-        duplicateMsg.innerText = "⚠️ Service already submitted";
-        duplicateMsg.style.display = "block";
-
-        lockFields(true);
-        submitBtn.disabled = true;
-
-      } else {
-        duplicateMsg.style.display = "none";
-
-        lockFields(false);
-        submitBtn.disabled = false;
-      }
-    }
-
-    // =========================
-    // 🔵 EDIT MODE
-    // =========================
+    // 🔒 LOCK RULES
     if (mode === "edit") {
-
       serviceInput.readOnly = true;
       serviceInput.style.background = "#e0e0e0";
-
-      if (!exists) {
-        errorMsg.innerText = "❌ Service not submitted";
-        errorMsg.style.display = "block";
-
-        submitBtn.disabled = true;
-        lockFields(false);
-
-      } else {
-        errorMsg.style.display = "none";
-
-        lockFields(true);   // 🔒 lock base data
-        submitBtn.disabled = false;
-      }
-    }
-
-    // =========================
-    // ✅ FINAL VERIFICATION FLAG
-    // =========================
-    if (
-      (mode === "create" && !exists) ||
-      (mode === "edit" && exists)
-    ) {
-      isVerified = true;
+      lockFields(true);
     } else {
-      isVerified = false;
+      lockFields(false);
     }
+
+    submitBtn.disabled = false;
+    isVerified = true;
 
   } catch (err) {
 
     loading.style.display = "none";
 
-    errorMsg.innerText = "❌ Network error. Try again.";
+    errorMsg.innerText = "❌ Network error";
     errorMsg.style.display = "block";
 
     submitBtn.disabled = true;
-
-    console.log(err);
   }
 }
 	
@@ -817,45 +797,51 @@ submitBtn.disabled = false;
 
 function reloadForm(){
 
-  // Show form again
-  document.getElementById("formScreen").style.display = "block";
+  // Show form
+  formScreen.style.display = "block";
+  successScreen.style.display = "none";
 
-  // Hide success screen
-  document.getElementById("successScreen").style.display = "none";
-
-  // Clear text fields
-  document.getElementById("service").value = "";
-  document.getElementById("name").value = "";
-  document.getElementById("phone").value = "";
-  document.getElementById("address").value = "";
-  document.getElementById("division").value = "";
-  document.getElementById("subdivision").value = "";
-  document.getElementById("section").value = "";
-  document.getElementById("distribution").value = "";
+  // Clear inputs
+  [
+    "service","name","phone","address",
+    "division","subdivision","section","distribution",
+    "panel1","panel2","panel3","panel4",
+    "inverterSerial","surveyor"
+  ].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = "";
+  });
 
   // Clear file inputs
-  document.getElementById("panels").value = "";
-	document.getElementById("panel1").value = "";
-document.getElementById("panel2").value = "";
-	document.getElementById("panel3").value = "";
-document.getElementById("panel4").value = "";
-  document.getElementById("inverter").value = "";
-	document.getElementById("inverterSerial").value = "";
-  document.getElementById("earth").value = "";
-  document.getElementById("bill").value = "";
-  document.getElementById("aadhar").value = "";
-  document.getElementById("doc1").value = "";
-  document.getElementById("doc2").value = "";
-document.getElementById("surveyor").value = "";
-  // Hide error message
-  document.getElementById("errorMsg").style.display = "none";
+  ["panels","inverter","earth","bill","aadhar","doc1","doc2"]
+  .forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = "";
+  });
 
-  // Focus back to first field
-  document.getElementById("service").focus();
-	document.querySelectorAll(".delete-btn").forEach(btn => {
-  btn.style.display = "none";
-		lockFields(false);
-});
+  // Hide messages
+  errorMsg.style.display = "none";
+  duplicateMsg.style.display = "none";
+
+  // Reset state
+  isVerified = false;
+  submitBtn.disabled = false;
+
+  // Unlock fields
+  lockFields(false);
+
+  // Reset service field readonly
+  const serviceInput = document.getElementById("service");
+  serviceInput.readOnly = false;
+  serviceInput.style.background = "#eee";
+
+  // Hide delete buttons
+  document.querySelectorAll(".delete-btn").forEach(btn => {
+    btn.style.display = "none";
+  });
+
+  // Focus
+  serviceInput.focus();
 }
 
 function clearFields(){
@@ -870,11 +856,11 @@ function clearFields(){
 }
 
 function resetMessages(){
-  document.getElementById("duplicateMsg").style.display = "none";
-  document.getElementById("errorMsg").style.display = "none";
+  duplicateMsg.style.display = "none";
+  errorMsg.style.display = "none";
   submitBtn.disabled = false;
   isVerified = false;
-  lockfields(false);
+  lockFields(false);
 }
 	
 function openDashboard() {
