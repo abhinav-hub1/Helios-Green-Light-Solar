@@ -238,6 +238,9 @@ const enrichedResult = result.map(r => {
 
 });
 
+// ✅ ADD THIS LINE
+renderData(enrichedResult);
+
   } catch (err) {
     container.innerHTML = "<p style='text-align:center;'>Error fetching data</p>";
   }
