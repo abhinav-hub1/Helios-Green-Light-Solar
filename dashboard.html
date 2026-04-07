@@ -193,6 +193,9 @@ function selectSearch(type, label) {
   async function performSearch() {
 
     currentView = "search";
+    if (!fullData.length) {
+  await loadData();
+}
 
   const value = document.getElementById("searchInput").value.trim();
   if (!value) return;
@@ -221,7 +224,19 @@ const divisionName = selectedDivision;
     document.getElementById("totalCount").innerText =
       `Search Results: ${result.length}`;
 
-    renderData(result);
+    // 🔥 Attach full data using service number
+const enrichedResult = result.map(r => {
+
+  const rService = (r.service || "").toString().trim();
+
+  const match = fullData.find(f => {
+    const fService = (f.service || "").toString().trim();
+    return fService === rService;
+  });
+
+  return match ? match : r;
+
+});
 
   } catch (err) {
     container.innerHTML = "<p style='text-align:center;'>Error fetching data</p>";
