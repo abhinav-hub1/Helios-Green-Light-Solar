@@ -131,6 +131,19 @@ button {
   <div class="search-option" onclick="selectSearch('subdivision', 'Sub Division Name')">Sub Division Name</div>
   <div class="search-option" onclick="selectSearch('section', 'Section Name')">Section Name</div>
   <div class="search-option" onclick="selectSearch('distribution', 'Distribution Name')">Distribution Name</div>
+
+  <div class="search-option" onclick="selectDateFilter()">Filter By Date</div>
+</div>
+
+<!-- ✅ DATE FILTER -->
+<div id="dateFilterBox" style="display:none;">
+  <label>From Date</label>
+  <input type="date" id="fromDate">
+
+  <label>To Date</label>
+  <input type="date" id="toDate">
+
+  <button class="search-action" onclick="applyDateFilter()">Apply Filter</button>
 </div>
 
   <div id="searchInputBox" style="display:none;">
@@ -138,7 +151,7 @@ button {
     <input type="text" id="searchInput" placeholder="Enter value">
     <button class="search-action" onclick="performSearch()">Search</button>
   </div>
-
+    
 </div>
 
 <div id="divisionSection" style="padding:20px; text-align:center;">
@@ -159,7 +172,6 @@ let currentView = "home";
 
 // SEARCH UI
 function toggleSearch() {
-
   const panel = document.getElementById("searchPanel");
 
   if (panel.style.display === "block") {
@@ -167,9 +179,11 @@ function toggleSearch() {
   } else {
     panel.style.display = "block";
 
-    // reset UI
     document.getElementById("searchOptions").style.display = "block";
     document.getElementById("searchInputBox").style.display = "none";
+
+    // ✅ ADD THIS
+    document.getElementById("dateFilterBox").style.display = "none";
   }
 }
 
@@ -189,7 +203,11 @@ function selectSearch(type, label) {
   // clear input
   document.getElementById("searchInput").value = "";
 }
-
+function selectDateFilter() {
+  document.getElementById("searchOptions").style.display = "none";
+  document.getElementById("searchInputBox").style.display = "none";
+  document.getElementById("dateFilterBox").style.display = "block";
+}
   async function performSearch() {
 
     currentView = "search";
@@ -493,6 +511,43 @@ document.getElementById("detailView").style.display = "none";
   document.getElementById("detailView").style.display = "none";
   document.getElementById("data").style.display = "block";
   currentView = "division";
+}
+  function applyDateFilter() {
+
+  const from = document.getElementById("fromDate").value;
+  const to = document.getElementById("toDate").value;
+
+  if (!from || !to) {
+    alert("Select both dates");
+    return;
+  }
+
+  const fromDate = new Date(from);
+  const toDate = new Date(to);
+  toDate.setHours(23,59,59,999);
+
+  const filtered = fullData.filter(item => {
+
+    if (!item.timestamp) return false;
+
+    const d = toIST(item.timestamp);
+    if (!d) return false;
+
+    return d >= fromDate && d <= toDate &&
+           (item.division || "").toLowerCase().replace(/\s+/g,"") === 
+selectedDivision.toLowerCase().replace(/\s+/g,"")
+  });
+
+  document.getElementById("divisionSection").style.display = "none";
+  document.getElementById("data").style.display = "block";
+  document.getElementById("totalCount").style.display = "block";
+
+  document.getElementById("totalCount").innerText =
+    `${selectedDivision} | Filtered: ${filtered.length}`;
+
+  renderData(filtered);
+
+  document.getElementById("searchPanel").style.display = "none";
 }
 </script>
 
