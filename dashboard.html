@@ -144,6 +144,9 @@ button {
   <input type="date" id="toDate">
 
   <button class="search-action" onclick="applyDateFilter()">Apply Filter</button>
+  <button onclick="clearDateFilter()" style="background:#ccc; margin-top:5px;">
+  Clear Filter
+</button>
 </div>
 
   <div id="searchInputBox" style="display:none;">
@@ -512,7 +515,17 @@ document.getElementById("detailView").style.display = "none";
   document.getElementById("data").style.display = "block";
   currentView = "division";
 }
-  function applyDateFilter() {
+
+async function applyDateFilter() {
+
+  if (!selectedDivision) {
+  alert("Please select a division first");
+  return;
+}
+  // 🔥 LOAD DATA FIRST (THIS WAS MISSING)
+  if (!fullData.length) {
+    await loadData();
+  }
 
   const from = document.getElementById("fromDate").value;
   const to = document.getElementById("toDate").value;
@@ -534,8 +547,8 @@ document.getElementById("detailView").style.display = "none";
     if (!d) return false;
 
     return d >= fromDate && d <= toDate &&
-           (item.division || "").toLowerCase().replace(/\s+/g,"") === 
-selectedDivision.toLowerCase().replace(/\s+/g,"")
+      (item.division || "").toLowerCase().replace(/\s+/g,"") === 
+      selectedDivision.toLowerCase().replace(/\s+/g,"");
   });
 
   document.getElementById("divisionSection").style.display = "none";
@@ -543,11 +556,23 @@ selectedDivision.toLowerCase().replace(/\s+/g,"")
   document.getElementById("totalCount").style.display = "block";
 
   document.getElementById("totalCount").innerText =
-    `${selectedDivision} | Filtered: ${filtered.length}`;
+    `${selectedDivision} | ${from} → ${to} | Count: ${filtered.length}`;
 
   renderData(filtered);
 
   document.getElementById("searchPanel").style.display = "none";
+}
+  function clearDateFilter() {
+
+  document.getElementById("fromDate").value = "";
+  document.getElementById("toDate").value = "";
+
+  const btn =
+    selectedDivision === "Tadepalligudem"
+      ? document.getElementById("btn1")
+      : document.getElementById("btn2");
+
+  showDivision({ currentTarget: btn }, selectedDivision);
 }
 </script>
 
