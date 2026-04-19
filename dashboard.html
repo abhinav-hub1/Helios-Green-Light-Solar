@@ -532,6 +532,11 @@ async function applyDateFilter() {
   btn.disabled = true;
   btn.innerText = "⏳ Applying...";
 
+  const container = document.getElementById("data");
+container.innerHTML = "<p style='text-align:center;'>⏳ Applying filter...</p>";
+
+  document.getElementById("divisionSection").style.display = "none";
+document.getElementById("data").style.display = "block";
   try {
 
     if (!selectedDivision) {
@@ -567,6 +572,10 @@ async function applyDateFilter() {
 
     renderData(filtered);
 
+    document.getElementById("divisionSection").style.display = "none";
+document.getElementById("data").style.display = "block";
+document.getElementById("totalCount").style.display = "block";
+
   } catch (err) {
     alert("Error applying filter");
   } finally {
@@ -576,6 +585,22 @@ async function applyDateFilter() {
       btn.innerText = "Apply Filter";
     }, 500);
   }
+}
+  function clearDateFilter() {
+
+  document.getElementById("fromDate").value = "";
+  document.getElementById("toDate").value = "";
+
+  // close search panel
+  document.getElementById("searchPanel").style.display = "none";
+
+  // reload selected division data
+  const btn =
+    selectedDivision === "Tadepalligudem"
+      ? document.getElementById("btn1")
+      : document.getElementById("btn2");
+
+  showDivision({ currentTarget: btn }, selectedDivision);
 }
 </script>
 
