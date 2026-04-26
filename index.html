@@ -388,7 +388,11 @@ input[readonly] {
 
 	<div class="form-group" id="editorGroup">
   <label>Edited By</label>
-  <input type="text" id="editedBy" placeholder="Enter your name" required>
+  <input type="text" id="editedBy">
+
+  <div id="editedByError" style="color:red; font-size:13px; display:none;">
+    Edited By is required
+  </div>
 </div>
 
 <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit</button>
@@ -584,7 +588,7 @@ async function fetchData() {
       serviceInput.style.background = "#e0e0e0";
 
       if (!exists) {
-        errorMsg.innerText = "❌ Service not submitted";
+        errorMsg.innerText = "❌ Service number not submitted";
         errorMsg.style.display = "block";
 
         submitBtn.disabled = true;
@@ -646,28 +650,24 @@ let surveyor = null;
 	
 let editedBy = "";
 
-if (mode === "edit") {
+	if (mode === "edit") {
   const editedInput = document.getElementById("editedBy");
+  const editedError = document.getElementById("editedByError");
+
   editedBy = editedInput.value.trim();
 
   if (!editedBy) {
-    // ❌ Show error message
-    errorMsg.innerText = "Edited By is required";
-    errorMsg.style.display = "block";
-
-    // ❌ Highlight field
+    editedError.style.display = "block";
     editedInput.style.border = "2px solid red";
-
-    // ❌ Focus cursor
     editedInput.focus();
-
     return;
   } else {
-    // ✅ Reset border if correct
+    editedError.style.display = "none";
     editedInput.style.border = "1px solid #ccc";
   }
-}
+} // ✅ CLOSE HERE
 
+// ✅ CREATE MODE MUST BE OUTSIDE
 if (mode === "create") {
   surveyor = document.getElementById("surveyor").value.trim();
 
@@ -913,6 +913,8 @@ function resetMessages(){
   lockFields(false);
 	const editedInput = document.getElementById("editedBy");
 if (editedInput) editedInput.style.border = "1px solid #ccc";
+	const editedError = document.getElementById("editedByError");
+if (editedError) editedError.style.display = "none";
 }
 	
 function openDashboard() {
