@@ -166,6 +166,7 @@ button {
 <div id="divisionSection" style="padding:20px; text-align:center;">
   <button id="btn1" class="div-btn" onclick="showDivision(event, 'Tadepalligudem')">Tadepalligudem</button>
   <button id="btn2" class="div-btn" onclick="showDivision(event, 'Narsipatnam')">Narsipatnam</button>
+  <button id="btn3" class="div-btn" onclick="showDivision(event, 'Chirala')">Chirala</button>
 </div>
 
 <div class="container" id="data" style="display:none;"></div>
@@ -285,11 +286,13 @@ selectedDivision = divisionName;
 
   const btn1 = document.getElementById("btn1");
   const btn2 = document.getElementById("btn2");
+  const btn3 = document.getElementById("btn3");
 
   const clickedBtn = e.currentTarget;
 
   btn1.disabled = true;
   btn2.disabled = true;
+  btn3.disabled = true;
 
   clickedBtn.innerText = "⏳ Loading...";
   clickedBtn.classList.add("loading");
@@ -327,6 +330,8 @@ document.getElementById("searchBar").style.display = "block";
   } catch (err) {
     alert("Error loading data");
   }
+  clickedBtn.innerText = divisionName;
+clickedBtn.classList.remove("loading");
 
   isProcessing = false;
 }
@@ -504,15 +509,19 @@ document.getElementById("detailView").style.display = "none";
   // reset buttons
   const btn1 = document.getElementById("btn1");
   const btn2 = document.getElementById("btn2");
+  const btn3 = document.getElementById("btn3");
 
   btn1.disabled = false;
   btn2.disabled = false;
+  btn3.disabled = false;
 
   btn1.innerText = "Tadepalligudem";
   btn2.innerText = "Narsipatnam";
+  btn3.innerText = "Chirala";
 
   btn1.classList.remove("loading");
   btn2.classList.remove("loading");
+  btn3.classList.remove("loading");
 
   isProcessing = false;
 }
@@ -595,10 +604,15 @@ document.getElementById("totalCount").style.display = "block";
   document.getElementById("searchPanel").style.display = "none";
 
   // reload selected division data
-  const btn =
-    selectedDivision === "Tadepalligudem"
-      ? document.getElementById("btn1")
-      : document.getElementById("btn2");
+ let btn;
+
+if (selectedDivision === "Tadepalligudem") {
+  btn = document.getElementById("btn1");
+} else if (selectedDivision === "Narsipatnam") {
+  btn = document.getElementById("btn2");
+} else {
+  btn = document.getElementById("btn3"); // ✅ Chirala
+}
 
   showDivision({ currentTarget: btn }, selectedDivision);
 }
