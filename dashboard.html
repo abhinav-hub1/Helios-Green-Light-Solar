@@ -239,7 +239,7 @@ const divisionName = selectedDivision;
 
   try {
 
-    const url = "https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec"
+    const url = "https://script.google.com/macros/s/AKfycbw3JuSh_4CQ2ZrOZ11YHD6x0UMa1j4JfB0wcICLSyXbF-BB2DdhCxgTeSsWQz-Gp1Qt/exec"
       + "?action=search"
       + "&division=" + encodeURIComponent(divisionName)
       + "&field=" + encodeURIComponent(selectedSearchType)
@@ -304,7 +304,7 @@ selectedDivision = divisionName;
     }
 
     let divisionData = fullData.filter(item => {
-      const div = (item.division || "").toLowerCase().trim();
+      const div = (item.division || "").toString().toLowerCase().trim();
       return div.replace(/\s+/g, "") === divisionName.toLowerCase().replace(/\s+/g, "");
     });
 
@@ -338,7 +338,7 @@ clickedBtn.classList.remove("loading");
 
 // FETCH
 async function loadData() {
-  const res = await fetch("https://script.google.com/macros/s/AKfycbw8Iuo-DLYM9Uw5-4AeA23L0xwEwEONjZL3pAfDq-JAsnRmPy3c1sj_Wb-JBQoEtLXn/exec?type=all&t=" + Date.now());
+  const res = await fetch("https://script.google.com/macros/s/AKfycbw3JuSh_4CQ2ZrOZ11YHD6x0UMa1j4JfB0wcICLSyXbF-BB2DdhCxgTeSsWQz-Gp1Qt/exec?type=all&t=" + Date.now());
   fullData = await res.json();
   fullData = fullData.filter(item => item.timestamp);
 }
