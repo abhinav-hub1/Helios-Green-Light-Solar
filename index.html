@@ -525,7 +525,7 @@ async function fetchData() {
     // 🔵 STEP 1: FETCH FROM DATA SHEET
     // =========================
     const res = await fetch(
-      "https://script.google.com/macros/s/AKfycbw3JuSh_4CQ2ZrOZ11YHD6x0UMa1j4JfB0wcICLSyXbF-BB2DdhCxgTeSsWQz-Gp1Qt/exec?service=" + service
+      "https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec?service=" + service
     );
 
     const data = await res.json();
@@ -546,7 +546,7 @@ async function fetchData() {
     // 🔴 STEP 2: CHECK SUBMISSION (MOVED UP)
     // =========================
     const checkUrl =
-      "https://script.google.com/macros/s/AKfycbw3JuSh_4CQ2ZrOZ11YHD6x0UMa1j4JfB0wcICLSyXbF-BB2DdhCxgTeSsWQz-Gp1Qt/exec"
+      "https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec"
       + "?action=search"
       + "&division=" + encodeURIComponent(data.division)
       + "&field=service"
@@ -784,7 +784,7 @@ const data = {
 };
 
   try {
-const res = await fetch("https://script.google.com/macros/s/AKfycbw3JuSh_4CQ2ZrOZ11YHD6x0UMa1j4JfB0wcICLSyXbF-BB2DdhCxgTeSsWQz-Gp1Qt/exec", {
+const res = await fetch("https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec", {
   method: "POST",
   body: JSON.stringify(data)
 });
