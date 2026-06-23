@@ -1068,9 +1068,7 @@ function lockFields(lock = true) {
 let html5QrScanner;
 
 async function scanCode(fieldId) {
-
   try {
-
     // Stop old scanner if running
     if (html5QrScanner) {
       try {
@@ -1084,50 +1082,47 @@ async function scanCode(fieldId) {
 
     html5QrScanner = new Html5Qrcode("reader");
 
-await html5QrScanner.start(
-  { facingMode: "environment" },
-  {
-    fps: 3,
-    qrbox: { width: 250, height: 100 },
-    experimentalFeatures: {
-      useBarCodeDetectorIfSupported: true
-    },
-    formatsToSupport: [
-      Html5QrcodeSupportedFormats.CODE_128
-    ]
-  },
+    await html5QrScanner.start(
+      { facingMode: "environment" },
+      {
+        fps: 10, // Increased FPS for faster scanning response
+        qrbox: { width: 250, height: 150 },
+        experimentalFeatures: {
+          useBarCodeDetectorIfSupported: true
+        }
+        // Removed formatsToSupport so it accepts BOTH QR codes and barcodes automatically
+      },
+      async (decodedText) => {
+        let value = decodedText.trim().toUpperCase();
 
-  async (decodedText) => {
+        // Clean values to fit your A-Z 0-9 validation rules
+        value = value.replace(/[^A-Z0-9]/g, "");
 
-    let value = decodedText.trim().toUpperCase();
+        // Optional: Lowered or removed character limit if your barcodes are shorter than 12 digits
+        if (value.length < 4) { 
+          console.log("Rejected due to short length:", value);
+          return;
+        }
 
-    if (value.length < 12) {
-      console.log("Rejected:", value);
-      return;
-    }
+        document.getElementById(fieldId).value = value;
 
-    document.getElementById(fieldId).value = value;
+        await html5QrScanner.stop();
+        await html5QrScanner.clear();
 
-    await html5QrScanner.stop();
-    await html5QrScanner.clear();
-
+        document.getElementById("readerContainer").style.display = "none";
+        document.getElementById("closeScanner").style.display = "none";
+      },
+      (errorMessage) => {
+        // Soft logging instead of breaking the flow
+        console.log("Scanning...", errorMessage);
+      }
+    );
+  } catch (err) {
+    console.error(err);
     document.getElementById("readerContainer").style.display = "none";
     document.getElementById("closeScanner").style.display = "none";
-  },
-
-  (errorMessage) => {
-    console.log(errorMessage);
+    alert("Scanner Error: " + err);
   }
-);
-	  }
-catch (err) {
-  console.error(err);
-
-  document.getElementById("readerContainer").style.display = "none";
-  document.getElementById("closeScanner").style.display = "none";
-
-  alert("Scanner Error");
-}
 }
 	async function closeScanner() {
 
