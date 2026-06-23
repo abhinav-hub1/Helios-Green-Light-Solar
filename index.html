@@ -1087,8 +1087,8 @@ async function scanCode(fieldId) {
 await html5QrScanner.start(
   { facingMode: "environment" },
   {
-    fps: 20,
-    qrbox: { width: 300, height: 150 }
+    qrbox: { width: 450, height: 250 },
+fps: 15
   },
   async (decodedText) => {
 
