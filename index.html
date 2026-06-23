@@ -1083,28 +1083,48 @@ async function scanCode(fieldId) {
     html5QrScanner = new Html5Qrcode("reader");
 
     await html5QrScanner.start(
-      { facingMode: "environment" },
+      { 
+        facingMode: "environment"
+      },
       {
-        fps: 10, // Increased FPS for faster scanning response
-        qrbox: { width: 250, height: 150 },
+        fps: 10,
+        // 1. INCREASE SCAN AREA: Gives more room to align the barcode cleanly
+        qrbox: { width: 280, height: 160 },
         experimentalFeatures: {
+          // Uses the device's native hardware decoder if available (massive help for blur)
           useBarCodeDetectorIfSupported: true
+        },
+        // 2. FORCE HIGHER RESOLUTION: Helps the camera resolve fine barcode lines clearly
+        videoConstraints: {
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+          advanced: [{ focusMode: "continuous" }] // Forces continuous auto-focus
         }
-        // Removed formatsToSupport so it accepts BOTH QR codes and barcodes automatically
       },
       async (decodedText) => {
         let value = decodedText.trim().toUpperCase();
 
+        // 3. FIX THE "C1" PREFIX BUG: 
+        // If the barcode string accidentally starts with C1 followed by your regular characters, strip it off.
+        if (value.startsWith("C1") && value.includes("ICON")) {
+          value = value.substring(2); 
+        } else if (value.startsWith("C1") && value.length > 10) {
+          // General fallback for other serial numbers like your inverter if they get a C1 prefix
+          value = value.substring(2);
+        }
+
         // Clean values to fit your A-Z 0-9 validation rules
         value = value.replace(/[^A-Z0-9]/g, "");
 
-        // Optional: Lowered or removed character limit if your barcodes are shorter than 12 digits
         if (value.length < 4) { 
           console.log("Rejected due to short length:", value);
           return;
         }
 
-        document.getElementById(fieldId).value = value;
+        // Update the input field
+        const inputField = document.getElementById(fieldId);
+        inputField.value = value;
+        inputField.style.border = "1px solid #ccc";
 
         await html5QrScanner.stop();
         await html5QrScanner.clear();
@@ -1113,7 +1133,6 @@ async function scanCode(fieldId) {
         document.getElementById("closeScanner").style.display = "none";
       },
       (errorMessage) => {
-        // Soft logging instead of breaking the flow
         console.log("Scanning...", errorMessage);
       }
     );
