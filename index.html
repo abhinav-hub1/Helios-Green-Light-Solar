@@ -1087,8 +1087,8 @@ async function scanCode(fieldId) {
 await html5QrScanner.start(
   { facingMode: "environment" },
   {
-    fps: 10,
-    qrbox: { width: 300, height: 150 },
+    fps: 3,
+    qrbox: { width: 250, height: 100 },
     experimentalFeatures: {
       useBarCodeDetectorIfSupported: true
     },
@@ -1096,14 +1096,17 @@ await html5QrScanner.start(
       Html5QrcodeSupportedFormats.CODE_128
     ]
   },
+
   async (decodedText) => {
 
-    let value = decodedText.trim();
+    let value = decodedText.trim().toUpperCase();
 
-   console.log("Scanned:", value);
+    if (value.length < 12) {
+      console.log("Rejected:", value);
+      return;
+    }
 
-    document.getElementById(fieldId).value =
-      value.toUpperCase();
+    document.getElementById(fieldId).value = value;
 
     await html5QrScanner.stop();
     await html5QrScanner.clear();
@@ -1113,7 +1116,7 @@ await html5QrScanner.start(
   },
 
   (errorMessage) => {
-    console.log("Scanning...", errorMessage);
+    console.log(errorMessage);
   }
 );
 	  }
