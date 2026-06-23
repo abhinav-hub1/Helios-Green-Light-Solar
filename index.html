@@ -494,7 +494,7 @@ input[readonly] {
   ✖ Close
 </button>
 	
-	<script src="https://unpkg.com/@zxing/library@latest"></script>
+	<script src="https://unpkg.com/html5-qrcode"></script>
 	
 <script>
 
@@ -1087,14 +1087,20 @@ async function scanCode(fieldId) {
 await html5QrScanner.start(
   { facingMode: "environment" },
   {
-    qrbox: { width: 450, height: 250 },
-fps: 15
+    fps: 10,
+    qrbox: { width: 300, height: 150 },
+    experimentalFeatures: {
+      useBarCodeDetectorIfSupported: true
+    },
+    formatsToSupport: [
+      Html5QrcodeSupportedFormats.CODE_128
+    ]
   },
   async (decodedText) => {
 
     let value = decodedText.trim();
 
-    alert("Scanned: " + value);
+   console.log("Scanned:", value);
 
     document.getElementById(fieldId).value =
       value.toUpperCase();
