@@ -1089,8 +1089,18 @@ if (html5QrScanner) {
       },
       (decodedText) => {
 
-        document.getElementById(fieldId).value =
-          decodedText.toUpperCase();
+       let value = decodedText.toUpperCase().trim();
+
+// Remove unwanted leading characters
+value = value.replace(/^[^A-Z0-9]+/, "");
+
+// If ICON exists, keep only from ICON onwards
+const idx = value.indexOf("ICON");
+if (idx >= 0) {
+  value = value.substring(idx);
+}
+
+document.getElementById(fieldId).value = value;
 
         html5QrScanner.stop()
           .then(() => html5QrScanner.clear())
