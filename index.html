@@ -1085,55 +1085,32 @@ async function scanCode(fieldId) {
     html5QrScanner = new Html5Qrcode("reader");
 
     await html5QrScanner.start(
-      {
-        facingMode: "environment"
-      },
-      {
-        fps: 20,
-        qrbox: { width: 400, height: 150 },
-        aspectRatio: 1.7778,
-        formatsToSupport: [
-          Html5QrcodeSupportedFormats.CODE_128,
-          Html5QrcodeSupportedFormats.CODE_39,
-          Html5QrcodeSupportedFormats.CODE_93,
-          Html5QrcodeSupportedFormats.EAN_13,
-          Html5QrcodeSupportedFormats.EAN_8
-        ]
-      },
-      async (decodedText) => {
+  { facingMode: "environment" },
+  {
+    fps: 10,
+    qrbox: 250
+  },
+  async (decodedText) => {
 
-        let value = decodedText.toUpperCase().trim();
+    document.getElementById(fieldId).value =
+      decodedText.toUpperCase().trim();
 
-        // Remove leading garbage characters
-        value = value.replace(/^[^A-Z0-9]+/, "");
-
-        // Must be at least 10 chars
-        if (value.length < 10) {
-          alert("Invalid barcode. Please scan again.");
-          return;
-        }
-
-        document.getElementById(fieldId).value = value;
-
-        try {
-          await html5QrScanner.stop();
-          await html5QrScanner.clear();
-        } catch (e) {}
-
-        document.getElementById("readerContainer").style.display = "none";
-        document.getElementById("closeScanner").style.display = "none";
-      }
-    );
-
-  } catch (err) {
-
-    console.error(err);
-
-    alert("Unable to start camera");
+    await html5QrScanner.stop();
+    await html5QrScanner.clear();
 
     document.getElementById("readerContainer").style.display = "none";
     document.getElementById("closeScanner").style.display = "none";
   }
+);
+	  }
+catch (err) {
+  console.error(err);
+
+  document.getElementById("readerContainer").style.display = "none";
+  document.getElementById("closeScanner").style.display = "none";
+
+  alert("Scanner Error");
+}
 }
 	async function closeScanner() {
 
