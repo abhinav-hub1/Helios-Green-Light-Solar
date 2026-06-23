@@ -65,8 +65,9 @@ input {
   margin-top: 5px;
   border-radius: 6px;
   border: 1px solid #ccc;
-  background: #eee;
+  background: #fff; /* Changed to white to signify editable fields */
   font-size: 15px;
+  box-sizing: border-box;
 }
 
 /* READONLY STYLE */
@@ -101,9 +102,9 @@ input[readonly] {
   padding: 10px;
   margin-top: 8px;
   padding-bottom: 20px;
-	box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
-	.file-box input[type="text"] {
+.file-box input[type="text"] {
   margin-top: 8px;
 }
 
@@ -157,7 +158,7 @@ input[readonly] {
 }
 .file-wrapper {
   position: relative;
-  padding-top: 10px; /* 👈 ADD THIS */
+  padding-top: 10px;
 }
 .delete-btn {
   position: absolute;
@@ -175,7 +176,7 @@ input[readonly] {
   font-size: 20px;
   color: #e53935;
 }
-	.menu-btn {
+.menu-btn {
   position: absolute;
   left: 12px;
   cursor: pointer;
@@ -237,277 +238,188 @@ input[readonly] {
 
 <body>
 <div id="sideMenu" class="side-menu">
-
-  <!-- 🔵 HEADER -->
-  <div class="menu-header">
-    Solar Installation
-  </div>
-
-  <!-- MENU ITEMS -->
-  <div class="menu-item" onclick="setMode('create')">
-    Create New
-  </div>
-
-  <div class="menu-item" onclick="setMode('edit')">
-    Edit Existing
-  </div>
-
+  <div class="menu-header">Solar Installation</div>
+  <div class="menu-item" onclick="setMode('create')">Create New</div>
+  <div class="menu-item" onclick="setMode('edit')">Edit Existing</div>
 </div>
 <div id="overlay" onclick="toggleMenu()"></div>
 	
 <div class="header">
-  
   <div class="menu-btn" onclick="toggleMenu()">
     <span class="material-icons">menu</span>
   </div>
-	
   <div class="header-title">Solar Installation</div>
-
   <div class="profile-circle" onclick="openDashboard()">👤</div>
-
 </div>
 	
 <div class="container" id="formScreen">
-  
-<div id="loading">Loading... ⏳</div>
+  <div id="loading">Loading... ⏳</div>
 
-<label>Service Number</label>
-<div class="row">
-<input id="service" placeholder="Enter Service Number"
-       oninput="resetMessages()" onkeypress="handleKey(event)">
-  <button class="icon-btn" onclick="fetchData()">🔍</button>
-  <button class="icon-btn" onclick="reloadForm()">⟳</button>
-</div>
-
-<div id="duplicateMsg" style="color:red; display:none; margin-top:5px;">
-  ⚠️ This service number already submitted
-</div>
-
-<div id="errorMsg" class="error">Service Number not found </div>
-
-<label>Customer Name</label>
-<input id="name">
-
-<label>Phone</label>
-<input id="phone">
-
-<label>Address</label>
-<input id="address">
-
-<label>Division</label>
-<input id="division">
-
-<label>Sub Division</label>
-<input id="subdivision">
-
-<label>Section</label>
-<input id="section">
-
-<label>Distribution</label>
-<input id="distribution">
-
-<h3>Upload Images</h3>
-
-<div class="file-box file-wrapper">
-  <label>Panels Image</label>
-  <input type="file" id="panels" accept="image/*,application/pdf" onchange="showDelete(this)">
-
-  <label>Panel No.1</label>
-<div class="row">
-  <input type="text"
-         id="panel1"
-         placeholder="Scan Panel Number 1"
-         readonly>
-
-  <button type="button"
-          class="icon-btn"
-          onclick="scanCode('panel1')">
-    📷
-  </button>
-</div>
-
-  <label>Panel No.2</label>
-<div class="row">
-  <input type="text"
-         id="panel2"
-         placeholder="Scan Panel Number 2"
-         readonly>
-
-  <button type="button"
-          class="icon-btn"
-          onclick="scanCode('panel2')">
-    📷
-  </button>
-</div>
-	
-  <label>Panel No.3</label>
-<div class="row">
-  <input type="text"
-         id="panel3"
-         placeholder="Scan Panel Number 3"
-         readonly>
-
-  <button type="button"
-          class="icon-btn"
-          onclick="scanCode('panel3')">
-    📷
-  </button>
-</div>
-
-  <label>Panel No.4</label>
-<div class="row">
-  <input type="text"
-         id="panel4"
-         placeholder="Scan Panel Number 4"
-         readonly>
-
-  <button type="button"
-          class="icon-btn"
-          onclick="scanCode('panel4')">
-    📷
-  </button>
-</div>
-
-  <button type="button" class="delete-btn" onclick="removeFile('panels')">
-    <span class="material-icons">delete</span>
-  </button>
-</div>
-
-<div class="file-box file-wrapper">
-  <label>Inverter Image</label>
-  <input type="file" id="inverter" accept="image/*,application/pdf" onchange="showDelete(this)">
-
- <label>Inverter Serial Number</label>
-<div class="row">
-  <input type="text"
-         id="inverterSerial"
-         placeholder="Scan Inverter Serial Number"
-         readonly>
-
-  <button type="button"
-          class="icon-btn"
-          onclick="scanCode('inverterSerial')">
-    📷
-  </button>
-</div>
-
-  <button type="button" class="delete-btn" onclick="removeFile('inverter')">
-    <span class="material-icons">delete</span>
-  </button>
-</div>
-
-<div class="file-box file-wrapper">
-<label>Earth Image</label>
-<input type="file" id="earth" accept="image/*,application/pdf" onchange="showDelete(this)">
-<button type="button" class="delete-btn" onclick="removeFile('earth')">
-    <span class="material-icons">delete</span>
-  </button>
-</div>
-
-<div class="file-box file-wrapper">
-  <label>Current Bill</label>
-<input type="file" id="bill" accept="image/*,application/pdf" onchange="showDelete(this)">
-<button type="button" class="delete-btn" onclick="removeFile('bill')">
-    <span class="material-icons">delete</span>
-  </button>
-</div>
-
-<div class="file-box file-wrapper">
-<label>Aadhar Card</label>
-<input type="file" id="aadhar" accept="image/*,application/pdf" onchange="showDelete(this)">
-<button type="button" class="delete-btn" onclick="removeFile('aadhar')">
-    <span class="material-icons">delete</span>
-  </button>
-</div>
-	
-<div class="file-box file-wrapper">
-<label>Document Image 1</label>
-<input type="file" id="doc1" accept="image/*,application/pdf" onchange="showDelete(this)">
-<button type="button" class="delete-btn" onclick="removeFile('doc1')">
-    <span class="material-icons">delete</span>
-  </button>
-</div>
-	
-<div class="file-box file-wrapper">
-<label>Document Image 2</label>
-<input type="file" id="doc2" accept="image/*,application/pdf" onchange="showDelete(this)">
-<button type="button" class="delete-btn" onclick="removeFile('doc2')">
-    <span class="material-icons">delete</span>
-  </button>
-</div>
-	
-<div class="form-group" id="surveyorGroup">
-  <label>Surveyor Name</label>
-  <input type="text" id="surveyor" placeholder="Enter Surveyor Name" required>
-</div>
-
-	<div class="form-group" id="editorGroup">
-  <label>Edited By</label>
-  <input type="text" id="editedBy">
-
-  <div id="editedByError" style="color:red; font-size:13px; display:none;">
-    Edited By is required
+  <label>Service Number</label>
+  <div class="row">
+    <input id="service" style="background:#eee;" placeholder="Enter Service Number" oninput="resetMessages()" onkeypress="handleKey(event)">
+    <button class="icon-btn" onclick="fetchData()">🔍</button>
+    <button class="icon-btn" onclick="reloadForm()">⟳</button>
   </div>
+
+  <div id="duplicateMsg" style="color:red; display:none; margin-top:5px;">
+    ⚠️ This service number already submitted
+  </div>
+  <div id="errorMsg" class="error">Service Number not found</div>
+
+  <label>Customer Name</label>
+  <input id="name" readonly>
+
+  <label>Phone</label>
+  <input id="phone" readonly>
+
+  <label>Address</label>
+  <input id="address" readonly>
+
+  <label>Division</label>
+  <input id="division" readonly>
+
+  <label>Sub Division</label>
+  <input id="subdivision" readonly>
+
+  <label>Section</label>
+  <input id="section" readonly>
+
+  <label>Distribution</label>
+  <input id="distribution" readonly>
+
+  <h3>Upload Images</h3>
+
+  <div class="file-box file-wrapper">
+    <label>Panels Image</label>
+    <input type="file" id="panels" accept="image/*,application/pdf" onchange="showDelete(this)">
+
+    <label>Panel No.1</label>
+    <div class="row">
+      <input type="text" id="panel1" placeholder="Scan Panel Number 1">
+      <button type="button" class="icon-btn" onclick="scanCode('panel1')">📷</button>
+    </div>
+
+    <label>Panel No.2</label>
+    <div class="row">
+      <input type="text" id="panel2" placeholder="Scan Panel Number 2">
+      <button type="button" class="icon-btn" onclick="scanCode('panel2')">📷</button>
+    </div>
+	
+    <label>Panel No.3</label>
+    <div class="row">
+      <input type="text" id="panel3" placeholder="Scan Panel Number 3">
+      <button type="button" class="icon-btn" onclick="scanCode('panel3')">📷</button>
+    </div>
+
+    <label>Panel No.4</label>
+    <div class="row">
+      <input type="text" id="panel4" placeholder="Scan Panel Number 4">
+      <button type="button" class="icon-btn" onclick="scanCode('panel4')">📷</button>
+    </div>
+
+    <button type="button" class="delete-btn" onclick="removeFile('panels')">
+      <span class="material-icons">delete</span>
+    </button>
+  </div>
+
+  <div class="file-box file-wrapper">
+    <label>Inverter Image</label>
+    <input type="file" id="inverter" accept="image/*,application/pdf" onchange="showDelete(this)">
+
+    <label>Inverter Serial Number</label>
+    <div class="row">
+      <input type="text" id="inverterSerial" placeholder="Scan Inverter Serial Number">
+      <button type="button" class="icon-btn" onclick="scanCode('inverterSerial')">📷</button>
+    </div>
+
+    <button type="button" class="delete-btn" onclick="removeFile('inverter')">
+      <span class="material-icons">delete</span>
+    </button>
+  </div>
+
+  <div class="file-box file-wrapper">
+    <label>Earth Image</label>
+    <input type="file" id="earth" accept="image/*,application/pdf" onchange="showDelete(this)">
+    <button type="button" class="delete-btn" onclick="removeFile('earth')">
+      <span class="material-icons">delete</span>
+    </button>
+  </div>
+
+  <div class="file-box file-wrapper">
+    <label>Current Bill</label>
+    <input type="file" id="bill" accept="image/*,application/pdf" onchange="showDelete(this)">
+    <button type="button" class="delete-btn" onclick="removeFile('bill')">
+      <span class="material-icons">delete</span>
+    </button>
+  </div>
+
+  <div class="file-box file-wrapper">
+    <label>Aadhar Card</label>
+    <input type="file" id="aadhar" accept="image/*,application/pdf" onchange="showDelete(this)">
+    <button type="button" class="delete-btn" onclick="removeFile('aadhar')">
+      <span class="material-icons">delete</span>
+    </button>
+  </div>
+	
+  <div class="file-box file-wrapper">
+    <label>Document Image 1</label>
+    <input type="file" id="doc1" accept="image/*,application/pdf" onchange="showDelete(this)">
+    <button type="button" class="delete-btn" onclick="removeFile('doc1')">
+      <span class="material-icons">delete</span>
+    </button>
+  </div>
+	
+  <div class="file-box file-wrapper">
+    <label>Document Image 2</label>
+    <input type="file" id="doc2" accept="image/*,application/pdf" onchange="showDelete(this)">
+    <button type="button" class="delete-btn" onclick="removeFile('doc2')">
+      <span class="material-icons">delete</span>
+    </button>
+  </div>
+	
+  <div class="form-group" id="surveyorGroup">
+    <label>Surveyor Name</label>
+    <input type="text" id="surveyor" placeholder="Enter Surveyor Name" required>
+  </div>
+
+  <div class="form-group" id="editorGroup">
+    <label>Edited By</label>
+    <input type="text" id="editedBy">
+    <div id="editedByError" style="color:red; font-size:13px; display:none;">
+      Edited By is required
+    </div>
+  </div>
+
+  <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit</button>
 </div>
 
-<button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit</button>
-
-</div>
-
-<!-- SUCCESS SCREEN -->
 <div id="successScreen">
   <h2 style="color:green;">✅ Submitted Successfully</h2>
   <p>Your data has been saved.</p>
   <button class="new-entry-btn" onclick="reloadForm()">New Entry</button>
 </div>
 
-<div id="readerContainer"
-     style="
-       display:none;
-       position:fixed;
-       top:0;
-       left:0;
-       width:100%;
-       height:100%;
-       background:#000;
-       z-index:9999;
-     ">
-
-  <div id="reader"
-       style="
-         width:100%;
-         max-width:500px;
-         margin:60px auto;
-       ">
-  </div>
-
+<div id="readerContainer" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:9999;">
+  <div id="reader" style="width:100%; max-width:500px; margin:60px auto;"></div>
 </div>
 
-<button id="closeScanner"
-        onclick="closeScanner()"
-        style="
-          display:none;
-          position:fixed;
-          top:10px;
-          right:10px;
-          z-index:10000;">
+<button id="closeScanner" onclick="closeScanner()" style="display:none; position:fixed; top:10px; right:10px; z-index:10000;">
   ✖ Close
 </button>
 	
-	<script src="https://unpkg.com/html5-qrcode"></script>
+<script src="https://unpkg.com/html5-qrcode"></script>
 	
 <script>
-
-	let isVerified = false;
-  const loading = document.getElementById("loading");
-  const errorMsg = document.getElementById("errorMsg");
-  const duplicateMsg = document.getElementById("duplicateMsg");
-  const submitBtn = document.getElementById("submitBtn");
-  const formScreen = document.getElementById("formScreen");
-  const successScreen = document.getElementById("successScreen");
+let isVerified = false;
+const loading = document.getElementById("loading");
+const errorMsg = document.getElementById("errorMsg");
+const duplicateMsg = document.getElementById("duplicateMsg");
+const submitBtn = document.getElementById("submitBtn");
+const formScreen = document.getElementById("formScreen");
+const successScreen = document.getElementById("successScreen");
 
 let mode = "create";
-
 const params = new URLSearchParams(window.location.search);
 const urlMode = params.get("mode");
 
@@ -517,22 +429,17 @@ if (urlMode === "edit") {
   mode = "create";
 }
 
-// 🔥 SET HEADER TEXT
 const titleEl = document.querySelector(".header-title");
 if (titleEl) {
   titleEl.innerText = mode === "edit" ? "Edit Entry" : "Create New";
 }
-	if (mode === "edit") {
+if (mode === "edit") {
   const surveyorField = document.getElementById("surveyorGroup");
-  if (surveyorField) {
-    surveyorField.style.display = "none";  // ✅ hide
-  }
+  if (surveyorField) surveyorField.style.display = "none";
 }
-	if (mode === "create") {
+if (mode === "create") {
   const editorField = document.getElementById("editorGroup");
-  if (editorField) {
-    editorField.style.display = "none";
-  }
+  if (editorField) editorField.style.display = "none";
 }
 	
 function readFile(input) {
@@ -544,12 +451,12 @@ function readFile(input) {
     reader.readAsDataURL(file);
   });
 }
+
 async function compressImage(input) {
   return new Promise(resolve => {
     const file = input.files[0];
     if (!file) return resolve("");
 
-    // If PDF → don't compress
     if (file.type === "application/pdf") {
       const reader = new FileReader();
       reader.onload = e => resolve(e.target.result);
@@ -559,108 +466,66 @@ async function compressImage(input) {
 
     const img = new Image();
     const reader = new FileReader();
-
-    reader.onload = e => {
-      img.src = e.target.result;
-    };
+    reader.onload = e => { img.src = e.target.result; };
 
     img.onload = () => {
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
-
       const MAX_WIDTH = 800;
       const scale = MAX_WIDTH / img.width;
-
       canvas.width = MAX_WIDTH;
       canvas.height = img.height * scale;
-
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
       resolve(canvas.toDataURL("image/jpeg", 0.7));
     };
-
     reader.readAsDataURL(file);
   });
 }
 
 function handleKey(e){
-
-  // 🔥 Hide old messages
   document.getElementById("duplicateMsg").style.display = "none";
   document.getElementById("errorMsg").style.display = "none";
-
-  // 🔥 Reset loading text
   loading.innerHTML = "Loading... ⏳";
-
   if(e.key==="Enter") fetchData();
 }
 
 async function fetchData() {
-
   isVerified = false;
-
   const serviceInput = document.getElementById("service");
   const service = serviceInput.value.trim();
   if (!service) return;
 
   duplicateMsg.style.display = "none";
   errorMsg.style.display = "none";
-
   loading.innerHTML = "Loading... ⏳";
   loading.style.display = "block";
 
   try {
-
-    // =========================
-    // 🔵 STEP 1: FETCH FROM DATA SHEET
-    // =========================
-    const res = await fetch(
-      "https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec?service=" + service
-    );
-
+    const res = await fetch("https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec?service=" + service);
     const data = await res.json();
 
     if (!data || data.name === "NOT FOUND") {
       loading.style.display = "none";
-
       errorMsg.innerText = "❌ Service Number not found";
       errorMsg.style.display = "block";
-
       clearFields();
       lockFields(false);
       submitBtn.disabled = true;
       return;
     }
 
-    // =========================
-    // 🔴 STEP 2: CHECK SUBMISSION (MOVED UP)
-    // =========================
-    const checkUrl =
-      "https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec"
-      + "?action=search"
-      + "&division=" + encodeURIComponent(data.division)
-      + "&field=service"
-      + "&value=" + encodeURIComponent(service)
-      + "&t=" + Date.now();
-
+    const checkUrl = "https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec?action=search&division=" + encodeURIComponent(data.division) + "&field=service" + "&value=" + encodeURIComponent(service) + "&t=" + Date.now();
     const checkRes = await fetch(checkUrl);
     const checkData = await checkRes.json();
-
     const exists = Array.isArray(checkData) && checkData.length > 0;
 
     loading.style.display = "none";
 
-    // =========================
-    // 🟢 CREATE MODE
-    // =========================
     if (mode === "create") {
-
       serviceInput.readOnly = false;
-
       if (exists) {
         duplicateMsg.innerText = "⚠️ Service already submitted";
         duplicateMsg.style.display = "block";
-
         lockFields(true);
         submitBtn.disabled = true;
       } else {
@@ -669,42 +534,26 @@ async function fetchData() {
       }
     }
 
-    // =========================
-    // 🔵 EDIT MODE
-    // =========================
     if (mode === "edit") {
-
       serviceInput.readOnly = true;
       serviceInput.style.background = "#e0e0e0";
-
       if (!exists) {
         errorMsg.innerText = "❌ Service number not submitted";
         errorMsg.style.display = "block";
-
         submitBtn.disabled = true;
         lockFields(false);
       } else {
         errorMsg.style.display = "none";
-
         lockFields(true);
         submitBtn.disabled = false;
       }
     }
 
-    // =========================
-    // ❌ STOP if invalid case
-    // =========================
-    if (
-      (mode === "create" && exists) ||
-      (mode === "edit" && !exists)
-    ) {
+    if ((mode === "create" && exists) || (mode === "edit" && !exists)) {
       isVerified = false;
       return;
     }
 
-    // =========================
-    // ✅ AUTO FILL (ONLY WHEN VALID)
-    // =========================
     document.getElementById("name").value = data.name;
     document.getElementById("phone").value = data.phone;
     document.getElementById("address").value = data.address;
@@ -712,16 +561,12 @@ async function fetchData() {
     document.getElementById("subdivision").value = data.subdivision;
     document.getElementById("section").value = data.section;
     document.getElementById("distribution").value = data.distribution;
-
     isVerified = true;
 
   } catch (err) {
-
     loading.style.display = "none";
-
     errorMsg.innerText = "❌ Network error. Try again.";
     errorMsg.style.display = "block";
-
     submitBtn.disabled = true;
     console.log(err);
   }
@@ -730,269 +575,197 @@ async function fetchData() {
 function isValidID(value) {
   return /^[A-Z0-9]+$/.test(value);
 }
+
 async function submitForm() {
-	if (!isVerified) {
-  errorMsg.innerText = "⚠️ Please verify service number first";
-  errorMsg.style.display = "block";
-  return;
-}
-let surveyor = null;
-	
-let editedBy = "";
-
-	if (mode === "edit") {
-  const editedInput = document.getElementById("editedBy");
-  const editedError = document.getElementById("editedByError");
-
-  editedBy = editedInput.value.trim();
-
-  if (!editedBy) {
-    editedError.style.display = "block";
-    editedInput.style.border = "2px solid red";
-    editedInput.focus();
-    return;
-  } else {
-    editedError.style.display = "none";
-    editedInput.style.border = "1px solid #ccc";
-  }
-} // ✅ CLOSE HERE
-
-// ✅ CREATE MODE MUST BE OUTSIDE
-if (mode === "create") {
-  surveyor = document.getElementById("surveyor").value.trim();
-
-  if (!surveyor) {
-    alert("Please enter Surveyor Name");
-    return;
-  }
-}
-  errorMsg.style.display = "none";
-duplicateMsg.style.display = "none";
-
-	const panelIds = [
-  document.getElementById("panel1").value.trim(),
-  document.getElementById("panel2").value.trim(),
-  document.getElementById("panel3").value.trim(),
-  document.getElementById("panel4").value.trim()
-];
-
-const inverterId = document.getElementById("inverterSerial").value.trim();
-
-// 🔴 Validate Panel IDs
-const panelInputs = ["panel1","panel2","panel3","panel4"];
-
-// 🔴 Validate Panel IDs + Highlight
-for (let i = 0; i < panelIds.length; i++) {
-
-  const inputField = document.getElementById(panelInputs[i]);
-
-  if (panelIds[i] && !isValidID(panelIds[i])) {
-
-    // ❌ Highlight wrong field
-    inputField.style.border = "2px solid red";
-
-    errorMsg.innerText = `Panel ${i+1}: Only A-Z and 0-9 allowed`;
+  if (!isVerified) {
+    errorMsg.innerText = "⚠️ Please verify service number first";
     errorMsg.style.display = "block";
     return;
-
-  } else {
-    // ✅ Reset border if correct
-    inputField.style.border = "1px solid #ccc";
   }
-}
+  let surveyor = null;
+  let editedBy = "";
 
-// 🔴 Validate Inverter ID
-const inverterInput = document.getElementById("inverterSerial");
+  if (mode === "edit") {
+    const editedInput = document.getElementById("editedBy");
+    const editedError = document.getElementById("editedByError");
+    editedBy = editedInput.value.trim();
 
-if (inverterId && !isValidID(inverterId)) {
-  inverterInput.style.border = "2px solid red";
-
-  errorMsg.innerText = "Inverter: Only A-Z and 0-9 allowed";
-  errorMsg.style.display = "block";
-  return;
-} else {
-  inverterInput.style.border = "1px solid #ccc";
-}
-	
-if (!document.getElementById("service").value.trim()) {
-  document.getElementById("errorMsg").innerText = "Service Number is required";
-  document.getElementById("errorMsg").style.display = "block";
-  return;
-}
-
-loading.innerHTML = "Uploading... Please wait ⏳";
-loading.style.display = "block";
-
-submitBtn.innerText = "Uploading...";
-submitBtn.disabled = true;
-
-const [
-  panelsData,
-  inverterData,
-  earthData,
-  billData,
-  aadharData,
-  doc1Data,
-  doc2Data
-] = await Promise.all([
-compressImage(document.getElementById("panels")),
-compressImage(document.getElementById("inverter")),
-compressImage(document.getElementById("earth")),
-compressImage(document.getElementById("bill")),
-compressImage(document.getElementById("aadhar")),
-compressImage(document.getElementById("doc1")),
-compressImage(document.getElementById("doc2"))
-]);
-
-const data = {
-  mode: mode,
-  serviceNumber: document.getElementById("service").value,
-  name: document.getElementById("name").value,
-  phone: document.getElementById("phone").value,
-  address: document.getElementById("address").value,
-  division: document.getElementById("division").value,
-  subdivision: document.getElementById("subdivision").value,
-  section: document.getElementById("section").value,
-  distribution: document.getElementById("distribution").value,
-
-  panels: panelsData,
-  panel1: document.getElementById("panel1").value,
-  panel2: document.getElementById("panel2").value,
-  panel3: document.getElementById("panel3").value,
-  panel4: document.getElementById("panel4").value,
-	
-  inverter: inverterData,
-  inverterSerial: document.getElementById("inverterSerial").value,
-	
-  earth: earthData,
-  bill: billData,
-  aadhar: aadharData,
-  doc1: doc1Data,
-  doc2: doc2Data,
-  surveyor: surveyor,
-  editedBy: editedBy
-};
-
-  try {
-const res = await fetch("https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec", {
-  method: "POST",
-  body: JSON.stringify(data)
-});
-
-const result = await res.json();
-
-loading.style.display = "none";
-
-if (result.status === "NOT_FOUND") {
-  errorMsg.innerText = "❌ Service number not found for editing";
-  errorMsg.style.display = "block";
-
-  submitBtn.innerText = "Submit";
-  submitBtn.disabled = false;
-  loading.style.display = "none";
-  return;
-}
-
-if (result.status === "ALREADY_SUBMITTED") {
+    if (!editedBy) {
+      editedError.style.display = "block";
+      editedInput.style.border = "2px solid red";
+      editedInput.focus();
+      return;
+    } else {
+      editedError.style.display = "none";
+      editedInput.style.border = "1px solid #ccc";
+    }
+  }
 
   if (mode === "create") {
-    duplicateMsg.innerText = "This service number already exists";
-    duplicateMsg.style.display = "block";
+    surveyor = document.getElementById("surveyor").value.trim();
+    if (!surveyor) {
+      alert("Please enter Surveyor Name");
+      return;
+    }
+  }
+  errorMsg.style.display = "none";
+  duplicateMsg.style.display = "none";
 
-    submitBtn.innerText = "Submit";
-    submitBtn.disabled = false;
-    loading.style.display = "none";
+  const panelIds = [
+    document.getElementById("panel1").value.trim(),
+    document.getElementById("panel2").value.trim(),
+    document.getElementById("panel3").value.trim(),
+    document.getElementById("panel4").value.trim()
+  ];
+  const inverterId = document.getElementById("inverterSerial").value.trim();
+  const panelInputs = ["panel1","panel2","panel3","panel4"];
+
+  for (let i = 0; i < panelIds.length; i++) {
+    const inputField = document.getElementById(panelInputs[i]);
+    if (panelIds[i] && !isValidID(panelIds[i])) {
+      inputField.style.border = "2px solid red";
+      errorMsg.innerText = `Panel ${i+1}: Only A-Z and 0-9 allowed`;
+      errorMsg.style.display = "block";
+      return;
+    } else {
+      inputField.style.border = "1px solid #ccc";
+    }
+  }
+
+  const inverterInput = document.getElementById("inverterSerial");
+  if (inverterId && !isValidID(inverterId)) {
+    inverterInput.style.border = "2px solid red";
+    errorMsg.innerText = "Inverter: Only A-Z and 0-9 allowed";
+    errorMsg.style.display = "block";
+    return;
+  } else {
+    inverterInput.style.border = "1px solid #ccc";
+  }
+	
+  if (!document.getElementById("service").value.trim()) {
+    document.getElementById("errorMsg").innerText = "Service Number is required";
+    document.getElementById("errorMsg").style.display = "block";
     return;
   }
 
-  // ✅ EDIT MODE → treat as SUCCESS
-  formScreen.style.display = "none";
-  successScreen.style.display = "block";
+  loading.innerHTML = "Uploading... Please wait ⏳";
+  loading.style.display = "block";
+  submitBtn.innerText = "Uploading...";
+  submitBtn.disabled = true;
 
-  submitBtn.innerText = "Submit";
-  submitBtn.disabled = false;
-  loading.style.display = "none";
-  return;
-}
+  const [panelsData, inverterData, earthData, billData, aadharData, doc1Data, doc2Data] = await Promise.all([
+    compressImage(document.getElementById("panels")),
+    compressImage(document.getElementById("inverter")),
+    compressImage(document.getElementById("earth")),
+    compressImage(document.getElementById("bill")),
+    compressImage(document.getElementById("aadhar")),
+    compressImage(document.getElementById("doc1")),
+    compressImage(document.getElementById("doc2"))
+  ]);
 
+  const data = {
+    mode: mode,
+    serviceNumber: document.getElementById("service").value,
+    name: document.getElementById("name").value,
+    phone: document.getElementById("phone").value,
+    address: document.getElementById("address").value,
+    division: document.getElementById("division").value,
+    subdivision: document.getElementById("subdivision").value,
+    section: document.getElementById("section").value,
+    distribution: document.getElementById("distribution").value,
+    panels: panelsData,
+    panel1: document.getElementById("panel1").value,
+    panel2: document.getElementById("panel2").value,
+    panel3: document.getElementById("panel3").value,
+    panel4: document.getElementById("panel4").value,
+    inverter: inverterData,
+    inverterSerial: document.getElementById("inverterSerial").value,
+    earth: earthData,
+    bill: billData,
+    aadhar: aadharData,
+    doc1: doc1Data,
+    doc2: doc2Data,
+    surveyor: surveyor,
+    editedBy: editedBy
+  };
+
+  try {
+    const res = await fetch("https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec", {
+      method: "POST",
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
     loading.style.display = "none";
+
+    if (result.status === "NOT_FOUND") {
+      errorMsg.innerText = "❌ Service number not found for editing";
+      errorMsg.style.display = "block";
+      submitBtn.innerText = "Submit";
+      submitBtn.disabled = false;
+      return;
+    }
+
+    if (result.status === "ALREADY_SUBMITTED") {
+      if (mode === "create") {
+        duplicateMsg.innerText = "This service number already exists";
+        duplicateMsg.style.display = "block";
+        submitBtn.innerText = "Submit";
+        submitBtn.disabled = false;
+        return;
+      }
+      formScreen.style.display = "none";
+      successScreen.style.display = "block";
+      submitBtn.innerText = "Submit";
+      submitBtn.disabled = false;
+      return;
+    }
+
     submitBtn.innerText = "Submit";
-
-
     formScreen.style.display = "none";
     loading.innerHTML = "Loading... ⏳";
     successScreen.style.display = "block";
-
   } catch (err) {
-  loading.innerHTML = "Loading... ⏳";
+    loading.innerHTML = "Loading... ⏳";
     loading.style.display = "none";
     submitBtn.innerText = "Submit";
     alert("Submission failed");
     console.log(err);
   }
-
-submitBtn.disabled = false;
+  submitBtn.disabled = false;
 }
 
 function reloadForm(){
-
-  // Show form
   formScreen.style.display = "block";
   successScreen.style.display = "none";
 
-  // Clear inputs
-  [
-    "service","name","phone","address",
-    "division","subdivision","section","distribution",
-    "panel1","panel2","panel3","panel4",
-    "inverterSerial","surveyor","editedBy"
-  ].forEach(id => {
+  ["service","name","phone","address","division","subdivision","section","distribution","panel1","panel2","panel3","panel4","inverterSerial","surveyor","editedBy"].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = "";
   });
 
-  // Clear file inputs
-  ["panels","inverter","earth","bill","aadhar","doc1","doc2"]
-  .forEach(id => {
+  ["panels","inverter","earth","bill","aadhar","doc1","doc2"].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = "";
   });
 
-  // Hide messages
   errorMsg.style.display = "none";
   duplicateMsg.style.display = "none";
-
-  // Reset state
   isVerified = false;
   submitBtn.disabled = false;
-
-  // Unlock fields
   lockFields(false);
 
-  // Reset service field readonly
   const serviceInput = document.getElementById("service");
   serviceInput.readOnly = false;
   serviceInput.style.background = "#eee";
 
-  // Hide delete buttons
-  document.querySelectorAll(".delete-btn").forEach(btn => {
-    btn.style.display = "none";
-  });
-
-  // Focus
+  document.querySelectorAll(".delete-btn").forEach(btn => { btn.style.display = "none"; });
   serviceInput.focus();
 }
 
 function clearFields(){
-  document.getElementById("name").value="";
-  document.getElementById("phone").value="";
-  document.getElementById("address").value="";
-  document.getElementById("division").value="";
-  document.getElementById("subdivision").value="";
-  document.getElementById("section").value="";
-  document.getElementById("distribution").value="";
-  document.getElementById("surveyor").value = "";
-  document.getElementById("editedBy").value = "";
+  ["name","phone","address","division","subdivision","section","distribution","surveyor","editedBy"].forEach(id => {
+    document.getElementById(id).value = "";
+  });
 }
 
 function resetMessages(){
@@ -1001,10 +774,10 @@ function resetMessages(){
   submitBtn.disabled = false;
   isVerified = false;
   lockFields(false);
-	const editedInput = document.getElementById("editedBy");
-if (editedInput) editedInput.style.border = "1px solid #ccc";
-	const editedError = document.getElementById("editedByError");
-if (editedError) editedError.style.display = "none";
+  const editedInput = document.getElementById("editedBy");
+  if (editedInput) editedInput.style.border = "1px solid #ccc";
+  const editedError = document.getElementById("editedByError");
+  if (editedError) editedError.style.display = "none";
 }
 	
 function openDashboard() {
@@ -1013,51 +786,49 @@ function openDashboard() {
 function showDelete(input) {
   const btn = input.parentElement.querySelector(".delete-btn");
   btn.style.display = input.files.length ? "block" : "none";
-
-  // 🔥 Force remove any green color
   input.style.background = "#eee";
 }
 
 function removeFile(id) {
   const input = document.getElementById(id);
   input.value = "";
-  input.style.background = "#eee"; // 🔥 reset color
+  input.style.background = "#eee";
   input.parentElement.querySelector(".delete-btn").style.display = "none";
 }
-	function toggleMenu() {
+
+function toggleMenu() {
   const menu = document.getElementById("sideMenu");
   const overlay = document.getElementById("overlay");
-
   menu.classList.toggle("open");
-
-  if (menu.classList.contains("open")) {
-    overlay.style.display = "block";
-  } else {
-    overlay.style.display = "none";
-  }
+  overlay.style.display = menu.classList.contains("open") ? "block" : "none";
 }
 
 function setMode(selectedMode) {
   window.location.href = `index.html?mode=${selectedMode}&t=${Date.now()}`;
 }
 	
+// REAL-TIME FORMATTING AS USER TYPES MANUALLY
 ["panel1","panel2","panel3","panel4","inverterSerial"].forEach(id => {
   const input = document.getElementById(id);
-  if (!input) return;   // ✅ prevent crash
+  if (!input) return;
 
   input.addEventListener("input", () => {
-    input.value = input.value.toUpperCase();
-    input.value = input.value.replace(/[^A-Z0-9]/g, "");
+    let cleanValue = input.value.toUpperCase();
+    
+    // Auto-strip manual paste or manual typing string prefix errors instantly
+    if (cleanValue.startsWith("C1ICON") || cleanValue.startsWith("C1ADMSP")) {
+      cleanValue = cleanValue.substring(2);
+    } else if (cleanValue.startsWith("C1") && cleanValue.length > 10) {
+      cleanValue = cleanValue.substring(2);
+    }
+    
+    input.value = cleanValue.replace(/[^A-Z0-9]/g, "");
     input.style.border = "1px solid #ccc";
   });
 });
 
 function lockFields(lock = true) {
-  const ids = [
-    "name","phone","address","division",
-    "subdivision","section","distribution"
-  ];
-
+  const ids = ["name","phone","address","division","subdivision","section","distribution"];
   ids.forEach(id => {
     const el = document.getElementById(id);
     el.readOnly = lock;
@@ -1067,9 +838,22 @@ function lockFields(lock = true) {
 
 let html5QrScanner;
 
+// CLEAN EXTRACTION UTILITY
+function cleanBarcodeText(decodedText) {
+  let value = decodedText.trim().toUpperCase();
+
+  // Strip 'C1' from your system barcodes seamlessly
+  if (value.startsWith("C1ICON") || value.startsWith("C1ADMSP")) {
+    value = value.substring(2); 
+  } else if (value.startsWith("C1") && value.length > 10) {
+    value = value.substring(2);
+  }
+
+  return value.replace(/[^A-Z0-9]/g, "");
+}
+
 async function scanCode(fieldId) {
   try {
-    // Stop old scanner if running
     if (html5QrScanner) {
       try {
         await html5QrScanner.stop();
@@ -1082,80 +866,60 @@ async function scanCode(fieldId) {
 
     html5QrScanner = new Html5Qrcode("reader");
 
+    // FORCES REAR HIGH RESOLUTION CAMERA PREFERENTIAL STREAM
     await html5QrScanner.start(
-      { 
-        facingMode: "environment"
-      },
+      { facingMode: { exact: "environment" } },
       {
-        fps: 10,
-        // 1. INCREASE SCAN AREA: Gives more room to align the barcode cleanly
-        qrbox: { width: 280, height: 160 },
+        fps: 20,
+        qrbox: { width: 300, height: 150 },
         experimentalFeatures: {
-          // Uses the device's native hardware decoder if available (massive help for blur)
-          useBarCodeDetectorIfSupported: true
-        },
-        // 2. FORCE HIGHER RESOLUTION: Helps the camera resolve fine barcode lines clearly
-        videoConstraints: {
-          width: { ideal: 1280 },
-          height: { ideal: 720 },
-          advanced: [{ focusMode: "continuous" }] // Forces continuous auto-focus
+          useBarCodeDetectorIfSupported: true // Fixes blur via native hardware GPU processing
         }
       },
       async (decodedText) => {
-        let value = decodedText.trim().toUpperCase();
+        let value = cleanBarcodeText(decodedText);
+        if (value.length < 4) return;
 
-        // 3. FIX THE "C1" PREFIX BUG: 
-        // If the barcode string accidentally starts with C1 followed by your regular characters, strip it off.
-        if (value.startsWith("C1") && value.includes("ICON")) {
-          value = value.substring(2); 
-        } else if (value.startsWith("C1") && value.length > 10) {
-          // General fallback for other serial numbers like your inverter if they get a C1 prefix
-          value = value.substring(2);
-        }
-
-        // Clean values to fit your A-Z 0-9 validation rules
-        value = value.replace(/[^A-Z0-9]/g, "");
-
-        if (value.length < 4) { 
-          console.log("Rejected due to short length:", value);
-          return;
-        }
-
-        // Update the input field
         const inputField = document.getElementById(fieldId);
         inputField.value = value;
         inputField.style.border = "1px solid #ccc";
 
-        await html5QrScanner.stop();
-        await html5QrScanner.clear();
-
-        document.getElementById("readerContainer").style.display = "none";
-        document.getElementById("closeScanner").style.display = "none";
+        await closeScanner();
       },
-      (errorMessage) => {
-        console.log("Scanning...", errorMessage);
-      }
+      (errorMessage) => { console.log("Searching...", errorMessage); }
     );
   } catch (err) {
-    console.error(err);
-    document.getElementById("readerContainer").style.display = "none";
-    document.getElementById("closeScanner").style.display = "none";
-    alert("Scanner Error: " + err);
+    console.error("Exact rear lens failed, launching standard fallback...", err);
+    
+    // BACKUP STREAM: Fallback loop for legacy models
+    try {
+      await html5QrScanner.start(
+        { facingMode: "environment" },
+        { fps: 20, qrbox: { width: 300, height: 150 } },
+        async (decodedText) => {
+          let value = cleanBarcodeText(decodedText);
+          if (value.length < 4) return;
+
+          document.getElementById(fieldId).value = value;
+          await closeScanner();
+        },
+        (err) => console.log(err)
+      );
+    } catch (fallbackErr) {
+      alert("Camera Permission Error: Please reset settings inside your app permissions.");
+    }
   }
 }
-	async function closeScanner() {
 
+async function closeScanner() {
   try {
-
     if (html5QrScanner) {
       await html5QrScanner.stop();
       await html5QrScanner.clear();
     }
-
   } catch (e) {
     console.log(e);
   }
-
   document.getElementById("readerContainer").style.display = "none";
   document.getElementById("closeScanner").style.display = "none";
 }
