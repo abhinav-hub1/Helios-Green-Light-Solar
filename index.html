@@ -1084,22 +1084,21 @@ async function scanCode(fieldId) {
 
     html5QrScanner = new Html5Qrcode("reader");
 
-    await html5QrScanner.start(
-  { facingMode: "environment" },
+  await html5QrScanner.start(
+  { facingMode: { exact: "environment" } },
   {
-    fps: 10,
-    qrbox: 250
+    fps: 5,
+    qrbox: 300,
+    aspectRatio: 1.7778,
+    disableFlip: true
   },
  async (decodedText) => {
 
   let value = decodedText.trim();
 
-  if (value.startsWith("]C1")) {
-    value = value.substring(3).trim();
-  }
+alert("Scanned: " + value);
 
-  document.getElementById(fieldId).value =
-    value.toUpperCase();
+document.getElementById(fieldId).value = value.toUpperCase();
 
   await html5QrScanner.stop();
   await html5QrScanner.clear();
