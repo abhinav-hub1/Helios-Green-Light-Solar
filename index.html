@@ -1092,6 +1092,7 @@ async function scanCode(fieldId) {
   },
   async (decodedText) => {
 
+	  console.log(decodedText);
     document.getElementById(fieldId).value =
       decodedText.toUpperCase().trim();
 
