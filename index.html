@@ -1070,75 +1070,86 @@ let html5QrScanner;
 async function scanCode(fieldId) {
 
   try {
-if (html5QrScanner) {
-  try {
-    await html5QrScanner.stop();
-    await html5QrScanner.clear();
-  } catch(e) {}
-}
+
+    // Stop old scanner if running
+    if (html5QrScanner) {
+      try {
+        await html5QrScanner.stop();
+        await html5QrScanner.clear();
+      } catch (e) {}
+    }
+
     document.getElementById("readerContainer").style.display = "block";
     document.getElementById("closeScanner").style.display = "block";
 
     html5QrScanner = new Html5Qrcode("reader");
 
     await html5QrScanner.start(
-      { facingMode: "environment" },
+      {
+        facingMode: "environment"
+      },
       {
         fps: 20,
-        qrbox: { width: 300, height: 150 }
+        qrbox: { width: 400, height: 150 },
+        aspectRatio: 1.7778,
+        formatsToSupport: [
+          Html5QrcodeSupportedFormats.CODE_128,
+          Html5QrcodeSupportedFormats.CODE_39,
+          Html5QrcodeSupportedFormats.CODE_93,
+          Html5QrcodeSupportedFormats.EAN_13,
+          Html5QrcodeSupportedFormats.EAN_8
+        ]
       },
-      (decodedText) => {
+      async (decodedText) => {
 
-       let value = decodedText.toUpperCase().trim();
+        let value = decodedText.toUpperCase().trim();
 
-// Remove unwanted leading characters
-value = value.replace(/^[^A-Z0-9]+/, "");
+        // Remove leading garbage characters
+        value = value.replace(/^[^A-Z0-9]+/, "");
 
-// If ICON exists, keep only from ICON onwards
-const idx = value.indexOf("ICON");
-if (idx >= 0) {
-  value = value.substring(idx);
-}
+        // Must be at least 10 chars
+        if (value.length < 10) {
+          alert("Invalid barcode. Please scan again.");
+          return;
+        }
 
-document.getElementById(fieldId).value = value;
+        document.getElementById(fieldId).value = value;
 
-        html5QrScanner.stop()
-          .then(() => html5QrScanner.clear())
-          .then(() => {
-            document.getElementById("readerContainer").style.display = "none";
-            document.getElementById("closeScanner").style.display = "none";
-          });
+        try {
+          await html5QrScanner.stop();
+          await html5QrScanner.clear();
+        } catch (e) {}
 
+        document.getElementById("readerContainer").style.display = "none";
+        document.getElementById("closeScanner").style.display = "none";
       }
     );
 
-  } 
-	catch (err) {
-  console.error(err);
+  } catch (err) {
 
-  alert(
-    "Scanner Error:\n" +
-    JSON.stringify(err, null, 2)
-  );
+    console.error(err);
 
-  document.getElementById("reader").style.display = "none";
-  document.getElementById("closeScanner").style.display = "none";
-}
-}
-	function closeScanner() {
+    alert("Unable to start camera");
 
-  if (html5QrScanner) {
-
-    html5QrScanner.stop()
-      .then(() => {
-        return html5QrScanner.clear();
-      })
-      .then(() => {
-        document.getElementById("reader").style.display = "none";
-        document.getElementById("closeScanner").style.display = "none";
-      })
-      .catch(err => console.log(err));
+    document.getElementById("readerContainer").style.display = "none";
+    document.getElementById("closeScanner").style.display = "none";
   }
+}
+	async function closeScanner() {
+
+  try {
+
+    if (html5QrScanner) {
+      await html5QrScanner.stop();
+      await html5QrScanner.clear();
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+
+  document.getElementById("readerContainer").style.display = "none";
+  document.getElementById("closeScanner").style.display = "none";
 }
 </script>
 </body>
