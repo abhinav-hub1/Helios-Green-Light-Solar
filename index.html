@@ -1084,7 +1084,7 @@ async function scanCode(fieldId) {
 
     html5QrScanner = new Html5Qrcode("reader");
 
- await html5QrScanner.start(
+await html5QrScanner.start(
   { facingMode: "environment" },
   {
     fps: 20,
@@ -1104,6 +1104,10 @@ async function scanCode(fieldId) {
 
     document.getElementById("readerContainer").style.display = "none";
     document.getElementById("closeScanner").style.display = "none";
+  },
+
+  (errorMessage) => {
+    console.log("Scanning...", errorMessage);
   }
 );
 	  }
