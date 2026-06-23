@@ -1090,18 +1090,23 @@ async function scanCode(fieldId) {
     fps: 10,
     qrbox: 250
   },
-  async (decodedText) => {
+ async (decodedText) => {
 
-	  console.log(decodedText);
-    document.getElementById(fieldId).value =
-      decodedText.toUpperCase().trim();
+  let value = decodedText.trim();
 
-    await html5QrScanner.stop();
-    await html5QrScanner.clear();
-
-    document.getElementById("readerContainer").style.display = "none";
-    document.getElementById("closeScanner").style.display = "none";
+  if (value.startsWith("]C1")) {
+    value = value.substring(3).trim();
   }
+
+  document.getElementById(fieldId).value =
+    value.toUpperCase();
+
+  await html5QrScanner.stop();
+  await html5QrScanner.clear();
+
+  document.getElementById("readerContainer").style.display = "none";
+  document.getElementById("closeScanner").style.display = "none";
+}
 );
 	  }
 catch (err) {
