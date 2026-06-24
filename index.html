@@ -239,8 +239,17 @@ input[readonly] {
 <body>
 <div id="sideMenu" class="side-menu">
   <div class="menu-header">Solar Installation</div>
-  <div class="menu-item" onclick="setMode('create')">Create New</div>
-  <div class="menu-item" onclick="setMode('edit')">Edit Existing</div>
+	<div class="menu-item" onclick="window.location.href='index.html'">
+Material Delivery
+</div>
+
+<div class="menu-item" onclick="window.location.href='create.html'">
+Create New
+</div>
+
+<div class="menu-item" onclick="window.location.href='edit.html'">
+Edit Existing
+</div>
 </div>
 <div id="overlay" onclick="toggleMenu()"></div>
 	
@@ -290,108 +299,90 @@ input[readonly] {
 
   <h3>Upload Images</h3>
 
-  <div class="file-box file-wrapper">
-    <label>Panels Image</label>
-    <input type="file" id="panels" accept="image/*,application/pdf" onchange="showDelete(this)">
+<!-- Panel 1 -->
+<div class="file-box file-wrapper">
+  <label>Panel Barcode 1 Image</label>
+  <input type="file" id="panelImg1" accept="image/*" onchange="showDelete(this)">
 
-    <label>Panel No.1</label>
-    <div class="row">
-      <input type="text" id="panel1" placeholder="Scan Panel Number 1" readonly>
-      <button type="button" class="icon-btn" onclick="scanCode('panel1')">📷</button>
-    </div>
-
-    <label>Panel No.2</label>
-    <div class="row">
-      <input type="text" id="panel2" placeholder="Scan Panel Number 2" readonly>
-      <button type="button" class="icon-btn" onclick="scanCode('panel2')">📷</button>
-    </div>
-	
-    <label>Panel No.3</label>
-    <div class="row">
-      <input type="text" id="panel3" placeholder="Scan Panel Number 3" readonly>
-      <button type="button" class="icon-btn" onclick="scanCode('panel3')">📷</button>
-    </div>
-
-    <label>Panel No.4</label>
-    <div class="row">
-      <input type="text" id="panel4" placeholder="Scan Panel Number 4" readonly>
-      <button type="button" class="icon-btn" onclick="scanCode('panel4')">📷</button>
-    </div>
-
-    <button type="button" class="delete-btn" onclick="removeFile('panels')">
-      <span class="material-icons">delete</span>
-    </button>
+  <label>Panel No.1</label>
+  <div class="row">
+    <input type="text" id="dpanel1" readonly>
+    <button type="button" class="icon-btn" onclick="scanCode('dpanel1')">📷</button>
   </div>
+</div>
 
-  <div class="file-box file-wrapper">
-    <label>Inverter Image</label>
-    <input type="file" id="inverter" accept="image/*,application/pdf" onchange="showDelete(this)">
+<!-- Panel 2 -->
+<div class="file-box file-wrapper">
+  <label>Panel Barcode 2 Image</label>
+  <input type="file" id="panelImg2" accept="image/*" onchange="showDelete(this)">
 
-    <label>Inverter Serial Number</label>
-    <div class="row">
-      <input type="text" id="inverterSerial" placeholder="Scan Inverter Serial Number" readonly>
-      <button type="button" class="icon-btn" onclick="scanCode('inverterSerial')">📷</button>
-    </div>
+  <label>Panel No.2</label>
+  <div class="row">
+    <input type="text" id="dpanel2" readonly>
+    <button type="button" class="icon-btn" onclick="scanCode('dpanel2')">📷</button>
+  </div>
+</div>
 
-    <button type="button" class="delete-btn" onclick="removeFile('inverter')">
-      <span class="material-icons">delete</span>
-    </button>
-  </div>
+<!-- Panel 3 -->
+<div class="file-box file-wrapper">
+  <label>Panel Barcode 3 Image</label>
+  <input type="file" id="panelImg3" accept="image/*" onchange="showDelete(this)">
 
-  <div class="file-box file-wrapper">
-    <label>Earth Image</label>
-    <input type="file" id="earth" accept="image/*,application/pdf" onchange="showDelete(this)">
-    <button type="button" class="delete-btn" onclick="removeFile('earth')">
-      <span class="material-icons">delete</span>
-    </button>
+  <label>Panel No.3</label>
+  <div class="row">
+    <input type="text" id="dpanel3" readonly>
+    <button type="button" class="icon-btn" onclick="scanCode('dpanel3')">📷</button>
   </div>
+</div>
 
-  <div class="file-box file-wrapper">
-    <label>Current Bill</label>
-    <input type="file" id="bill" accept="image/*,application/pdf" onchange="showDelete(this)">
-    <button type="button" class="delete-btn" onclick="removeFile('bill')">
-      <span class="material-icons">delete</span>
-    </button>
-  </div>
+<!-- Panel 4 -->
+<div class="file-box file-wrapper">
+  <label>Panel Barcode 4 Image</label>
+  <input type="file" id="panelImg4" accept="image/*" onchange="showDelete(this)">
 
-  <div class="file-box file-wrapper">
-    <label>Aadhar Card</label>
-    <input type="file" id="aadhar" accept="image/*,application/pdf" onchange="showDelete(this)">
-    <button type="button" class="delete-btn" onclick="removeFile('aadhar')">
-      <span class="material-icons">delete</span>
-    </button>
+  <label>Panel No.4</label>
+  <div class="row">
+    <input type="text" id="dpanel4" readonly>
+    <button type="button" class="icon-btn" onclick="scanCode('dpanel4')">📷</button>
   </div>
-	
-  <div class="file-box file-wrapper">
-    <label>Document Image 1</label>
-    <input type="file" id="doc1" accept="image/*,application/pdf" onchange="showDelete(this)">
-    <button type="button" class="delete-btn" onclick="removeFile('doc1')">
-      <span class="material-icons">delete</span>
-    </button>
-  </div>
-	
-  <div class="file-box file-wrapper">
-    <label>Document Image 2</label>
-    <input type="file" id="doc2" accept="image/*,application/pdf" onchange="showDelete(this)">
-    <button type="button" class="delete-btn" onclick="removeFile('doc2')">
-      <span class="material-icons">delete</span>
-    </button>
-  </div>
-	
-  <div class="form-group" id="surveyorGroup">
-    <label>Surveyor Name</label>
-    <input type="text" id="surveyor" placeholder="Enter Surveyor Name" required>
-  </div>
+</div>
 
-  <div class="form-group" id="editorGroup">
-    <label>Edited By</label>
-    <input type="text" id="editedBy">
-    <div id="editedByError" style="color:red; font-size:13px; display:none;">
-      Edited By is required
-    </div>
-  </div>
+<!-- Inverter -->
+<div class="file-box file-wrapper">
+  <label>Inverter Image</label>
+  <input type="file" id="dinverter" accept="image/*" onchange="showDelete(this)">
 
-  <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit</button>
+  <label>Inverter No.</label>
+  <div class="row">
+    <input type="text" id="dinverterNo" readonly>
+    <button type="button" class="icon-btn" onclick="scanCode('dinverterNo')">📷</button>
+  </div>
+</div>
+
+
+<h3>Material Images</h3>
+
+<div class="file-box file-wrapper">
+  <label>Panels Image</label>
+  <input type="file" id="panelsPhoto" accept="image/*" onchange="showDelete(this)">
+</div>
+
+<div class="file-box file-wrapper">
+  <label>BOS Material Image</label>
+  <input type="file" id="bosPhoto" accept="image/*" onchange="showDelete(this)">
+</div>
+
+<div class="file-box file-wrapper">
+  <label>Proof Of Delivery Image</label>
+  <input type="file" id="deliveryProof" accept="image/*" onchange="showDelete(this)">
+</div>
+
+<div class="form-group">
+  <label>Material Surveyor Name</label>
+  <input type="text" id="materialSurveyor">
+</div>
+
+  <button class="submit-btn" id="submitBtn" onclick="submitMaterialDelivery()">Submit</button>
 </div>
 
 <div id="successScreen">
@@ -419,28 +410,10 @@ const submitBtn = document.getElementById("submitBtn");
 const formScreen = document.getElementById("formScreen");
 const successScreen = document.getElementById("successScreen");
 
-let mode = "create";
-const params = new URLSearchParams(window.location.search);
-const urlMode = params.get("mode");
-
-if (urlMode === "edit") {
-  mode = "edit";
-} else {
-  mode = "create";
-}
-
 const titleEl = document.querySelector(".header-title");
-if (titleEl) {
-  titleEl.innerText = mode === "edit" ? "Edit Entry" : "Create New";
-}
-if (mode === "edit") {
-  const surveyorField = document.getElementById("surveyorGroup");
-  if (surveyorField) surveyorField.style.display = "none";
-}
-if (mode === "create") {
-  const editorField = document.getElementById("editorGroup");
-  if (editorField) editorField.style.display = "none";
-}
+	
+document.querySelector(".header-title").innerText =
+"Material Delivery";
 	
 function readFile(input) {
   return new Promise((resolve) => {
@@ -520,39 +493,15 @@ async function fetchData() {
     const exists = Array.isArray(checkData) && checkData.length > 0;
 
     loading.style.display = "none";
+if (exists) {
+  duplicateMsg.innerText = "⚠️ Material already delivered";
+  duplicateMsg.style.display = "block";
+  submitBtn.disabled = true;
+  isVerified = false;
+  return;
+}
 
-    if (mode === "create") {
-      serviceInput.readOnly = false;
-      if (exists) {
-        duplicateMsg.innerText = "⚠️ Service already submitted";
-        duplicateMsg.style.display = "block";
-        lockFields(true);
-        submitBtn.disabled = true;
-      } else {
-        lockFields(false);
-        submitBtn.disabled = false;
-      }
-    }
-
-    if (mode === "edit") {
-      serviceInput.readOnly = true;
-      serviceInput.style.background = "#e0e0e0";
-      if (!exists) {
-        errorMsg.innerText = "❌ Service number not submitted";
-        errorMsg.style.display = "block";
-        submitBtn.disabled = true;
-        lockFields(false);
-      } else {
-        errorMsg.style.display = "none";
-        lockFields(true);
-        submitBtn.disabled = false;
-      }
-    }
-
-    if ((mode === "create" && exists) || (mode === "edit" && !exists)) {
-      isVerified = false;
-      return;
-    }
+submitBtn.disabled = false;
 
     document.getElementById("name").value = data.name;
     document.getElementById("phone").value = data.phone;
@@ -571,200 +520,75 @@ async function fetchData() {
     console.log(err);
   }
 }
-	
-function isValidID(value) {
-  return /^[A-Z0-9]+$/.test(value);
-}
 
-async function submitForm() {
-  if (!isVerified) {
-    errorMsg.innerText = "⚠️ Please verify service number first";
-    errorMsg.style.display = "block";
-    return;
-  }
-  let surveyor = null;
-  let editedBy = "";
+function reloadForm() {
 
-  if (mode === "edit") {
-    const editedInput = document.getElementById("editedBy");
-    const editedError = document.getElementById("editedByError");
-    editedBy = editedInput.value.trim();
-
-    if (!editedBy) {
-      editedError.style.display = "block";
-      editedInput.style.border = "2px solid red";
-      editedInput.focus();
-      return;
-    } else {
-      editedError.style.display = "none";
-      editedInput.style.border = "1px solid #ccc";
-    }
-  }
-
-  if (mode === "create") {
-    surveyor = document.getElementById("surveyor").value.trim();
-    if (!surveyor) {
-      alert("Please enter Surveyor Name");
-      return;
-    }
-  }
-  errorMsg.style.display = "none";
-  duplicateMsg.style.display = "none";
-
-  const panelIds = [
-    document.getElementById("panel1").value.trim(),
-    document.getElementById("panel2").value.trim(),
-    document.getElementById("panel3").value.trim(),
-    document.getElementById("panel4").value.trim()
-  ];
-  const inverterId = document.getElementById("inverterSerial").value.trim();
-  const panelInputs = ["panel1","panel2","panel3","panel4"];
-
-  for (let i = 0; i < panelIds.length; i++) {
-    const inputField = document.getElementById(panelInputs[i]);
-    if (panelIds[i] && !isValidID(panelIds[i])) {
-      inputField.style.border = "2px solid red";
-      errorMsg.innerText = `Panel ${i+1}: Only A-Z and 0-9 allowed`;
-      errorMsg.style.display = "block";
-      return;
-    } else {
-      inputField.style.border = "1px solid #ccc";
-    }
-  }
-
-  const inverterInput = document.getElementById("inverterSerial");
-  if (inverterId && !isValidID(inverterId)) {
-    inverterInput.style.border = "2px solid red";
-    errorMsg.innerText = "Inverter: Only A-Z and 0-9 allowed";
-    errorMsg.style.display = "block";
-    return;
-  } else {
-    inverterInput.style.border = "1px solid #ccc";
-  }
-	
-  if (!document.getElementById("service").value.trim()) {
-    document.getElementById("errorMsg").innerText = "Service Number is required";
-    document.getElementById("errorMsg").style.display = "block";
-    return;
-  }
-
-  loading.innerHTML = "Uploading... Please wait ⏳";
-  loading.style.display = "block";
-  submitBtn.innerText = "Uploading...";
-  submitBtn.disabled = true;
-
-  const [panelsData, inverterData, earthData, billData, aadharData, doc1Data, doc2Data] = await Promise.all([
-    compressImage(document.getElementById("panels")),
-    compressImage(document.getElementById("inverter")),
-    compressImage(document.getElementById("earth")),
-    compressImage(document.getElementById("bill")),
-    compressImage(document.getElementById("aadhar")),
-    compressImage(document.getElementById("doc1")),
-    compressImage(document.getElementById("doc2"))
-  ]);
-
-  const data = {
-    mode: mode,
-    serviceNumber: document.getElementById("service").value,
-    name: document.getElementById("name").value,
-    phone: document.getElementById("phone").value,
-    address: document.getElementById("address").value,
-    division: document.getElementById("division").value,
-    subdivision: document.getElementById("subdivision").value,
-    section: document.getElementById("section").value,
-    distribution: document.getElementById("distribution").value,
-    panels: panelsData,
-    panel1: document.getElementById("panel1").value,
-    panel2: document.getElementById("panel2").value,
-    panel3: document.getElementById("panel3").value,
-    panel4: document.getElementById("panel4").value,
-    inverter: inverterData,
-    inverterSerial: document.getElementById("inverterSerial").value,
-    earth: earthData,
-    bill: billData,
-    aadhar: aadharData,
-    doc1: doc1Data,
-    doc2: doc2Data,
-    surveyor: surveyor,
-    editedBy: editedBy
-  };
-
-  try {
-    const res = await fetch("https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec", {
-      method: "POST",
-      body: JSON.stringify(data)
-    });
-    const result = await res.json();
-    loading.style.display = "none";
-
-    if (result.status === "NOT_FOUND") {
-      errorMsg.innerText = "❌ Service number not found for editing";
-      errorMsg.style.display = "block";
-      submitBtn.innerText = "Submit";
-      submitBtn.disabled = false;
-      return;
-    }
-
-    if (result.status === "ALREADY_SUBMITTED") {
-      if (mode === "create") {
-        duplicateMsg.innerText = "This service number already exists";
-        duplicateMsg.style.display = "block";
-        submitBtn.innerText = "Submit";
-        submitBtn.disabled = false;
-        return;
-      }
-      formScreen.style.display = "none";
-      successScreen.style.display = "block";
-      submitBtn.innerText = "Submit";
-      submitBtn.disabled = false;
-      return;
-    }
-
-    submitBtn.innerText = "Submit";
-    formScreen.style.display = "none";
-    loading.innerHTML = "Loading... ⏳";
-    successScreen.style.display = "block";
-  } catch (err) {
-    loading.innerHTML = "Loading... ⏳";
-    loading.style.display = "none";
-    submitBtn.innerText = "Submit";
-    alert("Submission failed");
-    console.log(err);
-  }
-  submitBtn.disabled = false;
-}
-
-function reloadForm(){
   formScreen.style.display = "block";
   successScreen.style.display = "none";
 
-  ["service","name","phone","address","division","subdivision","section","distribution","panel1","panel2","panel3","panel4","inverterSerial","surveyor","editedBy"].forEach(id => {
+  [
+    "service",
+    "name",
+    "phone",
+    "address",
+    "division",
+    "subdivision",
+    "section",
+    "distribution",
+    "dpanel1",
+    "dpanel2",
+    "dpanel3",
+    "dpanel4",
+    "dinverterNo",
+    "materialSurveyor"
+  ].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = "";
   });
 
-  ["panels","inverter","earth","bill","aadhar","doc1","doc2"].forEach(id => {
+  [
+    "panelImg1",
+    "panelImg2",
+    "panelImg3",
+    "panelImg4",
+    "dinverter",
+    "panelsPhoto",
+    "bosPhoto",
+    "deliveryProof"
+  ].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = "";
   });
 
   errorMsg.style.display = "none";
   duplicateMsg.style.display = "none";
+
   isVerified = false;
   submitBtn.disabled = false;
-  lockFields(false);
+  submitBtn.innerText = "Submit";
 
   const serviceInput = document.getElementById("service");
   serviceInput.readOnly = false;
   serviceInput.style.background = "#eee";
-
-  document.querySelectorAll(".delete-btn").forEach(btn => { btn.style.display = "none"; });
   serviceInput.focus();
+
+  document.querySelectorAll(".delete-btn").forEach(btn => {
+    btn.style.display = "none";
+  });
 }
 
 function clearFields(){
-  ["name","phone","address","division","subdivision","section","distribution","surveyor","editedBy"].forEach(id => {
-    document.getElementById(id).value = "";
+  [
+    "name",
+    "phone",
+    "address",
+    "division",
+    "subdivision",
+    "section",
+    "distribution"
+  ].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.value = "";
   });
 }
 
@@ -774,10 +598,6 @@ function resetMessages(){
   submitBtn.disabled = false;
   isVerified = false;
   lockFields(false);
-  const editedInput = document.getElementById("editedBy");
-  if (editedInput) editedInput.style.border = "1px solid #ccc";
-  const editedError = document.getElementById("editedByError");
-  if (editedError) editedError.style.display = "none";
 }
 	
 function openDashboard() {
@@ -785,7 +605,9 @@ function openDashboard() {
 }
 function showDelete(input) {
   const btn = input.parentElement.querySelector(".delete-btn");
-  btn.style.display = input.files.length ? "block" : "none";
+  if (btn) {
+    btn.style.display = input.files.length ? "block" : "none";
+  }
   input.style.background = "#eee";
 }
 
@@ -793,7 +615,9 @@ function removeFile(id) {
   const input = document.getElementById(id);
   input.value = "";
   input.style.background = "#eee";
-  input.parentElement.querySelector(".delete-btn").style.display = "none";
+
+  const btn = input.parentElement.querySelector(".delete-btn");
+  if (btn) btn.style.display = "none";
 }
 
 function toggleMenu() {
@@ -802,26 +626,21 @@ function toggleMenu() {
   menu.classList.toggle("open");
   overlay.style.display = menu.classList.contains("open") ? "block" : "none";
 }
-
-function setMode(selectedMode) {
-  window.location.href = `index.html?mode=${selectedMode}&t=${Date.now()}`;
-}
 	
 // REAL-TIME FORMATTING AS USER TYPES MANUALLY
-["panel1","panel2","panel3","panel4","inverterSerial"].forEach(id => {
+["dpanel1","dpanel2","dpanel3","dpanel4","dinverterNo"].forEach(id => {
   const input = document.getElementById(id);
   if (!input) return;
 
   input.addEventListener("input", () => {
     let cleanValue = input.value.toUpperCase();
-    
-    // Auto-strip manual paste or manual typing string prefix errors instantly
+
     if (cleanValue.startsWith("C1ICON") || cleanValue.startsWith("C1ADMSP")) {
       cleanValue = cleanValue.substring(2);
     } else if (cleanValue.startsWith("C1") && cleanValue.length > 10) {
       cleanValue = cleanValue.substring(2);
     }
-    
+
     input.value = cleanValue.replace(/[^A-Z0-9]/g, "");
     input.style.border = "1px solid #ccc";
   });
@@ -943,6 +762,114 @@ async function closeScanner() {
   document.getElementById("readerContainer").style.display = "none";
   document.getElementById("closeScanner").style.display = "none";
 }
+
+async function submitMaterialDelivery() {
+
+if (!isVerified) {
+errorMsg.innerText = "⚠️ Please verify service number first";
+errorMsg.style.display = "block";
+return;
+}
+
+loading.innerHTML = "Uploading... Please wait ⏳";
+loading.style.display = "block";
+submitBtn.disabled = true;
+submitBtn.innerText = "Uploading...";
+
+try {
+const [
+  panelImg1,
+  panelImg2,
+  panelImg3,
+  panelImg4,
+  inverterImg,
+  panelsPhoto,
+  bosPhoto,
+  deliveryProof
+] = await Promise.all([
+  compressImage(document.getElementById("panelImg1")),
+  compressImage(document.getElementById("panelImg2")),
+  compressImage(document.getElementById("panelImg3")),
+  compressImage(document.getElementById("panelImg4")),
+  compressImage(document.getElementById("dinverter")),
+  compressImage(document.getElementById("panelsPhoto")),
+  compressImage(document.getElementById("bosPhoto")),
+  compressImage(document.getElementById("deliveryProof"))
+]);
+
+const data = {
+  mode: "material",
+
+  serviceNumber: document.getElementById("service").value,
+  name: document.getElementById("name").value,
+  phone: document.getElementById("phone").value,
+  address: document.getElementById("address").value,
+  division: document.getElementById("division").value,
+  subdivision: document.getElementById("subdivision").value,
+  section: document.getElementById("section").value,
+  distribution: document.getElementById("distribution").value,
+
+  panelImg1,
+  panel1: document.getElementById("dpanel1").value,
+
+  panelImg2,
+  panel2: document.getElementById("dpanel2").value,
+
+  panelImg3,
+  panel3: document.getElementById("dpanel3").value,
+
+  panelImg4,
+  panel4: document.getElementById("dpanel4").value,
+
+  inverterImg,
+  inverterNo: document.getElementById("dinverterNo").value,
+
+  panelsPhoto,
+  bosPhoto,
+  deliveryProof,
+
+  materialSurveyor:
+    document.getElementById("materialSurveyor").value
+};
+
+const res = await fetch(
+  "https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec",
+  {
+    method: "POST",
+    body: JSON.stringify(data)
+  }
+);
+
+const result = await res.json();
+
+loading.style.display = "none";
+
+if (result.status === "SUCCESS") {
+
+  formScreen.style.display = "none";
+  successScreen.style.display = "block";
+
+} else {
+
+  alert(result.status || "Submission Failed");
+
+  submitBtn.disabled = false;
+  submitBtn.innerText = "Submit";
+}
+
+} catch (err) {
+	
+console.log(err);
+
+loading.style.display = "none";
+submitBtn.disabled = false;
+submitBtn.innerText = "Submit";
+
+alert("Submission Failed");
+
+}
+}
+
 </script>
 </body>
 </html>
