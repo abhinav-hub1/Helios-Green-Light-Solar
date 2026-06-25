@@ -487,10 +487,15 @@ async function fetchData() {
       return;
     }
 
-    const checkUrl = "https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec?action=search&division=" + encodeURIComponent(data.division) + "&field=service" + "&value=" + encodeURIComponent(service) + "&t=" + Date.now();
-    const checkRes = await fetch(checkUrl);
-    const checkData = await checkRes.json();
-    const exists = Array.isArray(checkData) && checkData.length > 0;
+const checkUrl =
+"https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec
+	?action=checkSubmitted&service="
++ encodeURIComponent(service)
++ "&t=" + Date.now();
+
+const checkRes = await fetch(checkUrl);
+const checkData = await checkRes.json();
+const exists = checkData.exists;
 
     loading.style.display = "none";
 if (exists) {
