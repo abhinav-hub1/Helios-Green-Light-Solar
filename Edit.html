@@ -240,8 +240,8 @@ input[readonly] {
 <div id="sideMenu" class="side-menu">
   <div class="menu-header">Solar Installation</div>
 	<div class="menu-item" onclick="setMode('delivery')">Material Delivery</div>
-  <div class="menu-item" onclick="setMode('create')">Create New</div>
-  <div class="menu-item" onclick="setMode('edit')">Edit Existing</div>
+  <div class="menu-item" onclick="setMode('create')">Create Document</div>
+  <div class="menu-item" onclick="setMode('edit')">Edit Document</div>
 </div>
 <div id="overlay" onclick="toggleMenu()"></div>
 	
@@ -261,10 +261,6 @@ input[readonly] {
     <input id="service" style="background:#eee;" placeholder="Enter Service Number" oninput="resetMessages()" onkeypress="handleKey(event)">
     <button class="icon-btn" onclick="fetchData()">🔍</button>
     <button class="icon-btn" onclick="reloadForm()">⟳</button>
-  </div>
-
-  <div id="duplicateMsg" style="color:red; display:none; margin-top:5px;">
-    ⚠️ This service number already submitted
   </div>
   <div id="errorMsg" class="error">Service Number not found</div>
 
@@ -297,25 +293,25 @@ input[readonly] {
 
     <label>Panel No.1</label>
     <div class="row">
-      <input type="text" id="panel1" placeholder="Scan Panel Number 1" readonly>
+      <input type="text" id="panel1" placeholder="Scan Panel Number 1">
       <button type="button" class="icon-btn" onclick="scanCode('panel1')">📷</button>
     </div>
 
     <label>Panel No.2</label>
     <div class="row">
-      <input type="text" id="panel2" placeholder="Scan Panel Number 2" readonly>
+      <input type="text" id="panel2" placeholder="Scan Panel Number 2">
       <button type="button" class="icon-btn" onclick="scanCode('panel2')">📷</button>
     </div>
 	
     <label>Panel No.3</label>
     <div class="row">
-      <input type="text" id="panel3" placeholder="Scan Panel Number 3" readonly>
+      <input type="text" id="panel3" placeholder="Scan Panel Number 3">
       <button type="button" class="icon-btn" onclick="scanCode('panel3')">📷</button>
     </div>
 
     <label>Panel No.4</label>
     <div class="row">
-      <input type="text" id="panel4" placeholder="Scan Panel Number 4" readonly>
+      <input type="text" id="panel4" placeholder="Scan Panel Number 4">
       <button type="button" class="icon-btn" onclick="scanCode('panel4')">📷</button>
     </div>
 
@@ -330,7 +326,7 @@ input[readonly] {
 
     <label>Inverter Serial Number</label>
     <div class="row">
-      <input type="text" id="inverterSerial" placeholder="Scan Inverter Serial Number" readonly>
+      <input type="text" id="inverterSerial" placeholder="Scan Inverter Serial Number">
       <button type="button" class="icon-btn" onclick="scanCode('inverterSerial')">📷</button>
     </div>
 
@@ -378,11 +374,6 @@ input[readonly] {
       <span class="material-icons">delete</span>
     </button>
   </div>
-	
-  <div class="form-group" id="surveyorGroup">
-    <label>Surveyor Name</label>
-    <input type="text" id="surveyor" placeholder="Enter Surveyor Name" required>
-  </div>
 
   <div class="form-group" id="editorGroup">
     <label>Edited By</label>
@@ -415,24 +406,11 @@ input[readonly] {
 let isVerified = false;
 const loading = document.getElementById("loading");
 const errorMsg = document.getElementById("errorMsg");
-const duplicateMsg = document.getElementById("duplicateMsg");
 const submitBtn = document.getElementById("submitBtn");
 const formScreen = document.getElementById("formScreen");
 const successScreen = document.getElementById("successScreen");
 
-let mode = "create";
-const params = new URLSearchParams(window.location.search);
-const urlMode = params.get("mode");
-
-if (urlMode === "delivery") {
-  mode = "delivery";
-}
-else if (urlMode === "edit") {
-  mode = "edit";
-}
-else {
-  mode = "create";
-}
+const mode = "edit";
 
 const titleEl = document.querySelector(".header-title");
 if (titleEl) {
@@ -446,15 +424,6 @@ else {
   titleEl.innerText = "Create New";
 }
 }
-if (mode === "edit") {
-  const surveyorField = document.getElementById("surveyorGroup");
-  if (surveyorField) surveyorField.style.display = "none";
-}
-if (mode === "create") {
-  const editorField = document.getElementById("editorGroup");
-  if (editorField) editorField.style.display = "none";
-}
-	
 function readFile(input) {
   return new Promise((resolve) => {
     const file = input.files[0];
@@ -496,7 +465,6 @@ async function compressImage(input) {
 }
 
 function handleKey(e){
-  document.getElementById("duplicateMsg").style.display = "none";
   document.getElementById("errorMsg").style.display = "none";
   loading.innerHTML = "Loading... ⏳";
   if(e.key==="Enter") fetchData();
@@ -507,65 +475,17 @@ async function fetchData() {
   const serviceInput = document.getElementById("service");
   const service = serviceInput.value.trim();
   if (!service) return;
-
-  duplicateMsg.style.display = "none";
+	
   errorMsg.style.display = "none";
   loading.innerHTML = "Loading... ⏳";
   loading.style.display = "block";
 
   try {
-    const res = await fetch("https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec?service=" + service);
-    const data = await res.json();
-
-    if (!data || data.name === "NOT FOUND") {
-      loading.style.display = "none";
-      errorMsg.innerText = "❌ Service Number not found";
-      errorMsg.style.display = "block";
-      clearFields();
-      lockFields(false);
-      submitBtn.disabled = true;
-      return;
-    }
-
-    const checkUrl = "https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec?action=search&division=" + encodeURIComponent(data.division) + "&field=service" + "&value=" + encodeURIComponent(service) + "&t=" + Date.now();
     const checkRes = await fetch(checkUrl);
     const checkData = await checkRes.json();
     const exists = Array.isArray(checkData) && checkData.length > 0;
 
     loading.style.display = "none";
-
-    if (mode === "create") {
-      serviceInput.readOnly = false;
-      if (exists) {
-        duplicateMsg.innerText = "⚠️ Service already submitted";
-        duplicateMsg.style.display = "block";
-        lockFields(true);
-        submitBtn.disabled = true;
-      } else {
-        lockFields(false);
-        submitBtn.disabled = false;
-      }
-    }
-
-    if (mode === "edit") {
-      serviceInput.readOnly = true;
-      serviceInput.style.background = "#e0e0e0";
-      if (!exists) {
-        errorMsg.innerText = "❌ Service number not submitted";
-        errorMsg.style.display = "block";
-        submitBtn.disabled = true;
-        lockFields(false);
-      } else {
-        errorMsg.style.display = "none";
-        lockFields(true);
-        submitBtn.disabled = false;
-      }
-    }
-
-    if ((mode === "create" && exists) || (mode === "edit" && !exists)) {
-      isVerified = false;
-      return;
-    }
 
     document.getElementById("name").value = data.name;
     document.getElementById("phone").value = data.phone;
@@ -595,7 +515,6 @@ async function submitForm() {
     errorMsg.style.display = "block";
     return;
   }
-  let surveyor = null;
   let editedBy = "";
 
   if (mode === "edit") {
@@ -613,16 +532,7 @@ async function submitForm() {
       editedInput.style.border = "1px solid #ccc";
     }
   }
-
-  if (mode === "create") {
-    surveyor = document.getElementById("surveyor").value.trim();
-    if (!surveyor) {
-      alert("Please enter Surveyor Name");
-      return;
-    }
-  }
   errorMsg.style.display = "none";
-  duplicateMsg.style.display = "none";
 
   const panelIds = [
     document.getElementById("panel1").value.trim(),
@@ -698,7 +608,6 @@ async function submitForm() {
     aadhar: aadharData,
     doc1: doc1Data,
     doc2: doc2Data,
-    surveyor: surveyor,
     editedBy: editedBy
   };
 
@@ -719,13 +628,6 @@ async function submitForm() {
     }
 
     if (result.status === "ALREADY_SUBMITTED") {
-      if (mode === "create") {
-        duplicateMsg.innerText = "This service number already exists";
-        duplicateMsg.style.display = "block";
-        submitBtn.innerText = "Submit";
-        submitBtn.disabled = false;
-        return;
-      }
       formScreen.style.display = "none";
       successScreen.style.display = "block";
       submitBtn.innerText = "Submit";
@@ -751,7 +653,7 @@ function reloadForm(){
   formScreen.style.display = "block";
   successScreen.style.display = "none";
 
-  ["service","name","phone","address","division","subdivision","section","distribution","panel1","panel2","panel3","panel4","inverterSerial","surveyor","editedBy"].forEach(id => {
+  ["service","name","phone","address","division","subdivision","section","distribution","panel1","panel2","panel3","panel4","inverterSerial","editedBy"].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = "";
   });
@@ -762,7 +664,6 @@ function reloadForm(){
   });
 
   errorMsg.style.display = "none";
-  duplicateMsg.style.display = "none";
   isVerified = false;
   submitBtn.disabled = false;
   lockFields(false);
@@ -776,13 +677,12 @@ function reloadForm(){
 }
 
 function clearFields(){
-  ["name","phone","address","division","subdivision","section","distribution","surveyor","editedBy"].forEach(id => {
+  ["name","phone","address","division","subdivision","section","distribution","editedBy"].forEach(id => {
     document.getElementById(id).value = "";
   });
 }
 
 function resetMessages(){
-  duplicateMsg.style.display = "none";
   errorMsg.style.display = "none";
   submitBtn.disabled = false;
   isVerified = false;
@@ -814,10 +714,6 @@ function toggleMenu() {
   const overlay = document.getElementById("overlay");
   menu.classList.toggle("open");
   overlay.style.display = menu.classList.contains("open") ? "block" : "none";
-}
-
-function setMode(selectedMode) {
-  window.location.href = `index.html?mode=${selectedMode}&t=${Date.now()}`;
 }
 	
 // REAL-TIME FORMATTING AS USER TYPES MANUALLY
