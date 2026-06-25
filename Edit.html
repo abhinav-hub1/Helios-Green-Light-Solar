@@ -471,22 +471,36 @@ function handleKey(e){
 }
 
 async function fetchData() {
-  isVerified = false;
-  const serviceInput = document.getElementById("service");
-  const service = serviceInput.value.trim();
+
+  const service = document.getElementById("service").value.trim();
+
   if (!service) return;
-	
-  errorMsg.style.display = "none";
-  loading.innerHTML = "Loading... ⏳";
+
   loading.style.display = "block";
+  errorMsg.style.display = "none";
 
   try {
-    const checkRes = await fetch(checkUrl);
-    const checkData = await checkRes.json();
-    const exists = Array.isArray(checkData) && checkData.length > 0;
+
+    const res = await fetch(
+      "https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec?action=getSubmission&service=" +
+      encodeURIComponent(service)
+    );
+
+    const data = await res.json();
 
     loading.style.display = "none";
 
+  if (!data.found) {
+    isVerified = false;
+	  clearFields();
+    errorMsg.innerText = "Service Number not found";
+    errorMsg.style.display = "block";
+    return;
+}
+
+    isVerified = true;
+	lockFields(true);
+	  
     document.getElementById("name").value = data.name;
     document.getElementById("phone").value = data.phone;
     document.getElementById("address").value = data.address;
@@ -494,15 +508,27 @@ async function fetchData() {
     document.getElementById("subdivision").value = data.subdivision;
     document.getElementById("section").value = data.section;
     document.getElementById("distribution").value = data.distribution;
-    isVerified = true;
+
+    document.getElementById("panel1").value = data.panel1;
+    document.getElementById("panel2").value = data.panel2;
+    document.getElementById("panel3").value = data.panel3;
+    document.getElementById("panel4").value = data.panel4;
+
+    document.getElementById("inverterSerial").value =
+      data.inverterSerial;
 
   } catch (err) {
+
     loading.style.display = "none";
-    errorMsg.innerText = "❌ Network error. Try again.";
+
+    errorMsg.innerText = "Network Error";
+
     errorMsg.style.display = "block";
-    submitBtn.disabled = true;
+
     console.log(err);
+
   }
+
 }
 	
 function isValidID(value) {
@@ -627,18 +653,33 @@ async function submitForm() {
       return;
     }
 
-    if (result.status === "ALREADY_SUBMITTED") {
-      formScreen.style.display = "none";
-      successScreen.style.display = "block";
-      submitBtn.innerText = "Submit";
-      submitBtn.disabled = false;
-      return;
-    }
+   if (result.status === "UPDATED") {
 
-    submitBtn.innerText = "Submit";
-    formScreen.style.display = "none";
-    loading.innerHTML = "Loading... ⏳";
-    successScreen.style.display = "block";
+  submitBtn.innerText = "Submit";
+  submitBtn.disabled = false;
+
+  formScreen.style.display = "none";
+  successScreen.style.display = "block";
+
+  return;
+}
+
+if (result.status === "NOT_FOUND") {
+
+  errorMsg.innerText = "Service Number not found";
+  errorMsg.style.display = "block";
+
+  submitBtn.innerText = "Submit";
+  submitBtn.disabled = false;
+
+  return;
+}
+
+errorMsg.innerText = result.status || "Update Failed";
+errorMsg.style.display = "block";
+
+submitBtn.innerText = "Submit";
+submitBtn.disabled = false;
   } catch (err) {
     loading.innerHTML = "Loading... ⏳";
     loading.style.display = "none";
@@ -676,8 +717,22 @@ function reloadForm(){
   serviceInput.focus();
 }
 
-function clearFields(){
-  ["name","phone","address","division","subdivision","section","distribution","editedBy"].forEach(id => {
+function clearFields() {
+  [
+    "name",
+    "phone",
+    "address",
+    "division",
+    "subdivision",
+    "section",
+    "distribution",
+    "panel1",
+    "panel2",
+    "panel3",
+    "panel4",
+    "inverterSerial",
+    "editedBy"
+  ].forEach(id => {
     document.getElementById(id).value = "";
   });
 }
