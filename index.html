@@ -481,6 +481,7 @@ async function fetchData() {
       loading.style.display = "none";
       errorMsg.innerText = "❌ Service Number not found";
       errorMsg.style.display = "block";
+		
       clearFields();
       lockFields(false);
       submitBtn.disabled = true;
@@ -488,8 +489,7 @@ async function fetchData() {
     }
 
 const checkUrl =
-"https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec
-	?action=checkSubmitted&service="
+"https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec?action=checkSubmitted&service="
 + encodeURIComponent(service)
 + "&t=" + Date.now();
 
