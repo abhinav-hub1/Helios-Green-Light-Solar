@@ -477,33 +477,69 @@ async function fetchData() {
     const res = await fetch("https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec?service=" + service);
     const data = await res.json();
 
-    if (!data || data.name === "NOT FOUND") {
-      loading.style.display = "none";
-      errorMsg.innerText = "❌ Service Number not found";
-      errorMsg.style.display = "block";
-		
-      clearFields();
-      lockFields(false);
-      submitBtn.disabled = true;
-      return;
-    }
+if (!data.found) {
+    loading.style.display = "none";
 
-const checkUrl =
-"https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec?action=checkSubmitted&service="
-+ encodeURIComponent(service)
-+ "&t=" + Date.now();
+    errorMsg.innerText = "❌ Service Number does not exist";
+    errorMsg.style.display = "block";
 
-const checkRes = await fetch(checkUrl);
-const checkData = await checkRes.json();
-const exists = checkData.exists;
+    clearFields();
+    lockFields(false);
+
+    isVerified = false;
+    submitBtn.disabled = true;
+
+    return;
+}
+
+const materialRes = await fetch(
+"https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec" +
+"?action=checkMaterial&service=" +
+encodeURIComponent(service) +
+"&t=" + Date.now()
+);
+
+const materialData = await materialRes.json();
+
+if (materialData.exists) {
 
     loading.style.display = "none";
-if (exists) {
-  duplicateMsg.innerText = "⚠️ Material already delivered";
-  duplicateMsg.style.display = "block";
-  submitBtn.disabled = true;
-  isVerified = false;
-  return;
+
+    duplicateMsg.innerText =
+    "⚠️ Material already delivered";
+
+    duplicateMsg.style.display = "block";
+
+    submitBtn.disabled = true;
+    isVerified = false;
+
+    return;
+}
+
+// 2. Check Installation
+
+const installRes = await fetch(
+"https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec" +
+"?action=checkInstallation&service=" +
+encodeURIComponent(service) +
+"&t=" + Date.now()
+);
+
+const installData = await installRes.json();
+
+if (installData.exists) {
+
+    loading.style.display = "none";
+
+    duplicateMsg.innerText =
+    "⚠️ Service Number already submitted";
+
+    duplicateMsg.style.display = "block";
+
+    submitBtn.disabled = true;
+    isVerified = false;
+
+    return;
 }
 
 submitBtn.disabled = false;
@@ -516,6 +552,8 @@ submitBtn.disabled = false;
     document.getElementById("section").value = data.section;
     document.getElementById("distribution").value = data.distribution;
     isVerified = true;
+	  lockFields(true);
+	  	loading.style.display = "none";
 
   } catch (err) {
     loading.style.display = "none";
@@ -524,6 +562,7 @@ submitBtn.disabled = false;
     submitBtn.disabled = true;
     console.log(err);
   }
+
 }
 
 function reloadForm() {
@@ -827,7 +866,7 @@ const data = {
   panel4: document.getElementById("dpanel4").value,
 
   inverterImg,
-  inverterNo: document.getElementById("dinverterNo").value,
+  inverterSerial: document.getElementById("dinverterNo").value,
 
   panelsPhoto,
   bosPhoto,
