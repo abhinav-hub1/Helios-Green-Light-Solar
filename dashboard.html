@@ -10,107 +10,425 @@ body {
   margin: 0;
 }
 
-.header {
-  background: #1e88e5;
-  height: 55px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  color: white;
-  font-weight: bold;
+
+.header{
+
+height:60px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:space-between;
+
+padding:0 15px;
+
+background:#1565C0;
+
+color:white;
+
+box-shadow:0 3px 10px rgba(0,0,0,.15);
+
+position:sticky;
+
+top:0;
+
+z-index:999;
+
 }
 
-.back-btn { position: absolute; left: 12px; cursor: pointer; }
+.header-title{
 
-.search-btn {
-  background:  #1e88e5;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
+font-size:18px;
+
+font-weight:600;
+
+letter-spacing:.5px;
+
 }
 
-#searchPanel {
-  display: none;
-  margin: 10px;
-  background: #fff;
-  padding: 15px;
-  border-radius: 12px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+.profile-icon{
+
+font-size:22px;
+
+cursor:pointer;
+
 }
 
-.search-option {
-  padding: 8px;
-  margin-bottom: 5px;
-  background: #e3f2fd;
-  border-radius: 6px;
-  cursor: pointer;
+.back-btn{
+
+font-size:22px;
+
+cursor:pointer;
+
+}
+ .search-card{
+
+margin:15px;
+
+background:white;
+
+border-radius:16px;
+
+padding:18px;
+
+box-shadow:0 4px 12px rgba(0,0,0,.08);
+
 }
 
-#searchInputBox {
-  display: none;
-  margin-top: 10px;
+.search-title{
+
+font-size:17px;
+
+font-weight:bold;
+
+margin-bottom:15px;
+
+color:#1565C0;
+
 }
 
-input { width: 100%; padding: 8px; margin-bottom: 10px; }
+.search-row{
 
-button {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  margin-top: 5px;
+display:flex;
+
+flex-direction:column;
+
+gap:10px;
+
 }
 
-.search-action { background: #1e88e5; color: white; }
+.search-row select,
 
-.count-box {
-  text-align: center;
-  padding: 10px;
-  background: #e3f2fd;
-  font-weight: bold;
+.search-row input{
+
+height:45px;
+
+border:1px solid #ddd;
+
+border-radius:10px;
+
+padding:0 12px;
+
+font-size:15px;
+
 }
 
-.div-btn {
-  width: 90%;
-  padding: 16px;
-  margin: 12px auto;
-  display: block;
-  border-radius: 14px;
-  border: none;
-  background: linear-gradient(135deg, #1e88e5, #1565c0);
-  color: white;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
+.search-row button{
+
+height:45px;
+
+background:#1565C0;
+
+color:white;
+
+border:none;
+
+border-radius:10px;
+
+font-size:15px;
+
+cursor:pointer;
+
+}
+  .summary-grid{
+
+display:grid;
+
+grid-template-columns:1fr 1fr;
+
+gap:15px;
+
+margin:15px;
+
 }
 
-.div-btn.loading {
-  opacity: 0.6;
-  pointer-events: none;
+.summary-card{
+
+background:white;
+
+border-radius:16px;
+
+padding:18px;
+
+text-align:center;
+
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+
 }
 
-.container { padding: 10px; }
+.summary-icon{
 
-.card {
-  background: white;
-  padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 10px;
+font-size:30px;
+
+margin-bottom:10px;
+
 }
 
-.date-header {
-  font-weight: bold;
-  margin: 10px 5px;
-  color: #1e88e5;
+.summary-title{
+
+font-size:15px;
+
+font-weight:bold;
+
+color:#444;
+
 }
 
-.time { font-size: 12px; color: gray; }
-  button:disabled {
-  opacity: 0.6;
-  pointer-events: none;
+.summary-count{
+
+font-size:34px;
+
+font-weight:bold;
+
+margin-top:12px;
+
+color:#1565C0;
+
+}
+
+.summary-sub{
+
+margin-top:10px;
+
+color:#666;
+
+font-size:14px;
+
+}
+  .section-title{
+
+margin:18px 18px 8px;
+
+font-size:18px;
+
+font-weight:bold;
+
+color:#1565C0;
+
+}
+
+.division-grid{
+
+padding:0 15px 20px;
+
+display:flex;
+
+flex-direction:column;
+
+gap:15px;
+
+}
+
+.division-card{
+
+background:white;
+
+border-radius:16px;
+
+padding:18px;
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+cursor:pointer;
+
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+
+transition:.25s;
+
+border-left:6px solid #1565C0;
+
+}
+
+.division-card:hover{
+
+transform:translateY(-3px);
+
+box-shadow:0 8px 20px rgba(0,0,0,.15);
+
+}
+
+.division-left{
+
+display:flex;
+
+flex-direction:column;
+
+gap:8px;
+
+}
+
+.division-name{
+
+font-size:17px;
+
+font-weight:bold;
+
+color:#333;
+
+}
+
+.division-stats{
+
+display:flex;
+
+gap:20px;
+
+font-size:14px;
+
+color:#666;
+
+}
+
+.division-arrow{
+
+font-size:24px;
+
+color:#1565C0;
+
+}
+
+.division-card.loading{
+
+opacity:.6;
+
+pointer-events:none;
+
+}
+  #recentSection{
+
+margin:20px 15px;
+
+}
+
+.activity-card{
+
+background:white;
+
+padding:15px;
+
+border-radius:14px;
+
+margin-bottom:12px;
+
+box-shadow:0 3px 12px rgba(0,0,0,.08);
+
+cursor:pointer;
+
+transition:.25s;
+
+}
+
+.activity-card:hover{
+
+transform:translateY(-2px);
+
+}
+
+.activity-service{
+
+font-size:16px;
+
+font-weight:bold;
+
+color:#1565C0;
+
+}
+
+.activity-name{
+
+margin-top:5px;
+
+font-size:15px;
+
+}
+
+.activity-time{
+
+margin-top:8px;
+
+font-size:12px;
+
+color:#777;
+
+}
+
+.activity-empty{
+
+background:white;
+
+padding:20px;
+
+border-radius:14px;
+
+text-align:center;
+
+color:#888;
+
+}
+  .card{
+
+background:#fff;
+
+padding:16px;
+
+margin:12px 15px;
+
+border-radius:14px;
+
+box-shadow:0 4px 12px rgba(0,0,0,.08);
+
+cursor:pointer;
+
+transition:.25s;
+
+}
+
+.card:hover{
+
+transform:translateY(-2px);
+
+}
+
+.time{
+
+margin-top:8px;
+
+font-size:12px;
+
+color:#666;
+
+}
+
+.date-header{
+
+margin:18px 15px 8px;
+
+font-weight:bold;
+
+color:#1565C0;
+
+font-size:16px;
+
+}
+  .loading{
+
+animation:pulse 1s infinite;
+
+}
+
+@keyframes pulse{
+
+0%{opacity:1;}
+
+50%{opacity:.5;}
+
+100%{opacity:1;}
+
 }
 </style>
 </head>
@@ -118,108 +436,574 @@ button {
 <body>
 
 <div class="header">
-  <div class="back-btn" onclick="goBack()">←</div>
-  Dashboard
+
+    <div class="back-btn" onclick="goBack()">←</div>
+
+    <div class="header-title">
+        HELIOS GREEN LIGHT SOLAR
+    </div>
+
+    <div class="profile-icon">
+        👤
+    </div>
+
 </div>
 
-<div class="count-box" id="totalCount" style="display:none;"></div>
-<div id="searchBar" style="display:none; padding:10px; text-align:center;">
-  <button class="search-btn" onclick="toggleSearch()">Search By</button>
-</div>
-  <div id="searchPanel">
-  
- <div id="searchOptions">
-  <div class="search-option" onclick="selectSearch('service', 'Service Number')">Service Number</div>
-  <div class="search-option" onclick="selectSearch('name', 'Customer Name')">Customer Name</div>
-  <div class="search-option" onclick="selectSearch('phone', 'Phone Number')">Phone Number</div>
-  <div class="search-option" onclick="selectSearch('subdivision', 'Sub Division Name')">Sub Division Name</div>
-  <div class="search-option" onclick="selectSearch('section', 'Section Name')">Section Name</div>
-  <div class="search-option" onclick="selectSearch('distribution', 'Distribution Name')">Distribution Name</div>
+<div class="search-card">
 
-  <div class="search-option" onclick="selectDateFilter()">Filter By Date</div>
+<div class="search-title">
+🔍 Universal Search
 </div>
 
-<!-- ✅ DATE FILTER -->
-<div id="dateFilterBox" style="display:none;">
-  <label>From Date</label>
-  <input type="date" id="fromDate">
+<div class="search-row">
 
-  <label>To Date</label>
-  <input type="date" id="toDate">
+<select id="searchType">
 
-  <button id="applyBtn" class="search-action" onclick="applyDateFilter()">
-  Apply Filter
+<option value="service">Service Number</option>
+
+<option value="name">Customer Name</option>
+
+<option value="phone">Phone Number</option>
+
+<option value="subdivision">Sub Division</option>
+
+<option value="section">Section</option>
+
+<option value="distribution">Distribution</option>
+
+</select>
+
+<input
+id="searchInput"
+type="text"
+placeholder="Enter Search Value">
+
+<button onclick="performSearch()">
+
+Search
+
 </button>
-  <button onclick="clearDateFilter()" style="background:#ccc; margin-top:5px;">
-  Clear Filter
+
+</div>
+  <div style="text-align:right;padding:0 15px 10px;">
+
+<button onclick="loadData()"
+style="background:#1565C0;color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;">
+
+🔄 Refresh
+
 </button>
+
 </div>
 
-  <div id="searchInputBox" style="display:none;">
-    <div id="selectedLabel" style="margin-bottom:8px; font-weight:bold;"></div>
-    <input type="text" id="searchInput" placeholder="Enter value">
-    <button class="search-action" onclick="performSearch()">Search</button>
-  </div>
-    
 </div>
 
-<div id="divisionSection" style="padding:20px; text-align:center;">
-  <button id="btn1" class="div-btn" onclick="showDivision(event, 'Tadepalligudem')">Tadepalligudem</button>
-  <button id="btn2" class="div-btn" onclick="showDivision(event, 'Narsipatnam')">Narsipatnam</button>
-  <button id="btn3" class="div-btn" onclick="showDivision(event, 'Chirala')">Chirala</button>
-  <button id="btn4" class="div-btn" onclick="showDivision(event, 'Bapatla')">Bapatla</button>
+  <div class="summary-grid">
+
+<div class="summary-card">
+
+<div class="summary-icon">
+
+📦
+
 </div>
 
-<div class="container" id="data" style="display:none;"></div>
-<!-- DETAILS VIEW -->
-<div id="detailView" style="display:none; padding:15px;"></div>
+<div class="summary-title">
+
+Material Delivery
+
+</div>
+
+<div class="summary-count"
+
+id="deliveryCount">
+
+0
+
+</div>
+
+<div class="summary-sub">
+
+Today
+
+<span id="deliveryToday">
+
+0
+
+</span>
+
+</div>
+
+</div>
+
+<div class="summary-card">
+
+<div class="summary-icon">
+
+🔧
+
+</div>
+
+<div class="summary-title">
+
+Material Installation
+
+</div>
+
+<div class="summary-count"
+
+id="installationCount">
+
+0
+
+</div>
+
+<div class="summary-sub">
+
+Today
+
+<span id="installationToday">
+
+0
+
+</span>
+
+</div>
+
+</div>
+
+</div>
+<div class="section-title">
+    Divisions
+</div>
+
+<div id="divisionSection" class="division-grid">
+
+    <div class="division-card"
+         id="btn1"
+         onclick="showDivision(event,'Tadepalligudem')">
+
+        <div class="division-left">
+
+            <div class="division-name">
+                📍 Tadepalligudem
+            </div>
+
+            <div class="division-stats">
+                <span>Today : <b id="tadeToday">0</b></span>
+                <span>Total : <b id="tadeTotal">0</b></span>
+            </div>
+
+        </div>
+
+        <div class="division-arrow">
+            ➜
+        </div>
+
+    </div>
+
+
+    <div class="division-card"
+         id="btn2"
+         onclick="showDivision(event,'Narsipatnam')">
+
+        <div class="division-left">
+
+            <div class="division-name">
+                📍 Narsipatnam
+            </div>
+
+            <div class="division-stats">
+                <span>Today : <b id="narsiToday">0</b></span>
+                <span>Total : <b id="narsiTotal">0</b></span>
+            </div>
+
+        </div>
+
+        <div class="division-arrow">
+            ➜
+        </div>
+
+    </div>
+
+
+    <div class="division-card"
+         id="btn3"
+         onclick="showDivision(event,'Chirala')">
+
+        <div class="division-left">
+
+            <div class="division-name">
+                📍 Chirala
+            </div>
+
+            <div class="division-stats">
+                <span>Today : <b id="chiralaToday">0</b></span>
+                <span>Total : <b id="chiralaTotal">0</b></span>
+            </div>
+
+        </div>
+
+        <div class="division-arrow">
+            ➜
+        </div>
+
+    </div>
+
+
+    <div class="division-card"
+         id="btn4"
+         onclick="showDivision(event,'Bapatla')">
+
+        <div class="division-left">
+
+            <div class="division-name">
+                📍 Bapatla
+            </div>
+
+            <div class="division-stats">
+                <span>Today : <b id="bapatlaToday">0</b></span>
+                <span>Total : <b id="bapatlaTotal">0</b></span>
+            </div>
+
+        </div>
+
+        <div class="division-arrow">
+            ➜
+        </div>
+
+    </div>
+
+</div>
+  <div id="totalCount" style="display:none;"></div>
+
+<div id="data" style="display:none;"></div>
+
+<div id="detailView" style="display:none;"></div>
+  <div id="recentSection">
+
+    <div class="section-title">
+        Recent Activities
+    </div>
+
+    <div id="recentActivities">
+
+        <div class="activity-empty">
+            Loading...
+        </div>
+
+    </div>
+
+</div>
 <script>
-
-let fullData = [];
-let isProcessing = false;
-let selectedSearchType = "";
+  let fullData = [];
+let selectedDivision = "";
 let currentView = "home";
-  let selectedDivision = "";
+let isProcessing = false;
+  async function showDivision(e, divisionName) {
 
-// SEARCH UI
-function toggleSearch() {
-  const panel = document.getElementById("searchPanel");
+  selectedDivision = divisionName;
+  currentView = "division";
 
-  if (panel.style.display === "block") {
-    panel.style.display = "none";
-  } else {
-    panel.style.display = "block";
+  if (isProcessing) return;
+  isProcessing = true;
 
-    document.getElementById("searchOptions").style.display = "block";
-    document.getElementById("searchInputBox").style.display = "none";
+  const cards = document.querySelectorAll(".division-card");
 
-    // ✅ ADD THIS
-    document.getElementById("dateFilterBox").style.display = "none";
+  // Disable all cards
+  cards.forEach(card => {
+    card.style.pointerEvents = "none";
+    card.classList.add("loading");
+  });
+
+  const clickedCard = e.currentTarget;
+
+  // Show loading icon only on clicked card
+  const arrow = clickedCard.querySelector(".division-arrow");
+  const oldArrow = arrow.innerHTML;
+  arrow.innerHTML = "⏳";
+
+  try {
+
+    // Load data only once
+    if (!fullData.length) {
+      await loadData();
+    }
+
+    // Filter selected division
+    let divisionData = fullData.filter(item => {
+
+      const div = (item.division || "")
+        .toString()
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, "");
+
+      return div === divisionName
+        .toLowerCase()
+        .replace(/\s+/g, "");
+
+    });
+
+    // Today's data
+    const today = getTodayIST();
+
+    const todayData = divisionData.filter(item => {
+
+      const d = toIST(item.timestamp);
+
+      if (!d) return false;
+
+      return (
+        d.getFullYear() === today.getFullYear() &&
+        d.getMonth() === today.getMonth() &&
+        d.getDate() === today.getDate()
+      );
+
+    });
+
+    // Hide home cards
+    document.getElementById("divisionSection").style.display = "none";
+
+    document.querySelector(".summary-grid").style.display = "none";
+
+    document.querySelector(".search-card").style.display = "none";
+
+    // Show list
+    document.getElementById("data").style.display = "block";
+
+    document.getElementById("totalCount").style.display = "block";
+
+    document.getElementById("recentSection").style.display="none";
+
+    document.getElementById("totalCount").innerHTML =
+      `<b>${divisionName}</b> &nbsp;&nbsp; | &nbsp;&nbsp;
+      Today : ${todayData.length}
+      &nbsp;&nbsp; | &nbsp;&nbsp;
+      Total : ${divisionData.length}`;
+
+    renderData(todayData);
+
+  } catch (err) {
+
+    alert("Error loading data");
+
+    console.error(err);
+
+  } finally {
+
+    // Enable cards again
+    cards.forEach(card => {
+
+      card.style.pointerEvents = "auto";
+
+      card.classList.remove("loading");
+
+    });
+
+    arrow.innerHTML = oldArrow;
+
+    isProcessing = false;
+
   }
+
 }
+  async function loadData() {
+    const btn = document.querySelector("button[onclick='loadData()']");
 
-function selectSearch(type, label) {
+btn.disabled = true;
+btn.innerText = "⏳ Refreshing...";
 
-  selectedSearchType = type;
+  try {
 
-  // hide all options
-  document.getElementById("searchOptions").style.display = "none";
+    const res = await fetch(
+      "https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec?type=all&t=" + Date.now()
+    );
 
-  // show input section
-  document.getElementById("searchInputBox").style.display = "block";
+    fullData = await res.json();
 
-  // show selected label
-  document.getElementById("selectedLabel").innerText = label;
+    // Remove blank timestamps
+    fullData = fullData.filter(item => item.timestamp);
 
-  // clear input
-  document.getElementById("searchInput").value = "";
+    // Update dashboard counts
+    updateDashboardCounts();
+    loadRecentActivities();
+
+  } catch (err) {
+
+    console.error(err);
+
+    alert("Unable to load dashboard data.");
+
+  }finally {
+
+        btn.disabled = false;
+        btn.innerText = "🔄 Refresh";
+
+    }
+    document.querySelector(".search-card").style.display = "block";
+document.querySelector(".summary-grid").style.display = "grid";
+document.getElementById("divisionSection").style.display = "flex";
+document.getElementById("recentSection").style.display = "block";
+
+document.getElementById("data").style.display = "none";
+document.getElementById("detailView").style.display = "none";
+document.getElementById("totalCount").style.display = "none";
+
+currentView = "home";
 }
-function selectDateFilter() {
-  document.getElementById("searchOptions").style.display = "none";
-  document.getElementById("searchInputBox").style.display = "none";
-  document.getElementById("dateFilterBox").style.display = "block";
+  function updateDashboardCounts() {
+
+    const today = getTodayIST();
+
+    let totalInstallation = 0;
+    let todayInstallation = 0;
+
+    let divisions = {
+
+        Tadepalligudem:{today:0,total:0},
+        Narsipatnam:{today:0,total:0},
+        Chirala:{today:0,total:0},
+        Bapatla:{today:0,total:0}
+
+    };
+
+    fullData.forEach(item=>{
+
+        totalInstallation++;
+
+        const div=(item.division||"").trim();
+
+        if(divisions[div]){
+
+            divisions[div].total++;
+
+        }
+
+        const d=toIST(item.timestamp);
+
+        if(!d) return;
+
+        if(
+
+            d.getFullYear()==today.getFullYear() &&
+            d.getMonth()==today.getMonth() &&
+            d.getDate()==today.getDate()
+
+        ){
+
+            todayInstallation++;
+
+            if(divisions[div]){
+
+                divisions[div].today++;
+
+            }
+
+        }
+
+    });
+
+    // Installation Card
+
+    document.getElementById("installationCount").innerText=totalInstallation;
+
+    document.getElementById("installationToday").innerText=todayInstallation;
+
+    // Delivery Card
+    // (Until delivery data is connected)
+
+    document.getElementById("deliveryCount").innerText="-";
+
+    document.getElementById("deliveryToday").innerText="-";
+
+    // Division Cards
+
+    document.getElementById("tadeToday").innerText=divisions.Tadepalligudem.today;
+    document.getElementById("tadeTotal").innerText=divisions.Tadepalligudem.total;
+
+    document.getElementById("narsiToday").innerText=divisions.Narsipatnam.today;
+    document.getElementById("narsiTotal").innerText=divisions.Narsipatnam.total;
+
+    document.getElementById("chiralaToday").innerText=divisions.Chirala.today;
+    document.getElementById("chiralaTotal").innerText=divisions.Chirala.total;
+
+    document.getElementById("bapatlaToday").innerText=divisions.Bapatla.today;
+    document.getElementById("bapatlaTotal").innerText=divisions.Bapatla.total;
+
 }
-  async function performSearch() {
+  function loadRecentActivities(){
+
+    const container=document.getElementById("recentActivities");
+
+    container.innerHTML="";
+
+    if(!fullData.length){
+
+        container.innerHTML="<div class='activity-empty'>No Records</div>";
+
+        return;
+
+    }
+
+    const latest=[...fullData]
+    .sort((a,b)=>toIST(b.timestamp)-toIST(a.timestamp))
+    .slice(0,10);
+
+    latest.forEach(item=>{
+
+        const card=document.createElement("div");
+
+        card.className="activity-card";
+
+      card.innerHTML = `
+
+<div style="display:flex;justify-content:space-between;align-items:center;">
+
+<div>
+
+<div class="activity-service">
+${item.service}
+</div>
+
+<div class="activity-name">
+👤 ${item.name}
+</div>
+
+<div style="margin-top:6px;color:#666;font-size:13px;">
+📍 ${item.division}
+</div>
+
+<div style="margin-top:4px;color:#666;font-size:13px;">
+📞 ${item.phone}
+</div>
+
+</div>
+
+<div style="text-align:right;">
+
+<div style="color:#28a745;font-size:12px;font-weight:bold;">
+● Completed
+</div>
+
+<div class="activity-time">
+${item.timestamp}
+</div>
+
+</div>
+
+</div>
+
+`;
+
+        card.onclick=()=>openDetails(item);
+
+        container.appendChild(card);
+
+    });
+
+}
+   async function performSearch() {
 
     currentView = "search";
     if (!fullData.length) {
@@ -230,20 +1014,21 @@ function selectDateFilter() {
   if (!value) return;
 
  /*const divisionName = document.getElementById("totalCount").innerText.split("|")[0].trim();*/
-const divisionName = selectedDivision;
+const divisionName = "";
   const container = document.getElementById("data");
   container.innerHTML = "<p style='text-align:center;'>⏳ Searching...</p>";
 
   document.getElementById("divisionSection").style.display = "none";
   document.getElementById("data").style.display = "block";
   document.getElementById("totalCount").style.display = "block";
+     document.getElementById("recentSection").style.display="none";
 
   try {
 
     const url = "https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec"
       + "?action=search"
       + "&division=" + encodeURIComponent(divisionName)
-      + "&field=" + encodeURIComponent(selectedSearchType)
+      + "&field=" + encodeURIComponent(document.getElementById("searchType").value)
       + "&value=" + encodeURIComponent(value)
       + "&t=" + Date.now();
 
@@ -273,79 +1058,7 @@ renderData(enrichedResult);
   } catch (err) {
     container.innerHTML = "<p style='text-align:center;'>Error fetching data</p>";
   }
-
-  document.getElementById("searchPanel").style.display = "none";
 }
-
-// CLICK DIVISION
-async function showDivision(e, divisionName) {
-selectedDivision = divisionName;
-  currentView = "division";
-
-  if (isProcessing) return;
-  isProcessing = true;
-
-  const btn1 = document.getElementById("btn1");
-  const btn2 = document.getElementById("btn2");
-  const btn3 = document.getElementById("btn3");
-  const btn4 = document.getElementById("btn4");
-
-  const clickedBtn = e.currentTarget;
-
-  btn1.disabled = true;
-  btn2.disabled = true;
-  btn3.disabled = true;
-  btn4.disabled = true;
-
-  clickedBtn.innerText = "⏳ Loading...";
-  clickedBtn.classList.add("loading");
-
-  try {
-
-    if (!fullData.length) {
-      await loadData();
-    }
-
-    let divisionData = fullData.filter(item => {
-      const div = (item.division || "").toString().toLowerCase().trim();
-      return div.replace(/\s+/g, "") === divisionName.toLowerCase().replace(/\s+/g, "");
-    });
-
-    const today = getTodayIST();
-
-    const todayData = divisionData.filter(item => {
-      const d = toIST(item.timestamp);
-      if (!d) return false;
-      return d.getFullYear() === today.getFullYear() &&
-             d.getMonth() === today.getMonth() &&
-             d.getDate() === today.getDate();
-    });
-
-    document.getElementById("divisionSection").style.display = "none";
-    document.getElementById("data").style.display = "block";
-    document.getElementById("totalCount").style.display = "block";
-document.getElementById("searchBar").style.display = "block";
-    document.getElementById("totalCount").innerText =
-      `${divisionName} | Today: ${todayData.length} | Total: ${divisionData.length}`;
-
-    renderData(todayData);
-
-  } catch (err) {
-    alert("Error loading data");
-  }
-  clickedBtn.innerText = divisionName;
-clickedBtn.classList.remove("loading");
-
-  isProcessing = false;
-}
-
-// FETCH
-async function loadData() {
-  const res = await fetch("https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec?type=all&t=" + Date.now());
-  fullData = await res.json();
-  fullData = fullData.filter(item => item.timestamp);
-}
-
 // DATE
 function toIST(dateInput) {
   if (!dateInput) return null;
@@ -426,6 +1139,7 @@ function renderData(data) {
   const detail = document.getElementById("detailView");
 
   document.getElementById("data").style.display = "none";
+    document.getElementById("totalCount").style.display="none";
   detail.style.display = "block";
 
  function val(v) {
@@ -434,111 +1148,83 @@ function renderData(data) {
   return cleaned !== "" ? cleaned : "-";
 }
 
-  function link(url) {
-    return url ? `<a href="${url}" target="_blank">View</a>` : "-";
-  }
+ function link(url){
 
-  detail.innerHTML = `
-    <div class="card" style="position:relative;">
+if(!url) return "-";
 
-      <!-- ❌ CLOSE BUTTON -->
-      <span onclick="closeDetails()" 
-        style="position:absolute; top:10px; right:15px; font-size:20px; cursor:pointer;">
-        ❌
-      </span>
+return `<a href="${url}" target="_blank"
+style="
+display:inline-block;
+padding:8px 14px;
+background:#1565C0;
+color:#fff;
+border-radius:8px;
+text-decoration:none;
+margin-top:5px;
+">
 
-      <h3 style="text-align:center;">Service Details</h3>
+📷 View Image
 
-      <b>Service No:</b> ${val(item.service)}<br><br>
-      <b>Name:</b> ${val(item.name)}<br><br>
-      <b>Phone:</b> ${val(item.phone)}<br><br>
-      <b>Address:</b> ${val(item.address)}<br><br>
+</a>`;
 
-      <b>Division:</b> ${val(item.division)}<br><br>
-      <b>Subdivision:</b> ${val(item.subdivision)}<br><br>
-      <b>Section:</b> ${val(item.section)}<br><br>
-      <b>Distribution:</b> ${val(item.distribution)}<br><br>
-
-    <b>Panel No 1:</b> ${val(item.panel1)}<br><br>
-<b>Panel No 2:</b> ${val(item.panel2)}<br><br>
-<b>Panel No 3:</b> ${val(item.panel3)}<br><br>
-<b>Panel No 4:</b> ${val(item.panel4)}<br><br>
-
-<b>Inverter Service No:</b> ${val(item.inverterSerial)}<br><br>
-
-      <hr>
-
-      <b>Panel Image:</b><br>
-      ${link(item.panels)}<br><br>
-
-      <b>Inverter Image:</b><br>
-      ${link(item.inverter)}<br><br>
-
-      <b>Earth Image:</b><br>
-      ${link(item.earth)}<br><br>
-
-      <b>Current Bill:</b><br>
-      ${link(item.bill)}<br><br>
-
-      <b>Aadhar Card:</b><br>
-      ${link(item.aadhar)}<br><br>
-
-      <b>Document 1:</b><br>
-      ${link(item.doc1)}<br><br>
-
-      <b>Document 2:</b><br>
-      ${link(item.doc2)}<br><br>
-
-    </div>
-  `;
 }
+  detail.innerHTML = `
+<h2>Service Details</h2>
+
+<p><b>Service No:</b> ${val(item.service)}</p>
+
+<p><b>Customer:</b> ${val(item.name)}</p>
+
+<p><b>Phone:</b> ${val(item.phone)}</p>
+
+<p><b>Division:</b> ${val(item.division)}</p>
+
+<p><b>Surveyor:</b> ${val(item.surveyor)}</p>
+
+<p><b>Edited By:</b> ${val(item.editedBy)}</p>
+
+<p><b>Panel Image:</b><br>${link(item.panels)}</p>
+
+<p><b>Inverter Image:</b><br>${link(item.inverter)}</p>
+
+<p><b>Earth Image:</b><br>${link(item.earth)}</p>
+
+<button onclick="closeDetails()">⬅ Back</button>
+`;
+  }
+    
 // BACK
 function goBack() {
 
-  if (currentView === "search" || currentView === "division" || currentView === "details") {
+    if (currentView === "details") {
 
-    document.getElementById("data").style.display = "none";
-    document.getElementById("divisionSection").style.display = "block";
+        closeDetails();
+        return;
 
-    document.getElementById("totalCount").style.display = "none";
-    document.getElementById("searchBar").style.display = "none";
-    document.getElementById("searchPanel").style.display = "none";
-document.getElementById("detailView").style.display = "none";
-    currentView = "home";
+    }
 
-  } else {
+    if (currentView === "division" || currentView === "search") {
+
+        loadData();
+        return;
+
+    }
+
     window.location.href = "index.html";
-  }
 
-  // reset buttons
-  const btn1 = document.getElementById("btn1");
-  const btn2 = document.getElementById("btn2");
-  const btn3 = document.getElementById("btn3");
-  const btn4 = document.getElementById("btn4");
-
-  btn1.disabled = false;
-  btn2.disabled = false;
-  btn3.disabled = false;
-  btn4.disabled = false;
-
-  btn1.innerText = "Tadepalligudem";
-  btn2.innerText = "Narsipatnam";
-  btn3.innerText = "Chirala";
-  btn4.innerText = "Bapatla";
-
-  btn1.classList.remove("loading");
-  btn2.classList.remove("loading");
-  btn3.classList.remove("loading");
-  btn4.classList.remove("loading");
-
-  isProcessing = false;
-}
-  function closeDetails() {
-  document.getElementById("detailView").style.display = "none";
-  document.getElementById("data").style.display = "block";
-  currentView = "division";
 }
 
+  function closeDetails(){
+
+document.getElementById("detailView").style.display="none";
+
+document.getElementById("data").style.display="block";
+
+document.getElementById("totalCount").style.display="block";
+
+currentView="division";
+
+}
 async function applyDateFilter() {
 
   const btn = document.getElementById("applyBtn");
@@ -608,9 +1294,6 @@ document.getElementById("totalCount").style.display = "block";
   document.getElementById("fromDate").value = "";
   document.getElementById("toDate").value = "";
 
-  // close search panel
-  document.getElementById("searchPanel").style.display = "none";
-
   // reload selected division data
  let btn;
 
@@ -633,7 +1316,20 @@ if (selectedDivision === "Tadepalligudem") {
 
   showDivision({ currentTarget: btn }, selectedDivision);
 }
-</script>
+    
+  window.onload = async function () {
+    document.getElementById("searchInput")
+.addEventListener("keypress",function(e){
 
+if(e.key==="Enter"){
+
+performSearch();
+
+}
+
+});
+    await loadData();
+};
+</script>
 </body>
 </html>
