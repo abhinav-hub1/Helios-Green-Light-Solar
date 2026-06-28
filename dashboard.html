@@ -10,41 +10,26 @@ body {
   margin: 0;
 }
 
-
 .header{
-
-height:60px;
-
-display:flex;
-
-align-items:center;
-
-justify-content:space-between;
-
-padding:0 15px;
-
-background:#1565C0;
-
-color:white;
-
-box-shadow:0 3px 10px rgba(0,0,0,.15);
-
-position:sticky;
-
-top:0;
-
-z-index:999;
-
+    height:60px;
+    display:flex;
+    align-items:center;
+    background:#1565C0;
+    color:white;
+    box-shadow:0 3px 10px rgba(0,0,0,.15);
+    position:sticky;
+    top:0;
+    z-index:999;
+    position:relative;
 }
-
 .header-title{
-
-font-size:18px;
-
-font-weight:600;
-
-letter-spacing:.5px;
-
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:18px;
+    font-weight:600;
+    letter-spacing:.5px;
+    white-space:nowrap;
 }
 
 .profile-icon{
@@ -297,41 +282,6 @@ color:#1565C0;
 opacity:.6;
 
 pointer-events:none;
-
-}
-
-.activity-service{
-
-font-size:16px;
-
-font-weight:bold;
-
-color:#1565C0;
-
-}
-
-
-.activity-time{
-
-margin-top:8px;
-
-font-size:12px;
-
-color:#777;
-
-}
-
-.activity-empty{
-
-background:white;
-
-padding:20px;
-
-border-radius:14px;
-
-text-align:center;
-
-color:#888;
 
 }
   .card{
@@ -587,49 +537,66 @@ Today
 
 </div>
   <div id="totalCount" style="display:none;"></div>
-  <div id="divisionSearch" class="search-card" style="display:none;">
+  
+<div id="divisionSearch" class="search-card" style="display:none;">
 
-    <div class="search-title">
-        🔍 Search in Division
-    </div>
+<div class="search-title">
+🔍 Search in Division
+</div>
 
-    <div class="search-row">
+<div class="search-row">
 
-        <select id="searchType">
+<select id="searchType">
 
-            <option value="service">Service Number</option>
-            <option value="name">Customer Name</option>
-            <option value="phone">Phone Number</option>
-            <option value="subdivision">Sub Division</option>
-            <option value="section">Section</option>
-            <option value="distribution">Distribution</option>
+<option value="service">Service Number</option>
+<option value="name">Customer Name</option>
+<option value="phone">Phone Number</option>
+<option value="subdivision">Sub Division</option>
+<option value="section">Section</option>
+<option value="distribution">Distribution</option>
 
-        </select>
+<option value="date">📅 Filter By Date</option>
 
-        <input
-            id="searchInput"
-            type="text"
-            placeholder="Enter Search Value">
+</select>
 
-        <div style="display:flex;gap:10px;margin-top:10px">
+<!-- Search Box -->
+<div id="searchBox">
+
+<input
+id="searchInput"
+type="text"
+placeholder="Enter Search Value">
+
+<button onclick="performSearch()">
+Search
+</button>
+
+</div>
+
+<!-- Date Filter -->
+<div id="dateBox" style="display:none;">
 
 <input type="date" id="fromDate">
 
 <input type="date" id="toDate">
 
+<div style="display:flex;gap:10px;margin-top:10px;">
+
+<button id="applyBtn"
+onclick="applyDateFilter()">
+Filter
+</button>
+
+<button onclick="clearDateFilter()">
+Clear
+</button>
+
 </div>
 
-<div style="display:flex;gap:10px;margin-top:10px">
-
-<button onclick="performSearch()">Search</button>
-
-<button id="applyBtn" onclick="applyDateFilter()">Filter</button>
-
-<button onclick="clearDateFilter()">Clear</button>
-
 </div>
 
 </div>
+
 </div>
 
 <div id="data" style="display:none;"></div>
@@ -665,9 +632,7 @@ let isProcessing = false;
   // Show loading icon only on clicked card
   const arrow = clickedCard.querySelector(".division-arrow");
   const oldArrow = arrow.innerHTML;
-  arrow.innerHTML = "⏳ Loading...";
-clickedCard.style.background = "#E3F2FD";
-
+  arrow.innerHTML = "⏳";
   try {
 
     // Load data only once
@@ -695,12 +660,16 @@ clickedCard.style.background = "#E3F2FD";
 
     document.querySelector(".summary-grid").style.display = "none";
 
-    // Show list
-    document.getElementById("data").style.display = "block";
-
     document.getElementById("totalCount").style.display = "block";
     
     document.getElementById("divisionSearch").style.display = "block";
+document.getElementById("searchType").value = "service";
+document.getElementById("searchInput").value = "";
+document.getElementById("fromDate").value = "";
+document.getElementById("toDate").value = "";
+
+document.getElementById("searchBox").style.display = "block";
+document.getElementById("dateBox").style.display = "none";
 
     const div = dashboard.divisions[divisionName];
 
@@ -728,7 +697,6 @@ const todayData = divisionData.filter(item => {
         d.getDate() === today.getDate();
 
 });
-
 renderData(todayData);
 
   } catch (err) {
@@ -745,8 +713,6 @@ renderData(todayData);
       card.style.pointerEvents = "auto";
 
       card.classList.remove("loading");
-      clickedCard.style.background = "";
-
     });
 
     arrow.innerHTML = oldArrow;
@@ -893,6 +859,7 @@ const enrichedResult = result.map(r => {
 
 // ✅ ADD THIS LINE
 renderData(enrichedResult);
+    document.getElementById("searchInput").value = "";
 
   } catch (err) {
     container.innerHTML = "<p style='text-align:center;'>Error fetching data</p>";
@@ -1041,9 +1008,25 @@ margin-top:5px;
 
     document.getElementById("data").style.display = "none";
 
+      document.getElementById("data").innerHTML = "";
+document.getElementById("detailView").innerHTML = "";
+document.getElementById("totalCount").innerHTML = "";
+
     document.getElementById("detailView").style.display = "none";
 
     document.getElementById("totalCount").style.display = "none";
+      
+      document.getElementById("searchType").value = "service";
+        
+document.getElementById("searchInput").value = "";
+      
+document.getElementById("fromDate").value = "";
+      
+document.getElementById("toDate").value = "";
+
+document.getElementById("searchBox").style.display = "block";
+      
+document.getElementById("dateBox").style.display = "none";
 
     currentView = "home";
 
@@ -1171,18 +1154,37 @@ if (selectedDivision === "Tadepalligudem") {
   showDivision({ currentTarget: btn }, selectedDivision);
 }
     
-  window.onload = async function () {
+ window.onload = async function () {
+
     document.getElementById("searchInput")
-.addEventListener("keypress",function(e){
+    .addEventListener("keypress", function(e){
 
-if(e.key==="Enter"){
+        if(e.key==="Enter"){
+            performSearch();
+        }
 
-performSearch();
+    });
 
-}
+    // Search / Date Filter Toggle
+    document.getElementById("searchType")
+    .addEventListener("change", function(){
 
-});
+        if(this.value === "date"){
+
+            document.getElementById("searchBox").style.display = "none";
+            document.getElementById("dateBox").style.display = "block";
+
+        }else{
+
+            document.getElementById("searchBox").style.display = "block";
+            document.getElementById("dateBox").style.display = "none";
+
+        }
+
+    });
+
     await loadData();
+
 };
 </script>
 </body>
