@@ -751,14 +751,15 @@ if (btn) {
 
   try {
 
-    const res = await fetch(
-      "https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec?type=all&t=" + Date.now()
-    );
+const [res, countRes] = await Promise.all([
 
-    fullData = await res.json();
-    const countRes = await fetch(
-  "https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec?action=dashboardCounts&t=" + Date.now()
-);
+  fetch("https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec" + "?type=all&t=" + Date.now()),
+
+  fetch("https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec" + "?action=dashboardCounts&t=" + Date.now())
+
+]);
+
+fullData = await res.json();
 
 dashboard = await countRes.json();
 
@@ -1015,7 +1016,23 @@ margin-top:5px;
 <button onclick="closeDetails()">⬅ Back</button>
 `;
   }
-    
+    function showHome(){
+
+    document.querySelector(".summary-grid").style.display = "grid";
+
+    document.getElementById("divisionSection").style.display = "flex";
+
+    document.getElementById("divisionSearch").style.display = "none";
+
+    document.getElementById("data").style.display = "none";
+
+    document.getElementById("detailView").style.display = "none";
+
+    document.getElementById("totalCount").style.display = "none";
+
+    currentView = "home";
+
+}
 // BACK
 function goBack() {
 
@@ -1026,13 +1043,13 @@ function goBack() {
 
     }
 
-    if (currentView === "division" || currentView === "search") {
+  if (currentView === "division" || currentView === "search") {
 
-        loadData();
-        return;
+    alert("Back clicked");
+showHome();
+    return;
 
-    }
-
+}
     window.location.href = "index.html";
 
 }
