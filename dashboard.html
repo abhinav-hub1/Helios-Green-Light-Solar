@@ -665,7 +665,8 @@ let isProcessing = false;
   // Show loading icon only on clicked card
   const arrow = clickedCard.querySelector(".division-arrow");
   const oldArrow = arrow.innerHTML;
-  arrow.innerHTML = "⏳";
+  arrow.innerHTML = "⏳ Loading...";
+clickedCard.style.background = "#E3F2FD";
 
   try {
 
@@ -715,7 +716,20 @@ Today <b>${div.deliveryToday}</b> |
 Total <b>${div.deliveryTotal}</b>
 `;
 
-    renderData(divisionData);
+   const today = getTodayIST();
+
+const todayData = divisionData.filter(item => {
+
+    const d = toIST(item.timestamp);
+
+    return d &&
+        d.getFullYear() === today.getFullYear() &&
+        d.getMonth() === today.getMonth() &&
+        d.getDate() === today.getDate();
+
+});
+
+renderData(todayData);
 
   } catch (err) {
 
@@ -731,6 +745,7 @@ Total <b>${div.deliveryTotal}</b>
       card.style.pointerEvents = "auto";
 
       card.classList.remove("loading");
+      clickedCard.style.background = "";
 
     });
 
@@ -1045,7 +1060,6 @@ function goBack() {
 
   if (currentView === "division" || currentView === "search") {
 
-    alert("Back clicked");
 showHome();
     return;
 
