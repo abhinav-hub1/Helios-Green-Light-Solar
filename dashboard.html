@@ -299,35 +299,6 @@ opacity:.6;
 pointer-events:none;
 
 }
-  #recentSection{
-
-margin:20px 15px;
-
-}
-
-.activity-card{
-
-background:white;
-
-padding:15px;
-
-border-radius:14px;
-
-margin-bottom:12px;
-
-box-shadow:0 3px 12px rgba(0,0,0,.08);
-
-cursor:pointer;
-
-transition:.25s;
-
-}
-
-.activity-card:hover{
-
-transform:translateY(-2px);
-
-}
 
 .activity-service{
 
@@ -339,13 +310,6 @@ color:#1565C0;
 
 }
 
-.activity-name{
-
-margin-top:5px;
-
-font-size:15px;
-
-}
 
 .activity-time{
 
@@ -442,59 +406,6 @@ animation:pulse 1s infinite;
     <div class="header-title">
         HELIOS GREEN LIGHT SOLAR
     </div>
-
-    <div class="profile-icon">
-        👤
-    </div>
-
-</div>
-
-<div class="search-card">
-
-<div class="search-title">
-🔍 Universal Search
-</div>
-
-<div class="search-row">
-
-<select id="searchType">
-
-<option value="service">Service Number</option>
-
-<option value="name">Customer Name</option>
-
-<option value="phone">Phone Number</option>
-
-<option value="subdivision">Sub Division</option>
-
-<option value="section">Section</option>
-
-<option value="distribution">Distribution</option>
-
-</select>
-
-<input
-id="searchInput"
-type="text"
-placeholder="Enter Search Value">
-
-<button onclick="performSearch()">
-
-Search
-
-</button>
-
-</div>
-  <div style="text-align:right;padding:0 15px 10px;">
-
-<button onclick="loadData()"
-style="background:#1565C0;color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;">
-
-🔄 Refresh
-
-</button>
-
-</div>
 
 </div>
 
@@ -676,30 +587,63 @@ Today
 
 </div>
   <div id="totalCount" style="display:none;"></div>
+  <div id="divisionSearch" class="search-card" style="display:none;">
+
+    <div class="search-title">
+        🔍 Search in Division
+    </div>
+
+    <div class="search-row">
+
+        <select id="searchType">
+
+            <option value="service">Service Number</option>
+            <option value="name">Customer Name</option>
+            <option value="phone">Phone Number</option>
+            <option value="subdivision">Sub Division</option>
+            <option value="section">Section</option>
+            <option value="distribution">Distribution</option>
+
+        </select>
+
+        <input
+            id="searchInput"
+            type="text"
+            placeholder="Enter Search Value">
+
+        <div style="display:flex;gap:10px;margin-top:10px">
+
+<input type="date" id="fromDate">
+
+<input type="date" id="toDate">
+
+</div>
+
+<div style="display:flex;gap:10px;margin-top:10px">
+
+<button onclick="performSearch()">Search</button>
+
+<button id="applyBtn" onclick="applyDateFilter()">Filter</button>
+
+<button onclick="clearDateFilter()">Clear</button>
+
+</div>
+
+</div>
+</div>
 
 <div id="data" style="display:none;"></div>
 
 <div id="detailView" style="display:none;"></div>
-  <div id="recentSection">
-
-    <div class="section-title">
-        Recent Activities
-    </div>
-
-    <div id="recentActivities">
-
-        <div class="activity-empty">
-            Loading...
-        </div>
-
-    </div>
-
-</div>
 <script>
-  let fullData = [];
+  
+let fullData = [];
+let dashboard = {};
 let selectedDivision = "";
 let currentView = "home";
 let isProcessing = false;
+
+  
   async function showDivision(e, divisionName) {
 
   selectedDivision = divisionName;
@@ -745,44 +689,33 @@ let isProcessing = false;
 
     });
 
-    // Today's data
-    const today = getTodayIST();
-
-    const todayData = divisionData.filter(item => {
-
-      const d = toIST(item.timestamp);
-
-      if (!d) return false;
-
-      return (
-        d.getFullYear() === today.getFullYear() &&
-        d.getMonth() === today.getMonth() &&
-        d.getDate() === today.getDate()
-      );
-
-    });
-
     // Hide home cards
     document.getElementById("divisionSection").style.display = "none";
 
     document.querySelector(".summary-grid").style.display = "none";
 
-    document.querySelector(".search-card").style.display = "none";
-
     // Show list
     document.getElementById("data").style.display = "block";
 
     document.getElementById("totalCount").style.display = "block";
+    
+    document.getElementById("divisionSearch").style.display = "block";
 
-    document.getElementById("recentSection").style.display="none";
+    const div = dashboard.divisions[divisionName];
 
-    document.getElementById("totalCount").innerHTML =
-      `<b>${divisionName}</b> &nbsp;&nbsp; | &nbsp;&nbsp;
-      Today : ${todayData.length}
-      &nbsp;&nbsp; | &nbsp;&nbsp;
-      Total : ${divisionData.length}`;
+document.getElementById("totalCount").innerHTML = `
+<b>${divisionName}</b><br><br>
 
-    renderData(todayData);
+🔧 Installation :
+Today <b>${div.installationToday}</b> |
+Total <b>${div.installationTotal}</b><br>
+
+📦 Material Delivery :
+Today <b>${div.deliveryToday}</b> |
+Total <b>${div.deliveryTotal}</b>
+`;
+
+    renderData(divisionData);
 
   } catch (err) {
 
@@ -809,10 +742,12 @@ let isProcessing = false;
 
 }
   async function loadData() {
-    const btn = document.querySelector("button[onclick='loadData()']");
+const btn = document.querySelector("button[onclick='loadData()']");
 
-btn.disabled = true;
-btn.innerText = "⏳ Refreshing...";
+if (btn) {
+    btn.disabled = true;
+    btn.innerText = "⏳ Refreshing...";
+}
 
   try {
 
@@ -821,13 +756,52 @@ btn.innerText = "⏳ Refreshing...";
     );
 
     fullData = await res.json();
+    const countRes = await fetch(
+  "https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec?action=dashboardCounts&t=" + Date.now()
+);
+
+dashboard = await countRes.json();
+
+document.getElementById("installationCount").innerText =
+dashboard.installation.total;
+
+document.getElementById("installationToday").innerText =
+dashboard.installation.today;
+
+document.getElementById("deliveryCount").innerText =
+dashboard.delivery.total;
+
+document.getElementById("deliveryToday").innerText =
+dashboard.delivery.today;
+
+// Division counts
+document.getElementById("tadeToday").innerText =
+dashboard.divisions.Tadepalligudem.installationToday;
+
+document.getElementById("tadeTotal").innerText =
+dashboard.divisions.Tadepalligudem.installationTotal;
+
+document.getElementById("narsiToday").innerText =
+dashboard.divisions.Narsipatnam.installationToday;
+
+document.getElementById("narsiTotal").innerText =
+dashboard.divisions.Narsipatnam.installationTotal;
+
+document.getElementById("chiralaToday").innerText =
+dashboard.divisions.Chirala.installationToday;
+
+document.getElementById("chiralaTotal").innerText =
+dashboard.divisions.Chirala.installationTotal;
+
+document.getElementById("bapatlaToday").innerText =
+dashboard.divisions.Bapatla.installationToday;
+
+document.getElementById("bapatlaTotal").innerText =
+dashboard.divisions.Bapatla.installationTotal;
 
     // Remove blank timestamps
     fullData = fullData.filter(item => item.timestamp);
-
-    // Update dashboard counts
-    updateDashboardCounts();
-    loadRecentActivities();
+    
 
   } catch (err) {
 
@@ -837,14 +811,14 @@ btn.innerText = "⏳ Refreshing...";
 
   }finally {
 
-        btn.disabled = false;
-        btn.innerText = "🔄 Refresh";
+        if (btn) {
+    btn.disabled = false;
+    btn.innerText = "🔄 Refresh";
+}
 
     }
-    document.querySelector(".search-card").style.display = "block";
 document.querySelector(".summary-grid").style.display = "grid";
 document.getElementById("divisionSection").style.display = "flex";
-document.getElementById("recentSection").style.display = "block";
 
 document.getElementById("data").style.display = "none";
 document.getElementById("detailView").style.display = "none";
@@ -852,157 +826,7 @@ document.getElementById("totalCount").style.display = "none";
 
 currentView = "home";
 }
-  function updateDashboardCounts() {
 
-    const today = getTodayIST();
-
-    let totalInstallation = 0;
-    let todayInstallation = 0;
-
-    let divisions = {
-
-        Tadepalligudem:{today:0,total:0},
-        Narsipatnam:{today:0,total:0},
-        Chirala:{today:0,total:0},
-        Bapatla:{today:0,total:0}
-
-    };
-
-    fullData.forEach(item=>{
-
-        totalInstallation++;
-
-        const div=(item.division||"").trim();
-
-        if(divisions[div]){
-
-            divisions[div].total++;
-
-        }
-
-        const d=toIST(item.timestamp);
-
-        if(!d) return;
-
-        if(
-
-            d.getFullYear()==today.getFullYear() &&
-            d.getMonth()==today.getMonth() &&
-            d.getDate()==today.getDate()
-
-        ){
-
-            todayInstallation++;
-
-            if(divisions[div]){
-
-                divisions[div].today++;
-
-            }
-
-        }
-
-    });
-
-    // Installation Card
-
-    document.getElementById("installationCount").innerText=totalInstallation;
-
-    document.getElementById("installationToday").innerText=todayInstallation;
-
-    // Delivery Card
-    // (Until delivery data is connected)
-
-    document.getElementById("deliveryCount").innerText="-";
-
-    document.getElementById("deliveryToday").innerText="-";
-
-    // Division Cards
-
-    document.getElementById("tadeToday").innerText=divisions.Tadepalligudem.today;
-    document.getElementById("tadeTotal").innerText=divisions.Tadepalligudem.total;
-
-    document.getElementById("narsiToday").innerText=divisions.Narsipatnam.today;
-    document.getElementById("narsiTotal").innerText=divisions.Narsipatnam.total;
-
-    document.getElementById("chiralaToday").innerText=divisions.Chirala.today;
-    document.getElementById("chiralaTotal").innerText=divisions.Chirala.total;
-
-    document.getElementById("bapatlaToday").innerText=divisions.Bapatla.today;
-    document.getElementById("bapatlaTotal").innerText=divisions.Bapatla.total;
-
-}
-  function loadRecentActivities(){
-
-    const container=document.getElementById("recentActivities");
-
-    container.innerHTML="";
-
-    if(!fullData.length){
-
-        container.innerHTML="<div class='activity-empty'>No Records</div>";
-
-        return;
-
-    }
-
-    const latest=[...fullData]
-    .sort((a,b)=>toIST(b.timestamp)-toIST(a.timestamp))
-    .slice(0,10);
-
-    latest.forEach(item=>{
-
-        const card=document.createElement("div");
-
-        card.className="activity-card";
-
-      card.innerHTML = `
-
-<div style="display:flex;justify-content:space-between;align-items:center;">
-
-<div>
-
-<div class="activity-service">
-${item.service}
-</div>
-
-<div class="activity-name">
-👤 ${item.name}
-</div>
-
-<div style="margin-top:6px;color:#666;font-size:13px;">
-📍 ${item.division}
-</div>
-
-<div style="margin-top:4px;color:#666;font-size:13px;">
-📞 ${item.phone}
-</div>
-
-</div>
-
-<div style="text-align:right;">
-
-<div style="color:#28a745;font-size:12px;font-weight:bold;">
-● Completed
-</div>
-
-<div class="activity-time">
-${item.timestamp}
-</div>
-
-</div>
-
-</div>
-
-`;
-
-        card.onclick=()=>openDetails(item);
-
-        container.appendChild(card);
-
-    });
-
-}
    async function performSearch() {
 
     currentView = "search";
@@ -1014,14 +838,13 @@ ${item.timestamp}
   if (!value) return;
 
  /*const divisionName = document.getElementById("totalCount").innerText.split("|")[0].trim();*/
-const divisionName = "";
+const divisionName = selectedDivision;
   const container = document.getElementById("data");
   container.innerHTML = "<p style='text-align:center;'>⏳ Searching...</p>";
 
   document.getElementById("divisionSection").style.display = "none";
   document.getElementById("data").style.display = "block";
   document.getElementById("totalCount").style.display = "block";
-     document.getElementById("recentSection").style.display="none";
 
   try {
 
@@ -1285,7 +1108,7 @@ document.getElementById("totalCount").style.display = "block";
     // ✅ ALWAYS re-enable safely
     setTimeout(() => {
       btn.disabled = false;
-      btn.innerText = "Apply Filter";
+      btn.innerText = "Filter";
     }, 500);
   }
 }
