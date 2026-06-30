@@ -422,6 +422,9 @@ const successScreen = document.getElementById("successScreen");
 const mode = "edit";
 
 const titleEl = document.querySelector(".header-title");
+	window.onload = function () {
+    lockFields();
+};
 if (titleEl) {
   if (mode === "delivery") {
   titleEl.innerText = "Material Delivery";
@@ -508,7 +511,7 @@ async function fetchData() {
 }
 
     isVerified = true;
-	lockFields(true);
+	lockFields();
 	  
     document.getElementById("name").value = data.name;
     document.getElementById("phone").value = data.phone;
@@ -716,7 +719,7 @@ function reloadForm(){
   errorMsg.style.display = "none";
   isVerified = false;
   submitBtn.disabled = false;
-  lockFields(false);
+  lockFields();
 
   const serviceInput = document.getElementById("service");
   serviceInput.readOnly = false;
@@ -750,7 +753,7 @@ function resetMessages(){
   errorMsg.style.display = "none";
   submitBtn.disabled = false;
   isVerified = false;
-  lockFields(false);
+  lockFields();
   const editedInput = document.getElementById("editedBy");
   if (editedInput) editedInput.style.border = "1px solid #ccc";
   const editedError = document.getElementById("editedByError");
@@ -800,13 +803,26 @@ function toggleMenu() {
   });
 });
 
-function lockFields(lock = true) {
-  const ids = ["name","phone","address","division","subdivision","section","distribution"];
+function lockFields() {
+
+  const ids = [
+    "name",
+    "phone",
+    "address",
+    "division",
+    "subdivision",
+    "section",
+    "distribution"
+  ];
+
   ids.forEach(id => {
     const el = document.getElementById(id);
-    el.readOnly = lock;
-    el.style.background = lock ? "#e0e0e0" : "#eee";
+    if (!el) return;
+
+    el.readOnly = true;
+    el.style.background = "#e0e0e0";
   });
+
 }
 
 let html5QrScanner;
