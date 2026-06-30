@@ -12,10 +12,10 @@ body {
 }
 
 .header {
-  height: 65px;
+  height: 60px;
   display: flex;
   align-items: center;
-  background: #0f172a;
+  background: #1565C0;
   color: white;
   box-shadow: 0 4px 6px -1px rgba(0,0,0,.1);
   padding: 0 16px;
@@ -28,19 +28,20 @@ body {
   display: flex;
   align-items: center;
   width: 100%;
+  position: relative;
 }
 
 .back-btn-container {
-  display: none; /* Controlled dynamically by JS */
+  display: flex;
   align-items: center;
-  margin-right: 12px;
+  z-index: 10;
 }
 
 .back-btn {
-  background: #1e293b;
-  border: 1px solid #334155;
-  color: #f8fafc;
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  border-radius: 6px;
   padding: 6px 14px;
   font-size: 14px;
   font-weight: 500;
@@ -48,17 +49,21 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
-  transition: all 0.2s;
+  transition: background 0.2s;
 }
 
 .back-btn:hover {
-  background: #334155;
+  background: rgba(255, 255, 255, 0.25);
 }
 
 .header-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   font-size: 16px;
   font-weight: 600;
   letter-spacing: .5px;
+  white-space: nowrap;
   text-transform: uppercase;
 }
 
@@ -75,7 +80,7 @@ body {
   font-size: 15px;
   font-weight: 600;
   margin-bottom: 12px;
-  color: #0f172a;
+  color: #1565C0;
 }
 
 .search-row {
@@ -93,16 +98,18 @@ body {
   font-size: 14px;
   background-color: #fff;
   outline: none;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .search-row select:focus,
 .search-row input:focus {
-  border-color: #2563eb;
+  border-color: #1565C0;
 }
 
 .search-row button {
   height: 42px;
-  background: #2563eb;
+  background: #1565C0;
   color: white;
   border: none;
   border-radius: 8px;
@@ -110,61 +117,51 @@ body {
   font-weight: 500;
   cursor: pointer;
   transition: background 0.15s;
+  width: 100%;
 }
 
 .search-row button:hover {
-  background: #1d4ed8;
+  background: #0d47a1;
 }
 
 .summary-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
   margin: 16px;
 }
 
 .summary-card {
   background: white;
-  border-radius: 14px;
-  padding: 24px 16px;
+  border-radius: 12px;
+  padding: 16px 12px;
   text-align: center;
   border: 1px solid #e2e8f0;
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.summary-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
 }
 
 .summary-icon {
-  font-size: 32px;
-  margin-bottom: 8px;
+  font-size: 26px;
+  margin-bottom: 6px;
 }
 
 .summary-title {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   color: #475569;
 }
 
 .summary-count {
-  font-size: 38px;
+  font-size: 28px;
   font-weight: 700;
-  margin-top: 8px;
-  color: #0f172a;
+  margin-top: 6px;
+  color: #1565C0;
 }
 
 .summary-sub {
-  margin-top: 8px;
+  margin-top: 6px;
   color: #64748b;
-  font-size: 13px;
-  background: #f1f5f9;
-  padding: 4px 12px;
-  border-radius: 20px;
-  display: inline-block;
+  font-size: 12px;
 }
 
 .section-title {
@@ -190,14 +187,14 @@ body {
   align-items: center;
   cursor: pointer;
   border: 1px solid #e2e8f0;
+  border-left: 5px solid #1565C0;
   box-shadow: 0 1px 2px rgba(0,0,0,0.02);
   transition: all 0.2s;
 }
 
 .division-card:hover {
-  transform: translateX(4px);
-  border-color: #cbd5e1;
-  background: #fafafa;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 .division-left {
@@ -207,7 +204,7 @@ body {
 }
 
 .division-name {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   color: #0f172a;
 }
@@ -225,7 +222,7 @@ body {
 
 .division-arrow {
   font-size: 18px;
-  color: #94a3b8;
+  color: #1565C0;
 }
 
 .card {
@@ -260,12 +257,12 @@ body {
 
 #totalCount {
   margin: 16px;
-  background: #f1f5f9;
-  padding: 14px;
-  border-radius: 8px;
+  background: #fff;
+  padding: 16px;
+  border-radius: 12px;
   font-size: 14px;
   color: #334155;
-  line-height: 1.5;
+  line-height: 1.6;
   border: 1px solid #e2e8f0;
 }
 
@@ -288,9 +285,10 @@ body {
 .detail-row {
   display: flex;
   justify-content: space-between;
-  padding: 10px 0;
+  padding: 12px 0;
   border-bottom: 1px solid #f1f5f9;
   font-size: 14px;
+  align-items: center;
 }
 
 .detail-row span:first-child {
@@ -301,22 +299,26 @@ body {
 .detail-row span:last-child {
   color: #0f172a;
   font-weight: 600;
+  text-align: right;
+  max-width: 60%;
+  word-break: break-word;
 }
 
 .img-btn {
   display: inline-block;
   padding: 6px 12px;
-  background: #f1f5f9;
-  color: #334155;
-  border: 1px solid #cbd5e1;
+  background: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
   border-radius: 6px;
   text-decoration: none;
   font-size: 12px;
   font-weight: 500;
+  transition: background 0.15s;
 }
 
 .img-btn:hover {
-  background: #e2e8f0;
+  background: #bae6fd;
 }
 
 .loading {
@@ -335,30 +337,31 @@ body {
 
 <div class="header">
     <div class="nav-container">
-        <div id="backNav" class="back-btn-container">
-            <button class="back-btn" onclick="goBack()">Back</button>
+        <div class="back-btn-container">
+            <button class="back-btn" onclick="goBack()">← Back</button>
         </div>
-        <div class="header-title" id="mainHeader">Helios Solar Dashboard</div>
+        <div class="header-title">Helios Solar</div>
     </div>
 </div>
 
-<div id="moduleSection" class="summary-grid">
-    <div class="summary-card" onclick="selectModule('delivery')">
+<div class="summary-grid">
+    <div class="summary-card">
         <div class="summary-icon">📦</div>
         <div class="summary-title">Material Delivery</div>
-        <div class="summary-count" id="deliveryCount">...</div>
-        <div class="summary-sub">Today: <span id="deliveryToday">...</span></div>
+        <div class="summary-count" id="deliveryCount">0</div>
+        <div class="summary-sub">Today: <span id="deliveryToday">0</span></div>
     </div>
-    <div class="summary-card" onclick="selectModule('installation')">
+    <div class="summary-card">
         <div class="summary-icon">🔧</div>
         <div class="summary-title">Material Installation</div>
-        <div class="summary-count" id="installationCount">...</div>
-        <div class="summary-sub">Today: <span id="installationToday">...</span></div>
+        <div class="summary-count" id="installationCount">0</div>
+        <div class="summary-sub">Today: <span id="installationToday">0</span></div>
     </div>
 </div>
 
-<div id="divisionHeading" class="section-title" style="display:none;">Select Division</div>
-<div id="divisionSection" class="division-grid" style="display:none;">
+<div class="section-title" id="sectionTitleLabel">Divisions</div>
+
+<div id="divisionSection" class="division-grid">
     <div class="division-card" id="btn1" onclick="showDivision(event,'Tadepalligudem')">
         <div class="division-left">
             <div class="division-name">📍 Tadepalligudem</div>
@@ -367,7 +370,7 @@ body {
                 <span>Total: <b id="tadeTotal">0</b></span>
             </div>
         </div>
-        <div class="division-arrow">➔</div>
+        <div class="division-arrow">➜</div>
     </div>
 
     <div class="division-card" id="btn2" onclick="showDivision(event,'Narsipatnam')">
@@ -378,7 +381,7 @@ body {
                 <span>Total: <b id="narsiTotal">0</b></span>
             </div>
         </div>
-        <div class="division-arrow">➔</div>
+        <div class="division-arrow">➜</div>
     </div>
 
     <div class="division-card" id="btn3" onclick="showDivision(event,'Chirala')">
@@ -389,7 +392,7 @@ body {
                 <span>Total: <b id="chiralaTotal">0</b></span>
             </div>
         </div>
-        <div class="division-arrow">➔</div>
+        <div class="division-arrow">➜</div>
     </div>
 
     <div class="division-card" id="btn4" onclick="showDivision(event,'Bapatla')">
@@ -400,14 +403,14 @@ body {
                 <span>Total: <b id="bapatlaTotal">0</b></span>
             </div>
         </div>
-        <div class="division-arrow">➔</div>
+        <div class="division-arrow">➜</div>
     </div>
 </div>
 
 <div id="totalCount" style="display:none;"></div>
   
 <div id="divisionSearch" class="search-card" style="display:none;">
-    <div class="search-title">🔍 Search Filter</div>
+    <div class="search-title">🔍 Search in Division</div>
     <div class="search-row">
         <select id="searchType">
             <option value="service">Service Number</option>
@@ -420,16 +423,16 @@ body {
         </select>
 
         <div id="searchBox">
-            <input id="searchInput" type="text" placeholder="Enter Search Value">
+            <input id="searchInput" type="text" placeholder="Enter Search Value" style="margin-bottom: 10px;">
             <button onclick="performSearch()">Search</button>
         </div>
 
         <div id="dateBox" style="display:none;">
-            <input type="date" id="fromDate">
-            <input type="date" id="toDate">
-            <div style="display:flex;gap:10px;margin-top:10px;">
+            <input type="date" id="fromDate" style="margin-bottom: 10px;">
+            <input type="date" id="toDate" style="margin-bottom: 10px;">
+            <div style="display:flex; gap:10px;">
                 <button id="applyBtn" onclick="applyDateFilter()">Filter</button>
-                <button onclick="clearDateFilter()">Clear</button>
+                <button onclick="clearDateFilter()" style="background:#64748b;">Clear</button>
             </div>
         </div>
     </div>
@@ -441,64 +444,46 @@ body {
 <script>
 let fullData = [];
 let dashboard = {};
-let selectedModule = ""; 
 let selectedDivision = "";
-let currentView = "home"; 
+let currentView = "home";
 let isProcessing = false;
 
 const BASE_URL = "https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec";
 
 // Optimized asynchronous initial fetch setup
-function renderInitialCounts(counts) {
-    if (!counts) return;
-    document.getElementById("installationCount").innerText = counts.installation?.total || 0;
-    document.getElementById("installationToday").innerText = counts.installation?.today || 0;
-    document.getElementById("deliveryCount").innerText = counts.delivery?.total || 0;
-    document.getElementById("deliveryToday").innerText = counts.delivery?.today || 0;
-}
-
 async function loadData() {
     try {
-        // Parallelized fetch architecture to speed up cold starts
-        const countsPromise = fetch(BASE_URL + "?action=dashboardCounts&t=" + Date.now()).then(r => r.json());
-        const allDataPromise = fetch(BASE_URL + "?type=all&t=" + Date.now()).then(r => r.json());
+        // Step 1: Run the fast API call for counts and render to interface directly 
+        const countsResponse = await fetch(BASE_URL + "?action=dashboardCounts&t=" + Date.now());
+        dashboard = await countsResponse.json();
+        renderDashboardCounts(dashboard);
 
-        dashboard = await countsPromise;
-        renderInitialCounts(dashboard);
-
-        fullData = await allDataPromise;
+        // Step 2: Fetch the heavy history list asynchronously in the background
+        const recordsResponse = await fetch(BASE_URL + "?type=all&t=" + Date.now());
+        fullData = await recordsResponse.json();
         fullData = fullData.filter(item => item.timestamp);
     } catch (err) {
         console.error(err);
+        alert("Unable to load dashboard data.");
     }
 }
 
-function selectModule(moduleType) {
-    selectedModule = moduleType;
-    currentView = "module";
-    
-    document.getElementById("backNav").style.display = "flex";
-    document.getElementById("mainHeader").innerText = moduleType === 'delivery' ? "Material Delivery" : "Material Installation";
-    
-    updateDivisionCardsUI();
-    
-    document.getElementById("moduleSection").style.display = "none";
-    document.getElementById("divisionHeading").style.display = "block";
-    document.getElementById("divisionSection").style.display = "flex";
-}
+function renderDashboardCounts(data) {
+    if(!data) return;
+    document.getElementById("installationCount").innerText = data.installation?.total || 0;
+    document.getElementById("installationToday").innerText = data.installation?.today || 0;
+    document.getElementById("deliveryCount").innerText = data.delivery?.total || 0;
+    document.getElementById("deliveryToday").innerText = data.delivery?.today || 0;
 
-function updateDivisionCardsUI() {
-    if (!dashboard.divisions) return;
-    const divData = dashboard.divisions;
-    const m = selectedModule;
-    
-    const targets = ["tade", "narsi", "chirala", "bapatla"];
-    const keys = ["Tadepalligudem", "Narsipatnam", "Chirala", "Bapatla"];
-    
-    targets.forEach((t, idx) => {
-        document.getElementById(`${t}Today`).innerText = divData[keys[idx]][m + "Today"] || 0;
-        document.getElementById(`${t}Total`).innerText = divData[keys[idx]][m + "Total"] || 0;
-    });
+    // Fast render division counters
+    document.getElementById("tadeToday").innerText = data.divisions?.Tadepalligudem?.installationToday || 0;
+    document.getElementById("tadeTotal").innerText = data.divisions?.Tadepalligudem?.installationTotal || 0;
+    document.getElementById("narsiToday").innerText = data.divisions?.Narsipatnam?.installationToday || 0;
+    document.getElementById("narsiTotal").innerText = data.divisions?.Narsipatnam?.installationTotal || 0;
+    document.getElementById("chiralaToday").innerText = data.divisions?.Chirala?.installationToday || 0;
+    document.getElementById("chiralaTotal").innerText = data.divisions?.Chirala?.installationTotal || 0;
+    document.getElementById("bapatlaToday").innerText = data.divisions?.Bapatla?.installationToday || 0;
+    document.getElementById("bapatlaTotal").innerText = data.divisions?.Bapatla?.installationTotal || 0;
 }
 
 async function showDivision(e, divisionName) {
@@ -509,7 +494,15 @@ async function showDivision(e, divisionName) {
     isProcessing = true;
 
     const cards = document.querySelectorAll(".division-card");
-    cards.forEach(card => card.classList.add("loading"));
+    cards.forEach(card => {
+        card.style.pointerEvents = "none";
+        card.classList.add("loading");
+    });
+
+    const clickedCard = e.currentTarget;
+    const arrow = clickedCard.querySelector(".division-arrow");
+    const oldArrow = arrow.innerHTML;
+    arrow.innerHTML = "⏳";
 
     try {
         if (!fullData.length) {
@@ -521,8 +514,10 @@ async function showDivision(e, divisionName) {
             return div === divisionName.toLowerCase().replace(/\s+/g, "");
         });
 
-        document.getElementById("divisionHeading").style.display = "none";
         document.getElementById("divisionSection").style.display = "none";
+        document.getElementById("sectionTitleLabel").style.display = "none";
+        document.querySelector(".summary-grid").style.display = "none";
+
         document.getElementById("totalCount").style.display = "block";
         document.getElementById("divisionSearch").style.display = "block";
         
@@ -530,13 +525,16 @@ async function showDivision(e, divisionName) {
         document.getElementById("searchInput").value = "";
         document.getElementById("fromDate").value = "";
         document.getElementById("toDate").value = "";
+        document.getElementById("searchBox").style.display = "block";
+        document.getElementById("dateBox").style.display = "none";
 
-        const divMeta = dashboard.divisions[divisionName];
-        const displayModuleName = selectedModule === 'delivery' ? 'Delivery' : 'Installation';
-
+        const div = dashboard.divisions[divisionName];
         document.getElementById("totalCount").innerHTML = `
-            <b>📍 ${divisionName} — ${displayModuleName}</b><br>
-            Today: <b>${divMeta[selectedModule + 'Today']}</b> | Total: <b>${divMeta[selectedModule + 'Total']}</b>
+            <div style="font-size:16px; font-weight:700; color:#1565C0; margin-bottom:8px;">📍 ${divisionName}</div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top:4px;">
+                <div>🔧 <b>Installation:</b><br>Today: ${div.installationToday} | Total: ${div.installationTotal}</div>
+                <div>📦 <b>Delivery:</b><br>Today: ${div.deliveryToday} | Total: ${div.deliveryTotal}</div>
+            </div>
         `;
 
         const today = getTodayIST();
@@ -547,30 +545,45 @@ async function showDivision(e, divisionName) {
                 d.getMonth() === today.getMonth() &&
                 d.getDate() === today.getDate();
         });
-        
+
         document.getElementById("data").style.display = "block";
         renderData(todayData);
 
     } catch (err) {
-        alert("Error loading structural dashboard contents.");
+        alert("Error loading division dataset.");
+        console.error(err);
     } finally {
-        cards.forEach(card => card.classList.remove("loading"));
+        cards.forEach(card => {
+            card.style.pointerEvents = "auto";
+            card.classList.remove("loading");
+        });
+        arrow.innerHTML = oldArrow;
         isProcessing = false;
     }
 }
 
 async function performSearch() {
+    currentView = "search";
+    if (!fullData.length) {
+        await loadData();
+    }
+
     const value = document.getElementById("searchInput").value.trim();
     if (!value) return;
 
-    currentView = "search";
+    const divisionName = selectedDivision;
     const container = document.getElementById("data");
-    container.innerHTML = "<p style='text-align:center;'>⏳ Running search metrics...</p>";
+    container.innerHTML = "<p style='text-align:center; color:#64748b;'>⏳ Searching cloud matrix...</p>";
+
+    document.getElementById("divisionSection").style.display = "none";
+    document.getElementById("sectionTitleLabel").style.display = "none";
+    document.getElementById("data").style.display = "block";
+    document.getElementById("totalCount").style.display = "block";
 
     try {
         const url = BASE_URL
             + "?action=search"
-            + "&division=" + encodeURIComponent(selectedDivision)
+            + "&division=" + encodeURIComponent(divisionName)
             + "&field=" + encodeURIComponent(document.getElementById("searchType").value)
             + "&value=" + encodeURIComponent(value)
             + "&t=" + Date.now();
@@ -578,7 +591,7 @@ async function performSearch() {
         const res = await fetch(url);
         const result = await res.json();
 
-        document.getElementById("totalCount").innerText = `Search Results: ${result.length}`;
+        document.getElementById("totalCount").innerHTML = `<b>Search Results:</b> ${result.length} entries found`;
 
         const enrichedResult = result.map(r => {
             const rService = (r.service || "").toString().trim();
@@ -587,8 +600,9 @@ async function performSearch() {
         });
 
         renderData(enrichedResult);
+        document.getElementById("searchInput").value = "";
     } catch (err) {
-        container.innerHTML = "<p style='text-align:center;'>Error mapping matches.</p>";
+        container.innerHTML = "<p style='text-align:center; color:#ef4444;'>Error rendering search payload.</p>";
     }
 }
 
@@ -616,7 +630,7 @@ function renderData(data) {
     container.innerHTML = "";
 
     if (!data.length) {
-        container.innerHTML = "<p style='text-align:center; padding: 20px; color:#64748b;'>No entries logged for today.</p>";
+        container.innerHTML = "<p style='text-align:center; padding:20px; color:#64748b;'>No entries registered.</p>";
         return;
     }
 
@@ -640,9 +654,10 @@ function renderData(data) {
 
         container.innerHTML += `  
             <div class="card" onclick='openDetails(${JSON.stringify(item)})'>
-                <div style="font-weight:600; font-size:15px; color:#0f172a; margin-bottom:4px;">${item.service || "-"}</div>
-                <div style="font-size:14px; color:#334155;">${item.name || "-"}</div>
-                <div style="font-size:13px; color:#64748b; margin-top:2px;">${item.phone || "-"}</div>
+                <div style="font-weight:600; font-size:15px; color:#1565C0; margin-bottom:4px;">${item.service || "-"}</div>
+                <div style="font-size:14px; font-weight:500; color:#334155;">${item.name || "-"}</div>
+                <div style="font-size:13px; color:#64748b; margin-top:2px;">📞 ${item.phone || "-"}</div>
+                <div style="font-size:12px; color:#475569; margin-top:4px;">👷 Surveyor: ${item.surveyor || "-"}</div>
                 <div class="time">${time}</div>
             </div>`;
     });
@@ -661,18 +676,39 @@ function openDetails(item) {
     const link = (url) => url ? `<a href="${url}" target="_blank" class="img-btn">📷 View Image</a>` : "-";
 
     detail.innerHTML = `
-        <h2>Service Details</h2>
-        <div class="detail-row"><span>Service No</span><span>${val(item.service)}</span></div>
+        <h2>Service Records Detail</h2>
+        <div class="detail-row"><span>Service Number</span><span>${val(item.service)}</span></div>
         <div class="detail-row"><span>Customer Name</span><span>${val(item.name)}</span></div>
         <div class="detail-row"><span>Phone Contact</span><span>${val(item.phone)}</span></div>
-        <div class="detail-row"><span>Division</span><span>${val(item.division)}</span></div>
-        <div class="detail-row"><span>Panel Number(s)</span><span>${val(item.panelNumbers || item.panelNo)}</span></div>
-        <div class="detail-row"><span>Inverter Number</span><span>${val(item.inverterNo || item.inverterNumber)}</span></div>
-        <div class="detail-row"><span>Surveyor System ID</span><span>${val(item.surveyor)}</span></div>
-        <div class="detail-row"><span>Panel Image Matrix</span><span>${link(item.panels)}</span></div>
-        <div class="detail-row"><span>Inverter Image Matrix</span><span>${link(item.inverter)}</span></div>
-        <div class="detail-row"><span>Earth Structure Image</span><span>${link(item.earth)}</span></div>
+        <div class="detail-row"><span>Division Bound</span><span>${val(item.division)}</span></div>
+        <div class="detail-row"><span>Panel Number(s)</span><span>${val(item.panelNumbers || item.panelNo || item.panel_numbers)}</span></div>
+        <div class="detail-row"><span>Inverter Number</span><span>${val(item.inverterNo || item.inverterNumber || item.inverter_number)}</span></div>
+        <div class="detail-row"><span>Assigned Surveyor</span><span>${val(item.surveyor)}</span></div>
+        <div class="detail-row"><span>Modified System By</span><span>${val(item.editedBy)}</span></div>
+        <div class="detail-row"><span>Panel Matrix Photo</span><span>${link(item.panels)}</span></div>
+        <div class="detail-row"><span>Inverter Matrix Photo</span><span>${link(item.inverter)}</span></div>
+        <div class="detail-row"><span>Earth Array Photo</span><span>${link(item.earth)}</span></div>
     `;
+}
+
+function showHome() {
+    document.querySelector(".summary-grid").style.display = "grid";
+    document.getElementById("divisionSection").style.display = "flex";
+    document.getElementById("sectionTitleLabel").style.display = "block";
+
+    document.getElementById("divisionSearch").style.display = "none";
+    document.getElementById("data").style.display = "none";
+    document.getElementById("detailView").style.display = "none";
+    document.getElementById("totalCount").style.display = "none";
+      
+    document.getElementById("searchType").value = "service";
+    document.getElementById("searchInput").value = "";
+    document.getElementById("fromDate").value = "";
+    document.getElementById("toDate").value = "";
+    document.getElementById("searchBox").style.display = "block";
+    document.getElementById("dateBox").style.display = "none";
+
+    currentView = "home";
 }
 
 function closeDetails() {
@@ -688,24 +724,8 @@ function goBack() {
         closeDetails();
         return;
     }
-    if (currentView === "search" || currentView === "division") {
-        document.getElementById("divisionSearch").style.display = "none";
-        document.getElementById("data").style.display = "none";
-        document.getElementById("totalCount").style.display = "none";
-        
-        document.getElementById("divisionHeading").style.display = "block";
-        document.getElementById("divisionSection").style.display = "flex";
-        currentView = "module";
-        return;
-    }
-    if (currentView === "module") {
-        document.getElementById("backNav").style.display = "none";
-        document.getElementById("mainHeader").innerText = "Helios Solar Dashboard";
-        document.getElementById("divisionHeading").style.display = "none";
-        document.getElementById("divisionSection").style.display = "none";
-        
-        document.getElementById("moduleSection").style.display = "grid";
-        currentView = "home";
+    if (currentView === "division" || currentView === "search") {
+        showHome();
         return;
     }
     window.location.href = "index.html";
@@ -717,7 +737,7 @@ async function applyDateFilter() {
 
     btn.disabled = true;
     const container = document.getElementById("data");
-    container.innerHTML = "<p style='text-align:center;'>⏳ Filtering...</p>";
+    container.innerHTML = "<p style='text-align:center; color:#64748b;'>⏳ Applying processing matrix filters...</p>";
 
     try {
         const from = document.getElementById("fromDate").value;
@@ -730,47 +750,4 @@ async function applyDateFilter() {
 
         const fromDate = new Date(from);
         const toDate = new Date(to);
-        toDate.setHours(23, 59, 59, 999);
-
-        const filtered = fullData.filter(item => {
-            const d = toIST(item.timestamp);
-            return d && d >= fromDate && d <= toDate &&
-                (item.division || "").toLowerCase().replace(/\s+/g, "") === selectedDivision.toLowerCase().replace(/\s+/g, "");
-        });
-
-        document.getElementById("totalCount").innerText = `${selectedDivision} | ${from} → ${to} | Count: ${filtered.length}`;
-        renderData(filtered);
-    } catch (err) {
-        console.error(err);
-    } finally {
-        btn.disabled = false;
-    }
-}
-
-function clearDateFilter() {
-    document.getElementById("fromDate").value = "";
-    document.getElementById("toDate").value = "";
-    let mockEvent = { currentTarget: document.getElementById(selectedDivision === "Tadepalligudem" ? "btn1" : selectedDivision === "Narsipatnam" ? "btn2" : selectedDivision === "Chirala" ? "btn3" : "btn4") };
-    showDivision(mockEvent, selectedDivision);
-}
-
-window.onload = function () {
-    document.getElementById("searchInput").addEventListener("keypress", function (e) {
-        if (e.key === "Enter") performSearch();
-    });
-
-    document.getElementById("searchType").addEventListener("change", function () {
-        if (this.value === "date") {
-            document.getElementById("searchBox").style.display = "none";
-            document.getElementById("dateBox").style.display = "block";
-        } else {
-            document.getElementById("searchBox").style.display = "block";
-            document.getElementById("dateBox").style.display = "none";
-        }
-    });
-
-    loadData();
-};
-</script>
-</body>
-</html>
+        toDate.setHours(23, 59, 5
