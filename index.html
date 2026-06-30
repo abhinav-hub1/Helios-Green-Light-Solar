@@ -484,7 +484,7 @@ if (!data.found) {
     errorMsg.style.display = "block";
 
     clearFields();
-    lockFields(false);
+    lockFields(true);
 
     isVerified = false;
     submitBtn.disabled = true;
@@ -612,7 +612,6 @@ function reloadForm() {
   submitBtn.innerText = "Submit";
 
   const serviceInput = document.getElementById("service");
-  serviceInput.readOnly = false;
   serviceInput.style.background = "#eee";
   serviceInput.focus();
 
@@ -641,7 +640,7 @@ function resetMessages(){
   errorMsg.style.display = "none";
   submitBtn.disabled = false;
   isVerified = false;
-  lockFields(false);
+  lockFields(true);
 }
 	
 function openDashboard() {
@@ -690,13 +689,26 @@ function toggleMenu() {
   });
 });
 
-function lockFields(lock = true) {
-  const ids = ["name","phone","address","division","subdivision","section","distribution"];
+function lockFields() {
+
+  const ids = [
+    "name",
+    "phone",
+    "address",
+    "division",
+    "subdivision",
+    "section",
+    "distribution"
+  ];
+
   ids.forEach(id => {
     const el = document.getElementById(id);
-    el.readOnly = lock;
-    el.style.background = lock ? "#e0e0e0" : "#eee";
+    if (!el) return;
+
+    el.readOnly = true;
+    el.style.background = "#e0e0e0";
   });
+
 }
 
 let html5QrScanner;
