@@ -361,8 +361,8 @@ animation:pulse 1s infinite;
 
   <div class="summary-grid">
 
-<div class="summary-card">
-
+<div class="summary-card"
+onclick="showModule('delivery')">
 <div class="summary-icon">
 
 📦
@@ -397,7 +397,8 @@ Today
 
 </div>
 
-<div class="summary-card">
+<div class="summary-card"
+onclick="showModule('installation')">
 
 <div class="summary-icon">
 
@@ -434,108 +435,11 @@ Today
 </div>
 
 </div>
-<div class="section-title">
-    Divisions
+    <div id="divisionSection"
+     class="division-grid"
+     style="display:none;">
 </div>
 
-<div id="divisionSection" class="division-grid">
-
-    <div class="division-card"
-         id="btn1"
-         onclick="showDivision(event,'Tadepalligudem')">
-
-        <div class="division-left">
-
-            <div class="division-name">
-                📍 Tadepalligudem
-            </div>
-
-            <div class="division-stats">
-                <span>Today : <b id="tadeToday">0</b></span>
-                <span>Total : <b id="tadeTotal">0</b></span>
-            </div>
-
-        </div>
-
-        <div class="division-arrow">
-            ➜
-        </div>
-
-    </div>
-
-
-    <div class="division-card"
-         id="btn2"
-         onclick="showDivision(event,'Narsipatnam')">
-
-        <div class="division-left">
-
-            <div class="division-name">
-                📍 Narsipatnam
-            </div>
-
-            <div class="division-stats">
-                <span>Today : <b id="narsiToday">0</b></span>
-                <span>Total : <b id="narsiTotal">0</b></span>
-            </div>
-
-        </div>
-
-        <div class="division-arrow">
-            ➜
-        </div>
-
-    </div>
-
-
-    <div class="division-card"
-         id="btn3"
-         onclick="showDivision(event,'Chirala')">
-
-        <div class="division-left">
-
-            <div class="division-name">
-                📍 Chirala
-            </div>
-
-            <div class="division-stats">
-                <span>Today : <b id="chiralaToday">0</b></span>
-                <span>Total : <b id="chiralaTotal">0</b></span>
-            </div>
-
-        </div>
-
-        <div class="division-arrow">
-            ➜
-        </div>
-
-    </div>
-
-
-    <div class="division-card"
-         id="btn4"
-         onclick="showDivision(event,'Bapatla')">
-
-        <div class="division-left">
-
-            <div class="division-name">
-                📍 Bapatla
-            </div>
-
-            <div class="division-stats">
-                <span>Today : <b id="bapatlaToday">0</b></span>
-                <span>Total : <b id="bapatlaTotal">0</b></span>
-            </div>
-
-        </div>
-
-        <div class="division-arrow">
-            ➜
-        </div>
-
-    </div>
-
-</div>
   <div id="totalCount" style="display:none;"></div>
   
 <div id="divisionSearch" class="search-card" style="display:none;">
@@ -606,7 +510,10 @@ Clear
   
 let fullData = [];
 let dashboard = {};
+
+let selectedModule = "";
 let selectedDivision = "";
+
 let currentView = "home";
 let isProcessing = false;
 
@@ -671,19 +578,33 @@ document.getElementById("toDate").value = "";
 document.getElementById("searchBox").style.display = "block";
 document.getElementById("dateBox").style.display = "none";
 
-    const div = dashboard.divisions[divisionName];
+const div = dashboard.divisions[divisionName];
+
+if (selectedModule === "delivery") {
 
 document.getElementById("totalCount").innerHTML = `
-<b>${divisionName}</b><br><br>
+<b>📦 Material Delivery</b><br><br>
 
-🔧 Installation :
-Today <b>${div.installationToday}</b> |
-Total <b>${div.installationTotal}</b><br>
+<b>${divisionName}</b><br>
 
-📦 Material Delivery :
-Today <b>${div.deliveryToday}</b> |
-Total <b>${div.deliveryTotal}</b>
+Today : <b>${div.deliveryToday}</b><br>
+
+Total : <b>${div.deliveryTotal}</b>
 `;
+
+} else {
+
+document.getElementById("totalCount").innerHTML = `
+<b>🔧 Material Installation</b><br><br>
+
+<b>${divisionName}</b><br>
+
+Today : <b>${div.installationToday}</b><br>
+
+Total : <b>${div.installationTotal}</b>
+`;
+
+}
 
    const today = getTodayIST();
 
@@ -720,6 +641,61 @@ renderData(todayData);
     isProcessing = false;
 
   }
+
+}
+function showModule(module){
+
+    selectedModule = module;
+    currentView = "module";
+
+    document.querySelector(".summary-grid").style.display = "none";
+    document.getElementById("divisionSection").style.display = "flex";
+    document.getElementById("divisionSection").innerHTML = "";
+
+    const divisions = [
+        "Tadepalligudem",
+        "Narsipatnam",
+        "Chirala",
+        "Bapatla"
+    ];
+
+    divisions.forEach(div => {
+
+        const d = dashboard.divisions[div];
+
+        const today =
+            module === "delivery"
+            ? d.deliveryToday
+            : d.installationToday;
+
+        const total =
+            module === "delivery"
+            ? d.deliveryTotal
+            : d.installationTotal;
+
+        document.getElementById("divisionSection").innerHTML += `
+            <div class="division-card"
+                 onclick="showDivision(event,'${div}')">
+
+                <div class="division-left">
+
+                    <div class="division-name">
+                        📍 ${div}
+                    </div>
+
+                    <div class="division-stats">
+                        <span>Today : <b>${today}</b></span>
+                        <span>Total : <b>${total}</b></span>
+                    </div>
+
+                </div>
+
+                <div class="division-arrow">➜</div>
+
+            </div>
+        `;
+
+    });
 
 }
   async function loadData() {
