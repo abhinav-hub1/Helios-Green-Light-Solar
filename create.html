@@ -541,12 +541,15 @@ if (mode === "create") {
   );
 
   const material = await materialRes.json();
+		  console.log(material);
 
   document.getElementById("panel1").value = material.panel1 || "";
   document.getElementById("panel2").value = material.panel2 || "";
   document.getElementById("panel3").value = material.panel3 || "";
   document.getElementById("panel4").value = material.panel4 || "";
   document.getElementById("inverterSerial").value = material.inverterSerial || "";
+		  console.log(document.getElementById("panel1").value);
+console.log(document.getElementById("inverterSerial").value);
 
 } catch (err) {
   console.log("Material details not found", err);
