@@ -521,7 +521,7 @@ async function fetchData() {
     loading.style.display = "none";
 
 if (mode === "create") {
-  lockFields(false);
+  lockFields(true);
   submitBtn.disabled = false;
 }
 
@@ -746,12 +746,30 @@ function toggleMenu() {
 }
 
 function lockFields(lock = true) {
-  const ids = ["name","phone","address","division","subdivision","section","distribution"];
+
+  const ids = [
+    "name",
+    "phone",
+    "address",
+    "division",
+    "subdivision",
+    "section",
+    "distribution",
+    "panel1",
+    "panel2",
+    "panel3",
+    "panel4",
+    "inverterSerial"
+  ];
+
   ids.forEach(id => {
     const el = document.getElementById(id);
-    el.readOnly = lock;
-    el.style.background = lock ? "#e0e0e0" : "#eee";
+    if (!el) return;
+
+    el.readOnly = true;   // Always readonly
+    el.style.background = "#e0e0e0";
   });
+
 }
 </script>
 </body>
