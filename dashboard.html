@@ -12,10 +12,10 @@ body {
 }
 
 .header {
-  height: 60px;
+  height: 65px;
   display: flex;
   align-items: center;
-  background: #1565C0;
+  background: #0f172a;
   color: white;
   box-shadow: 0 4px 6px -1px rgba(0,0,0,.1);
   padding: 0 16px;
@@ -28,20 +28,19 @@ body {
   display: flex;
   align-items: center;
   width: 100%;
-  position: relative;
 }
 
 .back-btn-container {
-  display: flex;
+  display: none; /* Controlled dynamically by JS */
   align-items: center;
-  z-index: 10;
+  margin-right: 12px;
 }
 
 .back-btn {
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
-  border-radius: 6px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #f8fafc;
+  border-radius: 8px;
   padding: 6px 14px;
   font-size: 14px;
   font-weight: 500;
@@ -49,21 +48,17 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
-  transition: background 0.2s;
+  transition: all 0.2s;
 }
 
 .back-btn:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: #334155;
 }
 
 .header-title {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
   font-size: 16px;
   font-weight: 600;
   letter-spacing: .5px;
-  white-space: nowrap;
   text-transform: uppercase;
 }
 
@@ -80,7 +75,7 @@ body {
   font-size: 15px;
   font-weight: 600;
   margin-bottom: 12px;
-  color: #1565C0;
+  color: #0f172a;
 }
 
 .search-row {
@@ -98,18 +93,16 @@ body {
   font-size: 14px;
   background-color: #fff;
   outline: none;
-  box-sizing: border-box;
-  width: 100%;
 }
 
 .search-row select:focus,
 .search-row input:focus {
-  border-color: #1565C0;
+  border-color: #2563eb;
 }
 
 .search-row button {
   height: 42px;
-  background: #1565C0;
+  background: #2563eb;
   color: white;
   border: none;
   border-radius: 8px;
@@ -117,51 +110,61 @@ body {
   font-weight: 500;
   cursor: pointer;
   transition: background 0.15s;
-  width: 100%;
 }
 
 .search-row button:hover {
-  background: #0d47a1;
+  background: #1d4ed8;
 }
 
 .summary-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  grid-template-columns: 1fr;
+  gap: 16px;
   margin: 16px;
 }
 
 .summary-card {
   background: white;
-  border-radius: 12px;
-  padding: 16px 12px;
+  border-radius: 14px;
+  padding: 24px 16px;
   text-align: center;
   border: 1px solid #e2e8f0;
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.summary-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
 }
 
 .summary-icon {
-  font-size: 26px;
-  margin-bottom: 6px;
+  font-size: 32px;
+  margin-bottom: 8px;
 }
 
 .summary-title {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   color: #475569;
 }
 
 .summary-count {
-  font-size: 28px;
+  font-size: 38px;
   font-weight: 700;
-  margin-top: 6px;
-  color: #1565C0;
+  margin-top: 8px;
+  color: #0f172a;
 }
 
 .summary-sub {
-  margin-top: 6px;
+  margin-top: 8px;
   color: #64748b;
-  font-size: 12px;
+  font-size: 13px;
+  background: #f1f5f9;
+  padding: 4px 12px;
+  border-radius: 20px;
+  display: inline-block;
 }
 
 .section-title {
@@ -187,14 +190,14 @@ body {
   align-items: center;
   cursor: pointer;
   border: 1px solid #e2e8f0;
-  border-left: 5px solid #1565C0;
   box-shadow: 0 1px 2px rgba(0,0,0,0.02);
   transition: all 0.2s;
 }
 
 .division-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transform: translateX(4px);
+  border-color: #cbd5e1;
+  background: #fafafa;
 }
 
 .division-left {
@@ -204,7 +207,7 @@ body {
 }
 
 .division-name {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   color: #0f172a;
 }
@@ -222,7 +225,7 @@ body {
 
 .division-arrow {
   font-size: 18px;
-  color: #1565C0;
+  color: #94a3b8;
 }
 
 .card {
@@ -257,12 +260,12 @@ body {
 
 #totalCount {
   margin: 16px;
-  background: #fff;
-  padding: 16px;
-  border-radius: 12px;
+  background: #f1f5f9;
+  padding: 14px;
+  border-radius: 8px;
   font-size: 14px;
   color: #334155;
-  line-height: 1.6;
+  line-height: 1.5;
   border: 1px solid #e2e8f0;
 }
 
@@ -285,10 +288,9 @@ body {
 .detail-row {
   display: flex;
   justify-content: space-between;
-  padding: 12px 0;
+  padding: 10px 0;
   border-bottom: 1px solid #f1f5f9;
   font-size: 14px;
-  align-items: center;
 }
 
 .detail-row span:first-child {
@@ -299,26 +301,22 @@ body {
 .detail-row span:last-child {
   color: #0f172a;
   font-weight: 600;
-  text-align: right;
-  max-width: 60%;
-  word-break: break-word;
 }
 
 .img-btn {
   display: inline-block;
   padding: 6px 12px;
-  background: #e0f2fe;
-  color: #0369a1;
-  border: 1px solid #bae6fd;
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
   border-radius: 6px;
   text-decoration: none;
   font-size: 12px;
   font-weight: 500;
-  transition: background 0.15s;
 }
 
 .img-btn:hover {
-  background: #bae6fd;
+  background: #e2e8f0;
 }
 
 .loading {
@@ -337,31 +335,30 @@ body {
 
 <div class="header">
     <div class="nav-container">
-        <div class="back-btn-container">
+        <div id="backNav" class="back-btn-container">
             <button class="back-btn" onclick="goBack()">← Back</button>
         </div>
-        <div class="header-title">Helios Solar</div>
+        <div class="header-title" id="mainHeader">Helios Solar Dashboard</div>
     </div>
 </div>
 
-<div class="summary-grid">
-    <div class="summary-card">
+<div id="moduleSection" class="summary-grid">
+    <div class="summary-card" onclick="selectModule('delivery')">
         <div class="summary-icon">📦</div>
         <div class="summary-title">Material Delivery</div>
-        <div class="summary-count" id="deliveryCount">0</div>
-        <div class="summary-sub">Today: <span id="deliveryToday">0</span></div>
+        <div class="summary-count" id="deliveryCount">...</div>
+        <div class="summary-sub">Today: <span id="deliveryToday">...</span></div>
     </div>
-    <div class="summary-card">
+    <div class="summary-card" onclick="selectModule('installation')">
         <div class="summary-icon">🔧</div>
         <div class="summary-title">Material Installation</div>
-        <div class="summary-count" id="installationCount">0</div>
-        <div class="summary-sub">Today: <span id="installationToday">0</span></div>
+        <div class="summary-count" id="installationCount">...</div>
+        <div class="summary-sub">Today: <span id="installationToday">...</span></div>
     </div>
 </div>
 
-<div class="section-title" id="sectionTitleLabel">Divisions</div>
-
-<div id="divisionSection" class="division-grid">
+<div id="divisionHeading" class="section-title" style="display:none;">Select Division</div>
+<div id="divisionSection" class="division-grid" style="display:none;">
     <div class="division-card" id="btn1" onclick="showDivision(event,'Tadepalligudem')">
         <div class="division-left">
             <div class="division-name">📍 Tadepalligudem</div>
@@ -370,7 +367,7 @@ body {
                 <span>Total: <b id="tadeTotal">0</b></span>
             </div>
         </div>
-        <div class="division-arrow">➜</div>
+        <div class="division-arrow">➔</div>
     </div>
 
     <div class="division-card" id="btn2" onclick="showDivision(event,'Narsipatnam')">
@@ -381,7 +378,7 @@ body {
                 <span>Total: <b id="narsiTotal">0</b></span>
             </div>
         </div>
-        <div class="division-arrow">➜</div>
+        <div class="division-arrow">➔</div>
     </div>
 
     <div class="division-card" id="btn3" onclick="showDivision(event,'Chirala')">
@@ -392,7 +389,7 @@ body {
                 <span>Total: <b id="chiralaTotal">0</b></span>
             </div>
         </div>
-        <div class="division-arrow">➜</div>
+        <div class="division-arrow">➔</div>
     </div>
 
     <div class="division-card" id="btn4" onclick="showDivision(event,'Bapatla')">
@@ -403,14 +400,14 @@ body {
                 <span>Total: <b id="bapatlaTotal">0</b></span>
             </div>
         </div>
-        <div class="division-arrow">➜</div>
+        <div class="division-arrow">➔</div>
     </div>
 </div>
 
 <div id="totalCount" style="display:none;"></div>
   
 <div id="divisionSearch" class="search-card" style="display:none;">
-    <div class="search-title">🔍 Search in Division</div>
+    <div class="search-title">🔍 Search Filter</div>
     <div class="search-row">
         <select id="searchType">
             <option value="service">Service Number</option>
@@ -423,16 +420,16 @@ body {
         </select>
 
         <div id="searchBox">
-            <input id="searchInput" type="text" placeholder="Enter Search Value" style="margin-bottom: 10px;">
+            <input id="searchInput" type="text" placeholder="Enter Search Value">
             <button onclick="performSearch()">Search</button>
         </div>
 
         <div id="dateBox" style="display:none;">
-            <input type="date" id="fromDate" style="margin-bottom: 10px;">
-            <input type="date" id="toDate" style="margin-bottom: 10px;">
-            <div style="display:flex; gap:10px;">
+            <input type="date" id="fromDate">
+            <input type="date" id="toDate">
+            <div style="display:flex;gap:10px;margin-top:10px;">
                 <button id="applyBtn" onclick="applyDateFilter()">Filter</button>
-                <button onclick="clearDateFilter()" style="background:#64748b;">Clear</button>
+                <button onclick="clearDateFilter()">Clear</button>
             </div>
         </div>
     </div>
@@ -444,46 +441,71 @@ body {
 <script>
 let fullData = [];
 let dashboard = {};
+let selectedModule = ""; 
 let selectedDivision = "";
-let currentView = "home";
+let currentView = "home"; 
 let isProcessing = false;
 
 const BASE_URL = "https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec";
 
 // Optimized asynchronous initial fetch setup
+function renderInitialCounts(counts) {
+    if (!counts) return;
+    document.getElementById("installationCount").innerText = counts.installation?.total || 0;
+    document.getElementById("installationToday").innerText = counts.installation?.today || 0;
+    document.getElementById("deliveryCount").innerText = counts.delivery?.total || 0;
+    document.getElementById("deliveryToday").innerText = counts.delivery?.today || 0;
+}
+
 async function loadData() {
     try {
-        // Step 1: Run the fast API call for counts and render to interface directly 
-        const countsResponse = await fetch(BASE_URL + "?action=dashboardCounts&t=" + Date.now());
-        dashboard = await countsResponse.json();
-        renderDashboardCounts(dashboard);
+        // Parallelized fetch architecture to speed up cold starts
+        const countsPromise = fetch(BASE_URL + "?action=dashboardCounts&t=" + Date.now()).then(r => r.json());
+        const allDataPromise = fetch(
+    BASE_URL +
+    "?type=all" +
+    "&module=" + selectedModule +
+    "&t=" + Date.now()
+).then(r => r.json());
 
-        // Step 2: Fetch the heavy history list asynchronously in the background
-        const recordsResponse = await fetch(BASE_URL + "?type=all&t=" + Date.now());
-        fullData = await recordsResponse.json();
+        dashboard = await countsPromise;
+        renderInitialCounts(dashboard);
+
+        fullData = await allDataPromise;
         fullData = fullData.filter(item => item.timestamp);
     } catch (err) {
         console.error(err);
-        alert("Unable to load dashboard data.");
     }
 }
 
-function renderDashboardCounts(data) {
-    if(!data) return;
-    document.getElementById("installationCount").innerText = data.installation?.total || 0;
-    document.getElementById("installationToday").innerText = data.installation?.today || 0;
-    document.getElementById("deliveryCount").innerText = data.delivery?.total || 0;
-    document.getElementById("deliveryToday").innerText = data.delivery?.today || 0;
+async function selectModule(moduleType) {
+    selectedModule = moduleType;
+  fullData = [];
+await loadData();
+    currentView = "module";
+    
+    document.getElementById("backNav").style.display = "flex";
+    document.getElementById("mainHeader").innerText = moduleType === 'delivery' ? "Material Delivery" : "Material Installation";
+    
+    updateDivisionCardsUI();
+    
+    document.getElementById("moduleSection").style.display = "none";
+    document.getElementById("divisionHeading").style.display = "block";
+    document.getElementById("divisionSection").style.display = "flex";
+}
 
-    // Fast render division counters
-    document.getElementById("tadeToday").innerText = data.divisions?.Tadepalligudem?.installationToday || 0;
-    document.getElementById("tadeTotal").innerText = data.divisions?.Tadepalligudem?.installationTotal || 0;
-    document.getElementById("narsiToday").innerText = data.divisions?.Narsipatnam?.installationToday || 0;
-    document.getElementById("narsiTotal").innerText = data.divisions?.Narsipatnam?.installationTotal || 0;
-    document.getElementById("chiralaToday").innerText = data.divisions?.Chirala?.installationToday || 0;
-    document.getElementById("chiralaTotal").innerText = data.divisions?.Chirala?.installationTotal || 0;
-    document.getElementById("bapatlaToday").innerText = data.divisions?.Bapatla?.installationToday || 0;
-    document.getElementById("bapatlaTotal").innerText = data.divisions?.Bapatla?.installationTotal || 0;
+function updateDivisionCardsUI() {
+    if (!dashboard.divisions) return;
+    const divData = dashboard.divisions;
+    const m = selectedModule;
+    
+    const targets = ["tade", "narsi", "chirala", "bapatla"];
+    const keys = ["Tadepalligudem", "Narsipatnam", "Chirala", "Bapatla"];
+    
+    targets.forEach((t, idx) => {
+        document.getElementById(`${t}Today`).innerText = divData[keys[idx]][m + "Today"] || 0;
+        document.getElementById(`${t}Total`).innerText = divData[keys[idx]][m + "Total"] || 0;
+    });
 }
 
 async function showDivision(e, divisionName) {
@@ -494,15 +516,7 @@ async function showDivision(e, divisionName) {
     isProcessing = true;
 
     const cards = document.querySelectorAll(".division-card");
-    cards.forEach(card => {
-        card.style.pointerEvents = "none";
-        card.classList.add("loading");
-    });
-
-    const clickedCard = e.currentTarget;
-    const arrow = clickedCard.querySelector(".division-arrow");
-    const oldArrow = arrow.innerHTML;
-    arrow.innerHTML = "⏳";
+    cards.forEach(card => card.classList.add("loading"));
 
     try {
         if (!fullData.length) {
@@ -514,10 +528,8 @@ async function showDivision(e, divisionName) {
             return div === divisionName.toLowerCase().replace(/\s+/g, "");
         });
 
+        document.getElementById("divisionHeading").style.display = "none";
         document.getElementById("divisionSection").style.display = "none";
-        document.getElementById("sectionTitleLabel").style.display = "none";
-        document.querySelector(".summary-grid").style.display = "none";
-
         document.getElementById("totalCount").style.display = "block";
         document.getElementById("divisionSearch").style.display = "block";
         
@@ -525,16 +537,13 @@ async function showDivision(e, divisionName) {
         document.getElementById("searchInput").value = "";
         document.getElementById("fromDate").value = "";
         document.getElementById("toDate").value = "";
-        document.getElementById("searchBox").style.display = "block";
-        document.getElementById("dateBox").style.display = "none";
 
-        const div = dashboard.divisions[divisionName];
+        const divMeta = dashboard.divisions[divisionName];
+        const displayModuleName = selectedModule === 'delivery' ? 'Delivery' : 'Installation';
+
         document.getElementById("totalCount").innerHTML = `
-            <div style="font-size:16px; font-weight:700; color:#1565C0; margin-bottom:8px;">📍 ${divisionName}</div>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top:4px;">
-                <div>🔧 <b>Installation:</b><br>Today: ${div.installationToday} | Total: ${div.installationTotal}</div>
-                <div>📦 <b>Delivery:</b><br>Today: ${div.deliveryToday} | Total: ${div.deliveryTotal}</div>
-            </div>
+            <b>📍 ${divisionName} — ${displayModuleName}</b><br>
+            Today: <b>${divMeta[selectedModule + 'Today']}</b> | Total: <b>${divMeta[selectedModule + 'Total']}</b>
         `;
 
         const today = getTodayIST();
@@ -545,45 +554,30 @@ async function showDivision(e, divisionName) {
                 d.getMonth() === today.getMonth() &&
                 d.getDate() === today.getDate();
         });
-
+        
         document.getElementById("data").style.display = "block";
         renderData(todayData);
 
     } catch (err) {
-        alert("Error loading division dataset.");
-        console.error(err);
+        alert("Error loading structural dashboard contents.");
     } finally {
-        cards.forEach(card => {
-            card.style.pointerEvents = "auto";
-            card.classList.remove("loading");
-        });
-        arrow.innerHTML = oldArrow;
+        cards.forEach(card => card.classList.remove("loading"));
         isProcessing = false;
     }
 }
 
 async function performSearch() {
-    currentView = "search";
-    if (!fullData.length) {
-        await loadData();
-    }
-
     const value = document.getElementById("searchInput").value.trim();
     if (!value) return;
 
-    const divisionName = selectedDivision;
+    currentView = "search";
     const container = document.getElementById("data");
-    container.innerHTML = "<p style='text-align:center; color:#64748b;'>⏳ Searching cloud matrix...</p>";
-
-    document.getElementById("divisionSection").style.display = "none";
-    document.getElementById("sectionTitleLabel").style.display = "none";
-    document.getElementById("data").style.display = "block";
-    document.getElementById("totalCount").style.display = "block";
+    container.innerHTML = "<p style='text-align:center;'>⏳ Running search metrics...</p>";
 
     try {
         const url = BASE_URL
             + "?action=search"
-            + "&division=" + encodeURIComponent(divisionName)
+            + "&division=" + encodeURIComponent(selectedDivision)
             + "&field=" + encodeURIComponent(document.getElementById("searchType").value)
             + "&value=" + encodeURIComponent(value)
             + "&t=" + Date.now();
@@ -591,7 +585,7 @@ async function performSearch() {
         const res = await fetch(url);
         const result = await res.json();
 
-        document.getElementById("totalCount").innerHTML = `<b>Search Results:</b> ${result.length} entries found`;
+        document.getElementById("totalCount").innerText = `Search Results: ${result.length}`;
 
         const enrichedResult = result.map(r => {
             const rService = (r.service || "").toString().trim();
@@ -600,9 +594,8 @@ async function performSearch() {
         });
 
         renderData(enrichedResult);
-        document.getElementById("searchInput").value = "";
     } catch (err) {
-        container.innerHTML = "<p style='text-align:center; color:#ef4444;'>Error rendering search payload.</p>";
+        container.innerHTML = "<p style='text-align:center;'>Error mapping matches.</p>";
     }
 }
 
@@ -630,7 +623,7 @@ function renderData(data) {
     container.innerHTML = "";
 
     if (!data.length) {
-        container.innerHTML = "<p style='text-align:center; padding:20px; color:#64748b;'>No entries registered.</p>";
+        container.innerHTML = "<p style='text-align:center; padding: 20px; color:#64748b;'>No entries logged for today.</p>";
         return;
     }
 
@@ -653,129 +646,155 @@ function renderData(data) {
         });
 
         container.innerHTML += `  
-            <div class="card" onclick="openDetails('${item.service}')">
-                <div style="font-weight:600; font-size:15px; color:#1565C0; margin-bottom:4px;">${item.service || "-"}</div>
-                <div style="font-size:14px; font-weight:500; color:#334155;">${item.name || "-"}</div>
-                <div style="font-size:13px; color:#64748b; margin-top:2px;">📞 ${item.phone || "-"}</div>
-                <div style="font-size:12px; color:#475569; margin-top:4px;">👷 Surveyor: ${item.surveyor || "-"}</div>
+            <div class="card" onclick='openDetails(${JSON.stringify(item)})'>
+                <div style="font-weight:600; font-size:15px; color:#0f172a; margin-bottom:4px;">${item.service || "-"}</div>
+                <div style="font-size:14px; color:#334155;">${item.name || "-"}</div>
+                <div style="font-size:13px; color:#64748b; margin-top:2px;">${item.phone || "-"}</div>
                 <div class="time">${time}</div>
             </div>`;
     });
 }
 
-async function openDetails(serviceNo){
+function openDetails(item) {
 
-currentView="details";
+    currentView = "details";
 
-document.getElementById("data").style.display="none";
-document.getElementById("divisionSearch").style.display="none";
-document.getElementById("totalCount").style.display="none";
+    document.getElementById("data").style.display = "none";
+    document.getElementById("divisionSearch").style.display = "none";
+    document.getElementById("totalCount").style.display = "none";
 
-const detail=document.getElementById("detailView");
-detail.style.display="block";
+    const detail = document.getElementById("detailView");
+    detail.style.display = "block";
 
-detail.innerHTML="<h2>Loading Service Details...</h2>";
+    const val = v =>
+        v !== undefined &&
+        v !== null &&
+        String(v).trim() !== ""
+            ? String(v)
+            : "-";
 
-try{
-
-const res=await fetch(
-BASE_URL+
-"?action=getSubmission&service="+
-encodeURIComponent(serviceNo)+
-"&t="+Date.now()
-);
-
-const item=await res.json();
-
-if(!item.found){
-
-detail.innerHTML="<h2>Record Not Found</h2>";
-return;
-}
-  const img = (url, text) =>
-    url ? `<a href="${url}" target="_blank" class="img-btn">${text}</a>` : "-";
+    const img = url =>
+        url
+            ? `<a href="${url}" target="_blank" class="img-btn">📷 View</a>`
+            : "-";
+  if (selectedModule === "installation") {
 
 detail.innerHTML = `
 
-<h2>📋 Service Details</h2>
+<h2>🔧 Material Installation Details</h2>
 
-<div class="detail-row"><span>Service Number</span><span>${item.serviceNumber}</span></div>
-<div class="detail-row"><span>Customer Name</span><span>${item.name}</span></div>
-<div class="detail-row"><span>Phone</span><span>${item.phone}</span></div>
-<div class="detail-row"><span>Address</span><span>${item.address}</span></div>
-<div class="detail-row"><span>Division</span><span>${item.division}</span></div>
-<div class="detail-row"><span>Sub Division</span><span>${item.subdivision}</span></div>
-<div class="detail-row"><span>Section</span><span>${item.section}</span></div>
-<div class="detail-row"><span>Distribution</span><span>${item.distribution}</span></div>
+<div class="detail-row"><span>Service Number</span><span>${val(item.service)}</span></div>
 
-<h2>🔧 Installation</h2>
+<div class="detail-row"><span>Customer Name</span><span>${val(item.name)}</span></div>
 
-<div class="detail-row"><span>Surveyor</span><span>${item.surveyor}</span></div>
-<div class="detail-row"><span>Edited By</span><span>${item.editedBy}</span></div>
+<div class="detail-row"><span>Phone Number</span><span>${val(item.phone)}</span></div>
 
-<div class="detail-row"><span>Panel No.1</span><span>${item.panel1}</span></div>
-<div class="detail-row"><span>Panel No.2</span><span>${item.panel2}</span></div>
-<div class="detail-row"><span>Panel No.3</span><span>${item.panel3}</span></div>
-<div class="detail-row"><span>Panel No.4</span><span>${item.panel4}</span></div>
+<div class="detail-row"><span>Address</span><span>${val(item.address)}</span></div>
 
-<div class="detail-row"><span>Inverter Serial</span><span>${item.inverterSerial}</span></div>
+<div class="detail-row"><span>Division</span><span>${val(item.division)}</span></div>
 
-<div class="detail-row"><span>Panels Image</span><span>${img(item.panelsImage,"View")}</span></div>
-<div class="detail-row"><span>Inverter Image</span><span>${img(item.inverterImage,"View")}</span></div>
-<div class="detail-row"><span>Earth Image</span><span>${img(item.earthImage,"View")}</span></div>
-<div class="detail-row"><span>Current Bill</span><span>${img(item.billImage,"View")}</span></div>
-<div class="detail-row"><span>Aadhaar</span><span>${img(item.aadharImage,"View")}</span></div>
-<div class="detail-row"><span>Document 1</span><span>${img(item.doc1Image,"View")}</span></div>
-<div class="detail-row"><span>Document 2</span><span>${img(item.doc2Image,"View")}</span></div>
+<div class="detail-row"><span>Sub Division</span><span>${val(item.subdivision)}</span></div>
 
-<h2>📦 Material Delivery</h2>
+<div class="detail-row"><span>Section</span><span>${val(item.section)}</span></div>
 
-<div class="detail-row"><span>Panel Image 1</span><span>${img(item.material.panelImage1,"View")}</span></div>
-<div class="detail-row"><span>Panel 1</span><span>${item.material.panel1}</span></div>
+<div class="detail-row"><span>Distribution</span><span>${val(item.distribution)}</span></div>
 
-<div class="detail-row"><span>Panel Image 2</span><span>${img(item.material.panelImage2,"View")}</span></div>
-<div class="detail-row"><span>Panel 2</span><span>${item.material.panel2}</span></div>
+<hr>
 
-<div class="detail-row"><span>Panel Image 3</span><span>${img(item.material.panelImage3,"View")}</span></div>
-<div class="detail-row"><span>Panel 3</span><span>${item.material.panel3}</span></div>
+<div class="detail-row"><span>Panel No. 1</span><span>${val(item.panel1)}</span></div>
 
-<div class="detail-row"><span>Panel Image 4</span><span>${img(item.material.panelImage4,"View")}</span></div>
-<div class="detail-row"><span>Panel 4</span><span>${item.material.panel4}</span></div>
+<div class="detail-row"><span>Panel No. 2</span><span>${val(item.panel2)}</span></div>
 
-<div class="detail-row"><span>Inverter Image</span><span>${img(item.material.inverterImage,"View")}</span></div>
-<div class="detail-row"><span>Inverter Serial</span><span>${item.material.inverterNo}</span></div>
+<div class="detail-row"><span>Panel No. 3</span><span>${val(item.panel3)}</span></div>
 
-<div class="detail-row"><span>Panels Photo</span><span>${img(item.material.panelsPhoto,"View")}</span></div>
-<div class="detail-row"><span>BOS Photo</span><span>${img(item.material.bosPhoto,"View")}</span></div>
-<div class="detail-row"><span>Delivery Proof</span><span>${img(item.material.deliveryProof,"View")}</span></div>
+<div class="detail-row"><span>Panel No. 4</span><span>${val(item.panel4)}</span></div>
 
-<div class="detail-row"><span>Material Surveyor</span><span>${item.material.materialSurveyor}</span></div>
+<div class="detail-row"><span>Inverter Serial</span><span>${val(item.inverterSerial)}</span></div>
+
+<hr>
+
+<div class="detail-row"><span>Surveyor</span><span>${val(item.surveyor)}</span></div>
+
+<div class="detail-row"><span>Edited By</span><span>${val(item.editedBy)}</span></div>
+
+<hr>
+
+<div class="detail-row"><span>Panels Image</span><span>${img(item.panels)}</span></div>
+
+<div class="detail-row"><span>Inverter Image</span><span>${img(item.inverter)}</span></div>
+
+<div class="detail-row"><span>Earth Image</span><span>${img(item.earth)}</span></div>
+
+<div class="detail-row"><span>Current Bill</span><span>${img(item.bill)}</span></div>
+
+<div class="detail-row"><span>Aadhaar Card</span><span>${img(item.aadhar)}</span></div>
+
+<div class="detail-row"><span>Document 1</span><span>${img(item.doc1)}</span></div>
+
+<div class="detail-row"><span>Document 2</span><span>${img(item.doc2)}</span></div>
 
 `;
-  } catch (err) {
-    console.error(err);
-    detail.innerHTML = "<h2>Unable to load service details.</h2>";
+
 }
+  else {
+
+detail.innerHTML = `
+
+<h2>📦 Material Delivery Details</h2>
+
+<div class="detail-row"><span>Service Number</span><span>${val(item.service)}</span></div>
+
+<div class="detail-row"><span>Customer Name</span><span>${val(item.name)}</span></div>
+
+<div class="detail-row"><span>Phone Number</span><span>${val(item.phone)}</span></div>
+
+<div class="detail-row"><span>Address</span><span>${val(item.address)}</span></div>
+
+<div class="detail-row"><span>Division</span><span>${val(item.division)}</span></div>
+
+<div class="detail-row"><span>Sub Division</span><span>${val(item.subdivision)}</span></div>
+
+<div class="detail-row"><span>Section</span><span>${val(item.section)}</span></div>
+
+<div class="detail-row"><span>Distribution</span><span>${val(item.distribution)}</span></div>
+
+<hr>
+
+<div class="detail-row"><span>Panel Image 1</span><span>${img(item.panelImage1)}</span></div>
+
+<div class="detail-row"><span>Panel No. 1</span><span>${val(item.panel1)}</span></div>
+
+<div class="detail-row"><span>Panel Image 2</span><span>${img(item.panelImage2)}</span></div>
+
+<div class="detail-row"><span>Panel No. 2</span><span>${val(item.panel2)}</span></div>
+
+<div class="detail-row"><span>Panel Image 3</span><span>${img(item.panelImage3)}</span></div>
+
+<div class="detail-row"><span>Panel No. 3</span><span>${val(item.panel3)}</span></div>
+
+<div class="detail-row"><span>Panel Image 4</span><span>${img(item.panelImage4)}</span></div>
+
+<div class="detail-row"><span>Panel No. 4</span><span>${val(item.panel4)}</span></div>
+
+<hr>
+
+<div class="detail-row"><span>Inverter Image</span><span>${img(item.inverterImage)}</span></div>
+
+<div class="detail-row"><span>Inverter Serial</span><span>${val(item.inverterSerial)}</span></div>
+
+<hr>
+
+<div class="detail-row"><span>Panels Photo</span><span>${img(item.panelsPhoto)}</span></div>
+
+<div class="detail-row"><span>BOS Photo</span><span>${img(item.bosPhoto)}</span></div>
+
+<div class="detail-row"><span>Delivery Proof</span><span>${img(item.deliveryProof)}</span></div>
+
+<div class="detail-row"><span>Material Surveyor</span><span>${val(item.materialSurveyor)}</span></div>
+
+`;
+
 }
-
-function showHome() {
-    document.querySelector(".summary-grid").style.display = "grid";
-    document.getElementById("divisionSection").style.display = "flex";
-    document.getElementById("sectionTitleLabel").style.display = "block";
-
-    document.getElementById("divisionSearch").style.display = "none";
-    document.getElementById("data").style.display = "none";
-    document.getElementById("detailView").style.display = "none";
-    document.getElementById("totalCount").style.display = "none";
-      
-    document.getElementById("searchType").value = "service";
-    document.getElementById("searchInput").value = "";
-    document.getElementById("fromDate").value = "";
-    document.getElementById("toDate").value = "";
-    document.getElementById("searchBox").style.display = "block";
-    document.getElementById("dateBox").style.display = "none";
-
-    currentView = "home";
 }
 
 function closeDetails() {
@@ -791,8 +810,24 @@ function goBack() {
         closeDetails();
         return;
     }
-    if (currentView === "division" || currentView === "search") {
-        showHome();
+    if (currentView === "search" || currentView === "division") {
+        document.getElementById("divisionSearch").style.display = "none";
+        document.getElementById("data").style.display = "none";
+        document.getElementById("totalCount").style.display = "none";
+        
+        document.getElementById("divisionHeading").style.display = "block";
+        document.getElementById("divisionSection").style.display = "flex";
+        currentView = "module";
+        return;
+    }
+    if (currentView === "module") {
+        document.getElementById("backNav").style.display = "none";
+        document.getElementById("mainHeader").innerText = "Helios Solar Dashboard";
+        document.getElementById("divisionHeading").style.display = "none";
+        document.getElementById("divisionSection").style.display = "none";
+        
+        document.getElementById("moduleSection").style.display = "grid";
+        currentView = "home";
         return;
     }
     window.location.href = "index.html";
@@ -804,7 +839,7 @@ async function applyDateFilter() {
 
     btn.disabled = true;
     const container = document.getElementById("data");
-    container.innerHTML = "<p style='text-align:center; color:#64748b;'>⏳ Applying processing matrix filters...</p>";
+    container.innerHTML = "<p style='text-align:center;'>⏳ Filtering...</p>";
 
     try {
         const from = document.getElementById("fromDate").value;
@@ -825,10 +860,10 @@ async function applyDateFilter() {
                 (item.division || "").toLowerCase().replace(/\s+/g, "") === selectedDivision.toLowerCase().replace(/\s+/g, "");
         });
 
-        document.getElementById("totalCount").innerHTML = `<b>📍 ${selectedDivision}</b><br>${from} → ${to} | <b>Count:</b> ${filtered.length}`;
+        document.getElementById("totalCount").innerText = `${selectedDivision} | ${from} → ${to} | Count: ${filtered.length}`;
         renderData(filtered);
     } catch (err) {
-        alert("Error applying filter matrix");
+        console.error(err);
     } finally {
         btn.disabled = false;
     }
@@ -837,11 +872,11 @@ async function applyDateFilter() {
 function clearDateFilter() {
     document.getElementById("fromDate").value = "";
     document.getElementById("toDate").value = "";
-    let btn = document.getElementById(selectedDivision === "Tadepalligudem" ? "btn1" : selectedDivision === "Narsipatnam" ? "btn2" : selectedDivision === "Chirala" ? "btn3" : "btn4");
-    showDivision({ currentTarget: btn }, selectedDivision);
+    let mockEvent = { currentTarget: document.getElementById(selectedDivision === "Tadepalligudem" ? "btn1" : selectedDivision === "Narsipatnam" ? "btn2" : selectedDivision === "Chirala" ? "btn3" : "btn4") };
+    showDivision(mockEvent, selectedDivision);
 }
 
-window.onload = async function () {
+window.onload = function () {
     document.getElementById("searchInput").addEventListener("keypress", function (e) {
         if (e.key === "Enter") performSearch();
     });
@@ -856,7 +891,7 @@ window.onload = async function () {
         }
     });
 
-    await loadData();
+    loadData();
 };
 </script>
 </body>
