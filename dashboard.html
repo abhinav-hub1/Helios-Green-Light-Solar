@@ -1,1167 +1,248 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Dashboard</title>
+
 <style>
-body {
-  font-family: Arial;
-  background: #f4f6f8;
-  margin: 0;
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f4f6f8;
+}
+
+/* Header */
 .header{
-    height:60px;
-    display:flex;
-    align-items:center;
-    background:#1565C0;
-    color:white;
-    box-shadow:0 3px 10px rgba(0,0,0,.15);
     position:sticky;
     top:0;
-    z-index:999;
-    position:relative;
-}
-.header-title{
-    position:absolute;
-    left:50%;
-    transform:translateX(-50%);
-    font-size:18px;
+    z-index:1000;
+    height:60px;
+    background:#1565C0;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
     font-weight:600;
-    letter-spacing:.5px;
-    white-space:nowrap;
+    box-shadow:0 3px 10px rgba(0,0,0,.15);
 }
 
-.profile-icon{
+/* Pages */
 
-font-size:22px;
-
-cursor:pointer;
-
+.page{
+    padding:30px 20px;
 }
+
+.hidden{
+    display:none;
+}
+
+/* Dashboard */
+
+.dashboard-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:25px;
+    max-width:900px;
+    margin:auto;
+}
+
+.dashboard-card{
+    background:#fff;
+    border-radius:18px;
+    padding:35px;
+    text-align:center;
+    cursor:pointer;
+    transition:.3s;
+    box-shadow:0 8px 20px rgba(0,0,0,.12);
+}
+
+.dashboard-card:hover{
+    transform:translateY(-8px) scale(1.02);
+    box-shadow:0 18px 35px rgba(0,0,0,.18);
+}
+.delivery{
+    border-top:6px solid #2196F3;
+}
+
+.installation{
+    border-top:6px solid #43A047;
+}
+
+.card-icon{
+    font-size:60px;
+    margin-bottom:15px;
+}
+
+.card-title{
+    font-size:24px;
+    font-weight:bold;
+}
+
+.card-subtitle{
+    color:#666;
+    margin-top:10px;
+}
+
+/* Division */
 
 .back-btn{
-
-font-size:22px;
-
-cursor:pointer;
-
-}
- .search-card{
-
-margin:15px;
-
-background:white;
-
-border-radius:16px;
-
-padding:18px;
-
-box-shadow:0 4px 12px rgba(0,0,0,.08);
-
+    background:#1565C0;
+    color:white;
+    border:none;
+    padding:10px 18px;
+    border-radius:8px;
+    cursor:pointer;
+    margin-bottom:20px;
 }
 
-.search-title{
-
-font-size:17px;
-
-font-weight:bold;
-
-margin-bottom:15px;
-
-color:#1565C0;
-
-}
-
-.search-row{
-
-display:flex;
-
-flex-direction:column;
-
-gap:10px;
-
-}
-
-.search-row select,
-
-.search-row input{
-
-height:45px;
-
-border:1px solid #ddd;
-
-border-radius:10px;
-
-padding:0 12px;
-
-font-size:15px;
-
-}
-
-.search-row button{
-
-height:45px;
-
-background:#1565C0;
-
-color:white;
-
-border:none;
-
-border-radius:10px;
-
-font-size:15px;
-
-cursor:pointer;
-
-}
-  .summary-grid{
-
-display:grid;
-
-grid-template-columns:1fr 1fr;
-
-gap:15px;
-
-margin:15px;
-
-}
-
-.summary-card{
-
-background:white;
-
-border-radius:16px;
-
-padding:18px;
-
-text-align:center;
-
-box-shadow:0 5px 15px rgba(0,0,0,.08);
-
-}
-
-.summary-icon{
-
-font-size:30px;
-
-margin-bottom:10px;
-
-}
-
-.summary-title{
-
-font-size:15px;
-
-font-weight:bold;
-
-color:#444;
-
-}
-
-.summary-count{
-
-font-size:34px;
-
-font-weight:bold;
-
-margin-top:12px;
-
-color:#1565C0;
-
-}
-
-.summary-sub{
-
-margin-top:10px;
-
-color:#666;
-
-font-size:14px;
-
-}
-  .section-title{
-
-margin:18px 18px 8px;
-
-font-size:18px;
-
-font-weight:bold;
-
-color:#1565C0;
-
+.page-title{
+    text-align:center;
+    color:#1565C0;
+    margin-bottom:25px;
 }
 
 .division-grid{
-
-padding:0 15px 20px;
-
-display:flex;
-
-flex-direction:column;
-
-gap:15px;
-
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
 }
 
 .division-card{
-
-background:white;
-
-border-radius:16px;
-
-padding:18px;
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-cursor:pointer;
-
-box-shadow:0 5px 15px rgba(0,0,0,.08);
-
-transition:.25s;
-
-border-left:6px solid #1565C0;
-
+    background:white;
+    padding:25px;
+    text-align:center;
+    border-radius:15px;
+    cursor:pointer;
+    font-size:18px;
+    font-weight:bold;
+    box-shadow:0 5px 15px rgba(0,0,0,.1);
+    transition:.3s;
 }
 
 .division-card:hover{
+    background:#1565C0;
+    color:white;
+    transform:translateY(-5px) scale(1.02);
+    box-shadow:0 12px 25px rgba(21,101,192,.35);
+}
+@media(max-width:600px){
 
-transform:translateY(-3px);
-
-box-shadow:0 8px 20px rgba(0,0,0,.15);
+.dashboard-grid,
+.division-grid{
+    grid-template-columns:1fr;
+}
 
 }
 
-.division-left{
-
-display:flex;
-
-flex-direction:column;
-
-gap:8px;
-
-}
-
-.division-name{
-
-font-size:17px;
-
-font-weight:bold;
-
-color:#333;
-
-}
-
-.division-stats{
-
-display:flex;
-
-gap:20px;
-
-font-size:14px;
-
-color:#666;
-
-}
-
-.division-arrow{
-
-font-size:24px;
-
-color:#1565C0;
-
-}
-
-.division-card.loading{
-
-opacity:.6;
-
-pointer-events:none;
-
-}
-  .card{
-
-background:#fff;
-
-padding:16px;
-
-margin:12px 15px;
-
-border-radius:14px;
-
-box-shadow:0 4px 12px rgba(0,0,0,.08);
-
-cursor:pointer;
-
-transition:.25s;
-
-}
-
-.card:hover{
-
-transform:translateY(-2px);
-
-}
-
-.time{
-
-margin-top:8px;
-
-font-size:12px;
-
-color:#666;
-
-}
-
-.date-header{
-
-margin:18px 15px 8px;
-
-font-weight:bold;
-
-color:#1565C0;
-
-font-size:16px;
-
-}
-  .loading{
-
-animation:pulse 1s infinite;
-
-}
-
-@keyframes pulse{
-
-0%{opacity:1;}
-
-50%{opacity:.5;}
-
-100%{opacity:1;}
-
-}
 </style>
+
 </head>
 
 <body>
 
-<div class="header">
-
-    <div class="back-btn" onclick="goBack()">←</div>
-
-    <div class="header-title">
-        HELIOS GREEN LIGHT SOLAR
-    </div>
-
+<div class="header" id="headerTitle">
+    Dashboard
 </div>
 
-  <div class="summary-grid">
+<!-- Dashboard -->
 
-<div class="summary-card"
-onclick="showModule('delivery')">
-<div class="summary-icon">
+<div id="dashboardPage" class="page">
 
-📦
+<div class="dashboard-grid">
 
+<div class="dashboard-card delivery" onclick="openSection('Material Delivery')">
+<div class="card-icon">📦</div>
+<div class="card-title">Material Delivery</div>
+<div class="card-subtitle">View delivery records</div>
 </div>
 
-<div class="summary-title">
-
-Material Delivery
-
-</div>
-
-<div class="summary-count"
-
-id="deliveryCount">
-
-0
-
-</div>
-
-<div class="summary-sub">
-
-Today
-
-<span id="deliveryToday">
-
-0
-
-</span>
-
-</div>
-
-</div>
-
-<div class="summary-card"
-onclick="showModule('installation')">
-
-<div class="summary-icon">
-
-🔧
-
-</div>
-
-<div class="summary-title">
-
-Material Installation
-
-</div>
-
-<div class="summary-count"
-
-id="installationCount">
-
-0
-
-</div>
-
-<div class="summary-sub">
-
-Today
-
-<span id="installationToday">
-
-0
-
-</span>
-
+<div class="dashboard-card installation" onclick="openSection('Material Installation')">
+<div class="card-icon">🔧</div>
+<div class="card-title">Material Installation</div>
+<div class="card-subtitle">View installation records</div>
 </div>
 
 </div>
 
 </div>
-    <div id="divisionSection"
-     class="division-grid"
-     style="display:none;">
-</div>
 
-  <div id="totalCount" style="display:none;"></div>
-  
-<div id="divisionSearch" class="search-card" style="display:none;">
+<!-- Division Page -->
 
-<div class="search-title">
-🔍 Search in Division
-</div>
+<div id="divisionPage" class="page hidden">
 
-<div class="search-row">
-
-<select id="searchType">
-
-<option value="service">Service Number</option>
-<option value="name">Customer Name</option>
-<option value="phone">Phone Number</option>
-<option value="subdivision">Sub Division</option>
-<option value="section">Section</option>
-<option value="distribution">Distribution</option>
-
-<option value="date">📅 Filter By Date</option>
-
-</select>
-
-<!-- Search Box -->
-<div id="searchBox">
-
-<input
-id="searchInput"
-type="text"
-placeholder="Enter Search Value">
-
-<button onclick="performSearch()">
-Search
+<button class="back-btn" onclick="goBack()">
+← Back
 </button>
 
+<h2 class="page-title" id="sectionTitle"></h2>
+
+<div class="division-grid">
+
+<div class="division-card" onclick="openDivision('TADEPALLIGUDEM')">
+TADEPALLIGUDEM
 </div>
 
-<!-- Date Filter -->
-<div id="dateBox" style="display:none;">
-
-<input type="date" id="fromDate">
-
-<input type="date" id="toDate">
-
-<div style="display:flex;gap:10px;margin-top:10px;">
-
-<button id="applyBtn"
-onclick="applyDateFilter()">
-Filter
-</button>
-
-<button onclick="clearDateFilter()">
-Clear
-</button>
-
+<div class="division-card" onclick="openDivision('NARSIPATNAM')">
+NARSIPATNAM
 </div>
 
+<div class="division-card" onclick="openDivision('CHIRALA')">
+CHIRALA
+</div>
+
+<div class="division-card" onclick="openDivision('BAPATLA')">
+BAPATLA
 </div>
 
 </div>
 
 </div>
 
-<div id="data" style="display:none;"></div>
-
-<div id="detailView" style="display:none;"></div>
 <script>
-  
-let fullData = [];
-let dashboard = {};
 
-let selectedModule = "";
-let selectedDivision = "";
+let currentSection="";
 
-let currentView = "home";
-let isProcessing = false;
+function openSection(section){
 
-  
-  async function showDivision(e, divisionName) {
+currentSection=section;
 
-  selectedDivision = divisionName;
-  currentView = "division";
+document.getElementById("dashboardPage").classList.add("hidden");
+document.getElementById("divisionPage").classList.remove("hidden");
 
-  if (isProcessing) return;
-  isProcessing = true;
+document.getElementById("sectionTitle").innerText=section;
 
-  const cards = document.querySelectorAll(".division-card");
-
-  // Disable all cards
-  cards.forEach(card => {
-    card.style.pointerEvents = "none";
-    card.classList.add("loading");
-  });
-
-  const clickedCard = e.currentTarget;
-
-  // Show loading icon only on clicked card
-  const arrow = clickedCard.querySelector(".division-arrow");
-  const oldArrow = arrow.innerHTML;
-  arrow.innerHTML = "⏳";
-  try {
-
-    // Load data only once
-    if (!fullData.length) {
-      await loadData();
-    }
-
-    // Filter selected division
-    let divisionData = fullData.filter(item => {
-
-      const div = (item.division || "")
-        .toString()
-        .trim()
-        .toLowerCase()
-        .replace(/\s+/g, "");
-
-      return div === divisionName
-        .toLowerCase()
-        .replace(/\s+/g, "");
-
-    });
-
-    // Hide home cards
-    document.getElementById("divisionSection").style.display = "none";
-
-    document.querySelector(".summary-grid").style.display = "none";
-
-    document.getElementById("totalCount").style.display = "block";
-    
-    document.getElementById("divisionSearch").style.display = "block";
-document.getElementById("searchType").value = "service";
-document.getElementById("searchInput").value = "";
-document.getElementById("fromDate").value = "";
-document.getElementById("toDate").value = "";
-
-document.getElementById("searchBox").style.display = "block";
-document.getElementById("dateBox").style.display = "none";
-
-const div = dashboard.divisions[divisionName];
-
-if (selectedModule === "delivery") {
-
-document.getElementById("totalCount").innerHTML = `
-<b>📦 Material Delivery</b><br><br>
-
-<b>${divisionName}</b><br>
-
-Today : <b>${div.deliveryToday}</b><br>
-
-Total : <b>${div.deliveryTotal}</b>
-`;
-
-} else {
-
-document.getElementById("totalCount").innerHTML = `
-<b>🔧 Material Installation</b><br><br>
-
-<b>${divisionName}</b><br>
-
-Today : <b>${div.installationToday}</b><br>
-
-Total : <b>${div.installationTotal}</b>
-`;
+document.getElementById("headerTitle").innerText=section;
 
 }
 
-   const today = getTodayIST();
+function goBack(){
 
-const todayData = divisionData.filter(item => {
+document.getElementById("divisionPage").classList.add("hidden");
+document.getElementById("dashboardPage").classList.remove("hidden");
 
-    const d = toIST(item.timestamp);
-
-    return d &&
-        d.getFullYear() === today.getFullYear() &&
-        d.getMonth() === today.getMonth() &&
-        d.getDate() === today.getDate();
-
-});
-renderData(todayData);
-
-  } catch (err) {
-
-    alert("Error loading data");
-
-    console.error(err);
-
-  } finally {
-
-    // Enable cards again
-    cards.forEach(card => {
-
-      card.style.pointerEvents = "auto";
-
-      card.classList.remove("loading");
-    });
-
-    arrow.innerHTML = oldArrow;
-
-    isProcessing = false;
-
-  }
+document.getElementById("headerTitle").innerText="Dashboard";
 
 }
-function showModule(module){
 
-    selectedModule = module;
-    currentView = "module";
+function openDivision(name){
 
-    document.querySelector(".summary-grid").style.display = "none";
-    document.getElementById("divisionSection").style.display = "flex";
-    document.getElementById("divisionSection").innerHTML = "";
+alert(currentSection+"\n\n"+name);
 
-    const divisions = [
-        "Tadepalligudem",
-        "Narsipatnam",
-        "Chirala",
-        "Bapatla"
-    ];
-
-    divisions.forEach(div => {
-
-        const d = dashboard.divisions[div];
-
-        const today =
-            module === "delivery"
-            ? d.deliveryToday
-            : d.installationToday;
-
-        const total =
-            module === "delivery"
-            ? d.deliveryTotal
-            : d.installationTotal;
-
-        document.getElementById("divisionSection").innerHTML += `
-            <div class="division-card"
-                 onclick="showDivision(event,'${div}')">
-
-                <div class="division-left">
-
-                    <div class="division-name">
-                        📍 ${div}
-                    </div>
-
-                    <div class="division-stats">
-                        <span>Today : <b>${today}</b></span>
-                        <span>Total : <b>${total}</b></span>
-                    </div>
-
-                </div>
-
-                <div class="division-arrow">➜</div>
-
-            </div>
-        `;
-
-    });
-
-}
-  async function loadData() {
-const btn = document.querySelector("button[onclick='loadData()']");
-
-if (btn) {
-    btn.disabled = true;
-    btn.innerText = "⏳ Refreshing...";
-}
-
-  try {
-
-const [res, countRes] = await Promise.all([
-
-  fetch("https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec" + "?type=all&t=" + Date.now()),
-
-  fetch("https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec" + "?action=dashboardCounts&t=" + Date.now())
-
-]);
-
-fullData = await res.json();
-
-dashboard = await countRes.json();
-
-document.getElementById("installationCount").innerText =
-dashboard.installation.total;
-
-document.getElementById("installationToday").innerText =
-dashboard.installation.today;
-
-document.getElementById("deliveryCount").innerText =
-dashboard.delivery.total;
-
-document.getElementById("deliveryToday").innerText =
-dashboard.delivery.today;
-
-// Division counts
-document.getElementById("tadeToday").innerText =
-dashboard.divisions.Tadepalligudem.installationToday;
-
-document.getElementById("tadeTotal").innerText =
-dashboard.divisions.Tadepalligudem.installationTotal;
-
-document.getElementById("narsiToday").innerText =
-dashboard.divisions.Narsipatnam.installationToday;
-
-document.getElementById("narsiTotal").innerText =
-dashboard.divisions.Narsipatnam.installationTotal;
-
-document.getElementById("chiralaToday").innerText =
-dashboard.divisions.Chirala.installationToday;
-
-document.getElementById("chiralaTotal").innerText =
-dashboard.divisions.Chirala.installationTotal;
-
-document.getElementById("bapatlaToday").innerText =
-dashboard.divisions.Bapatla.installationToday;
-
-document.getElementById("bapatlaTotal").innerText =
-dashboard.divisions.Bapatla.installationTotal;
-
-    // Remove blank timestamps
-    fullData = fullData.filter(item => item.timestamp);
-    
-
-  } catch (err) {
-
-    console.error(err);
-
-    alert("Unable to load dashboard data.");
-
-  }finally {
-
-        if (btn) {
-    btn.disabled = false;
-    btn.innerText = "🔄 Refresh";
-}
-
-    }
-document.querySelector(".summary-grid").style.display = "grid";
-document.getElementById("divisionSection").style.display = "flex";
-
-document.getElementById("data").style.display = "none";
-document.getElementById("detailView").style.display = "none";
-document.getElementById("totalCount").style.display = "none";
-
-currentView = "home";
-}
-
-   async function performSearch() {
-
-    currentView = "search";
-    if (!fullData.length) {
-  await loadData();
-}
-
-  const value = document.getElementById("searchInput").value.trim();
-  if (!value) return;
-
- /*const divisionName = document.getElementById("totalCount").innerText.split("|")[0].trim();*/
-const divisionName = selectedDivision;
-  const container = document.getElementById("data");
-  container.innerHTML = "<p style='text-align:center;'>⏳ Searching...</p>";
-
-  document.getElementById("divisionSection").style.display = "none";
-  document.getElementById("data").style.display = "block";
-  document.getElementById("totalCount").style.display = "block";
-
-  try {
-
-    const url = "https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec"
-      + "?action=search"
-      + "&division=" + encodeURIComponent(divisionName)
-      + "&field=" + encodeURIComponent(document.getElementById("searchType").value)
-      + "&value=" + encodeURIComponent(value)
-      + "&t=" + Date.now();
-
-    const res = await fetch(url);
-    const result = await res.json();
-
-    document.getElementById("totalCount").innerText =
-      `Search Results: ${result.length}`;
-
-    // 🔥 Attach full data using service number
-const enrichedResult = result.map(r => {
-
-  const rService = (r.service || "").toString().trim();
-
-  const match = fullData.find(f => {
-    const fService = (f.service || "").toString().trim();
-    return fService === rService;
-  });
-
-  return match ? match : r;
-
-});
-
-// ✅ ADD THIS LINE
-renderData(enrichedResult);
-    document.getElementById("searchInput").value = "";
-
-  } catch (err) {
-    container.innerHTML = "<p style='text-align:center;'>Error fetching data</p>";
-  }
-}
-// DATE
-function toIST(dateInput) {
-  if (!dateInput) return null;
-  const parts = dateInput.split(/[- :]/);
-  return new Date(parts[0], parts[1] - 1, parts[2], parts[3], parts[4], parts[5]);
-}
-
-function getTodayIST() {
-  const now = new Date();
-  const formatter = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Asia/Kolkata",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit"
-  });
-  const parts = formatter.formatToParts(now);
-  const year = parts.find(p => p.type === "year").value;
-  const month = parts.find(p => p.type === "month").value;
-  const day = parts.find(p => p.type === "day").value;
-  return new Date(year, month - 1, day);
-}
-
-// RENDER
-function renderData(data) {
-
-  const container = document.getElementById("data");
-  container.innerHTML = "";
-
-  if (!data.length) {
-    container.innerHTML = "<p style='text-align:center;'>No data found</p>";
-    return;
-  }
-
-  // 🔥 SORT DATA BY TIMESTAMP (IMPORTANT FIX)
-  data.sort((a, b) => {
-    return toIST(b.timestamp) - toIST(a.timestamp);
-  });
-
-  let currentDate = "";
-
-  data.forEach(item => {
-
-    const d = toIST(item.timestamp);
-    if (!d) return;
-
-    const dateStr =
-      String(d.getDate()).padStart(2, "0") + "/" +
-      String(d.getMonth() + 1).padStart(2, "0") + "/" +
-      d.getFullYear();
-
-    if (dateStr !== currentDate) {
-      currentDate = dateStr;
-      container.innerHTML += `<div class="date-header">${dateStr}</div>`;
-    }
-
-    const time = d.toLocaleTimeString("en-IN", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-      timeZone: "Asia/Kolkata"
-    });
-
-    container.innerHTML += `  
-      <div class="card" onclick='openDetails(${JSON.stringify(item)})'>
-        <b>${item.service}</b><br>
-        ${item.name}<br>
-        ${item.phone}<br>
-        <b>Surveyor:</b> ${item.surveyor || "-"}<br>
-        <b>Edited By:</b> ${item.editedBy || "-"}<br>
-        <div class="time">${time}</div>
-      </div>
-    `;
-  });
-}
-  function openDetails(item) {
-
-  currentView = "details";
-  const detail = document.getElementById("detailView");
-
-  document.getElementById("data").style.display = "none";
-    document.getElementById("totalCount").style.display="none";
-  detail.style.display = "block";
-
- function val(v) {
-  if (v === undefined || v === null) return "-";
-  const cleaned = v.toString().trim();
-  return cleaned !== "" ? cleaned : "-";
-}
-
- function link(url){
-
-if(!url) return "-";
-
-return `<a href="${url}" target="_blank"
-style="
-display:inline-block;
-padding:8px 14px;
-background:#1565C0;
-color:#fff;
-border-radius:8px;
-text-decoration:none;
-margin-top:5px;
-">
-
-📷 View Image
-
-</a>`;
-
-}
-  detail.innerHTML = `
-<h2>Service Details</h2>
-
-<p><b>Service No:</b> ${val(item.service)}</p>
-
-<p><b>Customer:</b> ${val(item.name)}</p>
-
-<p><b>Phone:</b> ${val(item.phone)}</p>
-
-<p><b>Division:</b> ${val(item.division)}</p>
-
-<p><b>Surveyor:</b> ${val(item.surveyor)}</p>
-
-<p><b>Edited By:</b> ${val(item.editedBy)}</p>
-
-<p><b>Panel Image:</b><br>${link(item.panels)}</p>
-
-<p><b>Inverter Image:</b><br>${link(item.inverter)}</p>
-
-<p><b>Earth Image:</b><br>${link(item.earth)}</p>
-
-<button onclick="closeDetails()">⬅ Back</button>
-`;
-  }
-    function showHome(){
-
-    document.querySelector(".summary-grid").style.display = "grid";
-
-    document.getElementById("divisionSection").style.display = "flex";
-
-    document.getElementById("divisionSearch").style.display = "none";
-
-    document.getElementById("data").style.display = "none";
-
-      document.getElementById("data").innerHTML = "";
-document.getElementById("detailView").innerHTML = "";
-document.getElementById("totalCount").innerHTML = "";
-
-    document.getElementById("detailView").style.display = "none";
-
-    document.getElementById("totalCount").style.display = "none";
-      
-      document.getElementById("searchType").value = "service";
-        
-document.getElementById("searchInput").value = "";
-      
-document.getElementById("fromDate").value = "";
-      
-document.getElementById("toDate").value = "";
-
-document.getElementById("searchBox").style.display = "block";
-      
-document.getElementById("dateBox").style.display = "none";
-
-    currentView = "home";
-
-}
-// BACK
-function goBack() {
-
-    if (currentView === "details") {
-
-        closeDetails();
-        return;
-
-    }
-
-  if (currentView === "division" || currentView === "search") {
-
-showHome();
-    return;
-
-}
-    window.location.href = "index.html";
+// Next step:
+// Load records of this division.
 
 }
 
-  function closeDetails(){
-
-document.getElementById("detailView").style.display="none";
-
-document.getElementById("data").style.display="block";
-
-document.getElementById("totalCount").style.display="block";
-
-currentView="division";
-
-}
-async function applyDateFilter() {
-
-  const btn = document.getElementById("applyBtn");
-
-  // 🚫 prevent multiple clicks
-  if (btn.disabled) return;
-
-  btn.disabled = true;
-  btn.innerText = "⏳ Applying...";
-
-  const container = document.getElementById("data");
-container.innerHTML = "<p style='text-align:center;'>⏳ Applying filter...</p>";
-
-  document.getElementById("divisionSection").style.display = "none";
-document.getElementById("data").style.display = "block";
-  try {
-
-    if (!selectedDivision) {
-      alert("Please select a division first");
-      return;
-    }
-
-    if (!fullData.length) {
-      await loadData();
-    }
-
-    const from = document.getElementById("fromDate").value;
-    const to = document.getElementById("toDate").value;
-
-    if (!from || !to) {
-      alert("Select both dates");
-      return;
-    }
-
-    const fromDate = new Date(from);
-    const toDate = new Date(to);
-    toDate.setHours(23,59,59,999);
-
-    const filtered = fullData.filter(item => {
-      const d = toIST(item.timestamp);
-      return d && d >= fromDate && d <= toDate &&
-        (item.division || "").toLowerCase().replace(/\s+/g,"") === 
-        selectedDivision.toLowerCase().replace(/\s+/g,"");
-    });
-
-    document.getElementById("totalCount").innerText =
-      `${selectedDivision} | ${from} → ${to} | Count: ${filtered.length}`;
-
-    renderData(filtered);
-
-    document.getElementById("divisionSection").style.display = "none";
-document.getElementById("data").style.display = "block";
-document.getElementById("totalCount").style.display = "block";
-
-  } catch (err) {
-    alert("Error applying filter");
-  } finally {
-    // ✅ ALWAYS re-enable safely
-    setTimeout(() => {
-      btn.disabled = false;
-      btn.innerText = "Filter";
-    }, 500);
-  }
-}
-  function clearDateFilter() {
-
-  document.getElementById("fromDate").value = "";
-  document.getElementById("toDate").value = "";
-
-  // reload selected division data
- let btn;
-
-if (selectedDivision === "Tadepalligudem") {
-
-  btn = document.getElementById("btn1");
-
-} else if (selectedDivision === "Narsipatnam") {
-
-  btn = document.getElementById("btn2");
-
-} else if (selectedDivision === "Chirala") {
-
-  btn = document.getElementById("btn3");
-
-} else {
-
-  btn = document.getElementById("btn4");
-}
-
-  showDivision({ currentTarget: btn }, selectedDivision);
-}
-    
- window.onload = async function () {
-
-    document.getElementById("searchInput")
-    .addEventListener("keypress", function(e){
-
-        if(e.key==="Enter"){
-            performSearch();
-        }
-
-    });
-
-    // Search / Date Filter Toggle
-    document.getElementById("searchType")
-    .addEventListener("change", function(){
-
-        if(this.value === "date"){
-
-            document.getElementById("searchBox").style.display = "none";
-            document.getElementById("dateBox").style.display = "block";
-
-        }else{
-
-            document.getElementById("searchBox").style.display = "block";
-            document.getElementById("dateBox").style.display = "none";
-
-        }
-
-    });
-
-    await loadData();
-
-};
 </script>
+
 </body>
 </html>
