@@ -298,6 +298,21 @@ input[readonly] {
   <label>Distribution</label>
   <input id="distribution" readonly>
 
+<label>Panel No. 1</label>
+<input id="panel1" readonly>
+
+<label>Panel No. 2</label>
+<input id="panel2" readonly>
+
+<label>Panel No. 3</label>
+<input id="panel3" readonly>
+
+<label>Panel No. 4</label>
+<input id="panel4" readonly>
+
+<label>Inverter Serial Number</label>
+<input id="inverterSerial" readonly>
+
   <h3>Upload Images</h3>
 
   <div class="file-box file-wrapper">
@@ -517,6 +532,25 @@ if (mode === "create") {
     document.getElementById("subdivision").value = data.subdivision;
     document.getElementById("section").value = data.section;
     document.getElementById("distribution").value = data.distribution;
+	  try {
+
+  const materialRes = await fetch(
+    "https://script.google.com/macros/s/AKfycbwOybv133i3cqAU743ilXV0QWRoR6JfnGw93Nc8PQVwDrNnRFN4WSNJez9xpRR_ls3O/exec?action=getMaterialDetails&service=" +
+    encodeURIComponent(service) +
+    "&t=" + Date.now()
+  );
+
+  const material = await materialRes.json();
+
+  document.getElementById("panel1").value = material.panel1 || "";
+  document.getElementById("panel2").value = material.panel2 || "";
+  document.getElementById("panel3").value = material.panel3 || "";
+  document.getElementById("panel4").value = material.panel4 || "";
+  document.getElementById("inverterSerial").value = material.inverterSerial || "";
+
+} catch (err) {
+  console.log("Material details not found", err);
+}
     isVerified = true;
 
   } catch (err) {
@@ -582,7 +616,12 @@ async function submitForm() {
     section: document.getElementById("section").value,
     distribution: document.getElementById("distribution").value,
     panels: panelsData,
-    inverter: inverterData,
+	  panel1: document.getElementById("panel1").value,
+	  panel2: document.getElementById("panel2").value,
+	  panel3: document.getElementById("panel3").value,
+	  panel4: document.getElementById("panel4").value,
+	  inverter: inverterData,
+	  inverterSerial: document.getElementById("inverterSerial").value,
     earth: earthData,
     bill: billData,
     aadhar: aadharData,
