@@ -653,7 +653,7 @@ function renderData(data) {
         });
 
         container.innerHTML += `  
-            <div class="card" onclick='openDetails(${JSON.stringify(item)})'>
+            <div class="card" onclick="openDetails('${item.service}')">
                 <div style="font-weight:600; font-size:15px; color:#1565C0; margin-bottom:4px;">${item.service || "-"}</div>
                 <div style="font-size:14px; font-weight:500; color:#334155;">${item.name || "-"}</div>
                 <div style="font-size:13px; color:#64748b; margin-top:2px;">📞 ${item.phone || "-"}</div>
@@ -663,32 +663,99 @@ function renderData(data) {
     });
 }
 
-function openDetails(item) {
-    currentView = "details";
-    const detail = document.getElementById("detailView");
+async function openDetails(serviceNo){
 
-    document.getElementById("data").style.display = "none";
-    document.getElementById("divisionSearch").style.display = "none";
-    document.getElementById("totalCount").style.display = "none";
-    detail.style.display = "block";
+currentView="details";
 
-    const val = (v) => (v !== undefined && v !== null && v.toString().trim() !== "") ? v.toString().trim() : "-";
-    const link = (url) => url ? `<a href="${url}" target="_blank" class="img-btn">📷 View Image</a>` : "-";
+document.getElementById("data").style.display="none";
+document.getElementById("divisionSearch").style.display="none";
+document.getElementById("totalCount").style.display="none";
 
-    detail.innerHTML = `
-        <h2>Service Records Detail</h2>
-        <div class="detail-row"><span>Service Number</span><span>${val(item.service)}</span></div>
-        <div class="detail-row"><span>Customer Name</span><span>${val(item.name)}</span></div>
-        <div class="detail-row"><span>Phone Contact</span><span>${val(item.phone)}</span></div>
-        <div class="detail-row"><span>Division Bound</span><span>${val(item.division)}</span></div>
-        <div class="detail-row"><span>Panel Number(s)</span><span>${val(item.panelNumbers || item.panelNo || item.panel_numbers)}</span></div>
-        <div class="detail-row"><span>Inverter Number</span><span>${val(item.inverterNo || item.inverterNumber || item.inverter_number)}</span></div>
-        <div class="detail-row"><span>Assigned Surveyor</span><span>${val(item.surveyor)}</span></div>
-        <div class="detail-row"><span>Modified System By</span><span>${val(item.editedBy)}</span></div>
-        <div class="detail-row"><span>Panel Matrix Photo</span><span>${link(item.panels)}</span></div>
-        <div class="detail-row"><span>Inverter Matrix Photo</span><span>${link(item.inverter)}</span></div>
-        <div class="detail-row"><span>Earth Array Photo</span><span>${link(item.earth)}</span></div>
-    `;
+const detail=document.getElementById("detailView");
+detail.style.display="block";
+
+detail.innerHTML="<h2>Loading Service Details...</h2>";
+
+try{
+
+const res=await fetch(
+BASE_URL+
+"?action=getSubmission&service="+
+encodeURIComponent(serviceNo)+
+"&t="+Date.now()
+);
+
+const item=await res.json();
+
+if(!item.found){
+
+detail.innerHTML="<h2>Record Not Found</h2>";
+return;
+}
+  const img = (url, text) =>
+    url ? `<a href="${url}" target="_blank" class="img-btn">${text}</a>` : "-";
+
+detail.innerHTML = `
+
+<h2>📋 Service Details</h2>
+
+<div class="detail-row"><span>Service Number</span><span>${item.serviceNumber}</span></div>
+<div class="detail-row"><span>Customer Name</span><span>${item.name}</span></div>
+<div class="detail-row"><span>Phone</span><span>${item.phone}</span></div>
+<div class="detail-row"><span>Address</span><span>${item.address}</span></div>
+<div class="detail-row"><span>Division</span><span>${item.division}</span></div>
+<div class="detail-row"><span>Sub Division</span><span>${item.subdivision}</span></div>
+<div class="detail-row"><span>Section</span><span>${item.section}</span></div>
+<div class="detail-row"><span>Distribution</span><span>${item.distribution}</span></div>
+
+<h2>🔧 Installation</h2>
+
+<div class="detail-row"><span>Surveyor</span><span>${item.surveyor}</span></div>
+<div class="detail-row"><span>Edited By</span><span>${item.editedBy}</span></div>
+
+<div class="detail-row"><span>Panel No.1</span><span>${item.panel1}</span></div>
+<div class="detail-row"><span>Panel No.2</span><span>${item.panel2}</span></div>
+<div class="detail-row"><span>Panel No.3</span><span>${item.panel3}</span></div>
+<div class="detail-row"><span>Panel No.4</span><span>${item.panel4}</span></div>
+
+<div class="detail-row"><span>Inverter Serial</span><span>${item.inverterSerial}</span></div>
+
+<div class="detail-row"><span>Panels Image</span><span>${img(item.panelsImage,"View")}</span></div>
+<div class="detail-row"><span>Inverter Image</span><span>${img(item.inverterImage,"View")}</span></div>
+<div class="detail-row"><span>Earth Image</span><span>${img(item.earthImage,"View")}</span></div>
+<div class="detail-row"><span>Current Bill</span><span>${img(item.billImage,"View")}</span></div>
+<div class="detail-row"><span>Aadhaar</span><span>${img(item.aadharImage,"View")}</span></div>
+<div class="detail-row"><span>Document 1</span><span>${img(item.doc1Image,"View")}</span></div>
+<div class="detail-row"><span>Document 2</span><span>${img(item.doc2Image,"View")}</span></div>
+
+<h2>📦 Material Delivery</h2>
+
+<div class="detail-row"><span>Panel Image 1</span><span>${img(item.material.panelImage1,"View")}</span></div>
+<div class="detail-row"><span>Panel 1</span><span>${item.material.panel1}</span></div>
+
+<div class="detail-row"><span>Panel Image 2</span><span>${img(item.material.panelImage2,"View")}</span></div>
+<div class="detail-row"><span>Panel 2</span><span>${item.material.panel2}</span></div>
+
+<div class="detail-row"><span>Panel Image 3</span><span>${img(item.material.panelImage3,"View")}</span></div>
+<div class="detail-row"><span>Panel 3</span><span>${item.material.panel3}</span></div>
+
+<div class="detail-row"><span>Panel Image 4</span><span>${img(item.material.panelImage4,"View")}</span></div>
+<div class="detail-row"><span>Panel 4</span><span>${item.material.panel4}</span></div>
+
+<div class="detail-row"><span>Inverter Image</span><span>${img(item.material.inverterImage,"View")}</span></div>
+<div class="detail-row"><span>Inverter Serial</span><span>${item.material.inverterNo}</span></div>
+
+<div class="detail-row"><span>Panels Photo</span><span>${img(item.material.panelsPhoto,"View")}</span></div>
+<div class="detail-row"><span>BOS Photo</span><span>${img(item.material.bosPhoto,"View")}</span></div>
+<div class="detail-row"><span>Delivery Proof</span><span>${img(item.material.deliveryProof,"View")}</span></div>
+
+<div class="detail-row"><span>Material Surveyor</span><span>${item.material.materialSurveyor}</span></div>
+
+`;
+  } catch (err) {
+    console.error(err);
+    detail.innerHTML = "<h2>Unable to load service details.</h2>";
+}
 }
 
 function showHome() {
@@ -750,4 +817,47 @@ async function applyDateFilter() {
 
         const fromDate = new Date(from);
         const toDate = new Date(to);
-        toDate.setHours(23, 59, 5
+        toDate.setHours(23, 59, 59, 999);
+
+        const filtered = fullData.filter(item => {
+            const d = toIST(item.timestamp);
+            return d && d >= fromDate && d <= toDate &&
+                (item.division || "").toLowerCase().replace(/\s+/g, "") === selectedDivision.toLowerCase().replace(/\s+/g, "");
+        });
+
+        document.getElementById("totalCount").innerHTML = `<b>📍 ${selectedDivision}</b><br>${from} → ${to} | <b>Count:</b> ${filtered.length}`;
+        renderData(filtered);
+    } catch (err) {
+        alert("Error applying filter matrix");
+    } finally {
+        btn.disabled = false;
+    }
+}
+
+function clearDateFilter() {
+    document.getElementById("fromDate").value = "";
+    document.getElementById("toDate").value = "";
+    let btn = document.getElementById(selectedDivision === "Tadepalligudem" ? "btn1" : selectedDivision === "Narsipatnam" ? "btn2" : selectedDivision === "Chirala" ? "btn3" : "btn4");
+    showDivision({ currentTarget: btn }, selectedDivision);
+}
+
+window.onload = async function () {
+    document.getElementById("searchInput").addEventListener("keypress", function (e) {
+        if (e.key === "Enter") performSearch();
+    });
+
+    document.getElementById("searchType").addEventListener("change", function () {
+        if (this.value === "date") {
+            document.getElementById("searchBox").style.display = "none";
+            document.getElementById("dateBox").style.display = "block";
+        } else {
+            document.getElementById("searchBox").style.display = "block";
+            document.getElementById("dateBox").style.display = "none";
+        }
+    });
+
+    await loadData();
+};
+</script>
+</body>
+</html>
